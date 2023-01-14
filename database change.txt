@@ -1,0 +1,49 @@
+ALTER TABLE `tec_sales` ADD `invno` INT NULL DEFAULT NULL AFTER `return_id`, ADD `collection_id` INT NULL DEFAULT NULL AFTER `invno`;
+ 
+CREATE TABLE `tec_handcash` (
+  `id` int(11) NOT NULL,
+  `entry_date` date NOT NULL,
+  `amount` int(11) NOT NULL,
+  `note` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `tec_handcash`
+  ADD PRIMARY KEY (`id`);
+ 
+ALTER TABLE `tec_handcash`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `tec_bank_pending_donations` ADD `transactions_id` INT NULL DEFAULT NULL AFTER `amount`;
+
+
+CREATE TABLE `tec_persons` (
+  `id` int(11) NOT NULL,
+  `name` varchar(55) NOT NULL,
+  `cf1` varchar(255) NOT NULL,
+  `cf2` varchar(255) NOT NULL,
+  `phone` varchar(150) NOT NULL,
+  `email` varchar(100) NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+ALTER TABLE `tec_persons`
+  ADD PRIMARY KEY (`id`);
+ 
+ALTER TABLE `tec_persons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+CREATE TABLE `tec_attachment` (
+  `id` int(11) NOT NULL,
+  `title` varchar(55) NOT NULL, 
+  `persons_id` int(11) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL COMMENT 'receive/pay',
+  `attachment` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+ALTER TABLE `tec_attachment`
+  ADD PRIMARY KEY (`id`);
+ 
+ALTER TABLE `tec_attachment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+ALTER TABLE `tec_attachment` ADD `note` TEXT NULL DEFAULT NULL AFTER `attachment`;
