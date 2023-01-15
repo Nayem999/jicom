@@ -15,10 +15,10 @@
 
 				<div class="box-body">
 
-					<!-- <?php echo form_open($action);?> -->
+					<?php echo form_open($action);?>
 					<?php 
-					isset($emplyee)?$action="employee/edit/".$emplyee->id:$action="employee/add";
-					echo form_open($action);
+					/* isset($emplyee)?$action="employee/edit/".$emplyee->id:$action="employee/add";
+					echo form_open($action); */
 					?>
 
 

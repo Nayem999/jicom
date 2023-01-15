@@ -5,6 +5,7 @@ class Settings extends MY_Controller {
     function __construct() {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->library('encryption');
         $this->load->model('settings_model');
     }
 
@@ -38,7 +39,7 @@ class Settings extends MY_Controller {
 
         $this->form_validation->set_rules('bill_header', lang('bill_header'));
         $this->form_validation->set_rules('bill_footer', lang('bill_footer'));
-        $this->load->library('encrypt');
+
         if ($this->form_validation->run() == true) {
             $data = array(
                 'site_name' => DEMO ? 'SimplePOS' : $this->input->post('site_name') ,
@@ -96,7 +97,8 @@ class Settings extends MY_Controller {
                 'customer_sms' => $this->input->post('customer_sms') ,
             );
             if ($this->input->post('smtp_pass')) {
-                $data['smtp_pass'] = $this->encrypt->encode($this->input->post('smtp_pass'));
+                // $data['smtp_pass'] = $this->encrypt->encode($this->input->post('smtp_pass'));
+                $data['smtp_pass'] = $this->encryption->encrypt($this->input->post('smtp_pass'));
             }
 
             if (DEMO) {
@@ -136,7 +138,8 @@ class Settings extends MY_Controller {
             $this->data['settings'] = $this->site->getSettings();
             $this->data['customers'] = $this->site->getAllCustomers();
             $this->data['categories'] = $this->site->getAllCategories();
-            $this->data['smtp_pass'] = $this->encrypt->decode($this->data['settings']->smtp_pass);
+            // $this->data['smtp_pass'] = $this->encrypt->decode($this->data['settings']->smtp_pass);
+            $this->data['smtp_pass'] = $this->encryption->decrypt($this->data['settings']->smtp_pass);
             $this->data['page_title'] = lang('settings');
             $bc = array(
                 array(
@@ -242,23 +245,25 @@ class Settings extends MY_Controller {
         redirect("settings/updates");
     }
 
-    function backups() {   
-        if ($_FILES['userfile']['size'] > 0) {
-            $this->load->library('upload');
-            $config['upload_path'] = 'files/backups';
-            $config['allowed_types'] = 'txt';
-            $config['max_size'] = '50000';
+    function backups() {  
+        if (array_key_exists("userfile",$_FILES)){ 
+            if ($_FILES['userfile']['size'] > 0) {
+                $this->load->library('upload');
+                $config['upload_path'] = 'files/backups';
+                $config['allowed_types'] = 'txt';
+                $config['max_size'] = '50000';
 
-            //  $config['file_name'] = 'db-backup-on-' . date("Y-m-d-H-i-s") ;
+                //  $config['file_name'] = 'db-backup-on-' . date("Y-m-d-H-i-s") ;
 
-            $this->upload->initialize($config);
-            if (!$this->upload->do_upload()) {
-                $error = $this->upload->display_errors();
-                $this->upload->set_flashdata('error', $error);
-                redirect("settings/backups");
-            } else {
-                $file_name = $this->upload->file_name;
-                $this->session->set_flashdata('message', 'Database file successfully uploaded');
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload()) {
+                    $error = $this->upload->display_errors();
+                    $this->upload->set_flashdata('error', $error);
+                    redirect("settings/backups");
+                } else {
+                    $file_name = $this->upload->file_name;
+                    $this->session->set_flashdata('message', 'Database file successfully uploaded');
+                }
             }
         }
 

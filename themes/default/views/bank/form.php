@@ -15,8 +15,7 @@
 
 				<div class="box-body">
 
-					<!-- <?php // form_open($action);?> -->
-					<?php echo form_open("bank/add");?>
+					<?php echo form_open($action);?>
 
 					<div class="col-md-6">
 						<?php if($this->session->userdata('store_id')==0){ ?>

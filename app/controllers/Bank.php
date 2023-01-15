@@ -154,7 +154,7 @@ class Bank extends MY_Controller
             }
 			$date['submit_button'] = "New Bank Account ";
 			
-			$data['action'] = "bank/add" ;
+			$this->data['action'] = "bank/add" ;
 
 			$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -350,7 +350,8 @@ class Bank extends MY_Controller
 			 redirect("bank");
 
 		}
-	  
+
+		$this->data['action'] = "bank/addTranjiction/".$id;
 	  	$this->load->view($this->theme . 'bank/tranjiction',$this->data); 
 	  
 	}
@@ -407,6 +408,7 @@ class Bank extends MY_Controller
 		}
 	 
 	 	$this->data['transaction'] = $this->bank_model->getTransactionByID($id);
+	 	$this->data['action'] = "bank/editTransaction/".$id;
 		$this->load->view($this->theme . 'bank/tranjiction',$this->data);  
  	}
  	function tranjictionList($id){

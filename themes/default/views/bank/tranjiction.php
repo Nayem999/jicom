@@ -16,8 +16,7 @@ data-easein="flipYIn" class="modal posModal in" style="display: block; padding-l
 
         <!--<form accept-charset="utf-8" method="post" enctype="multipart/form-data" action="http://localhost/spos/sales/add_payment/3/2">
 <input type="hidden" style="display:none;" > -->
-        <!-- <?php form_open($action);?> -->
-        <?php echo form_open("bank/editTransaction/".$transaction->tranjiction_id);?>
+     <?php echo form_open($action);?> 
 
         <div class="modal-body">
 

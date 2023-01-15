@@ -199,7 +199,7 @@
                                     <strong><?= lang('default_category Product count') ?></strong>
 
                                     <?php
-                                    $ct='';
+                                    $ct=array();
                                     foreach ($categories as $catrgor) {
 
                                         $ct[$catrgor->id] = $catrgor->name;
