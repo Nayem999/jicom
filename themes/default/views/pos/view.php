@@ -146,6 +146,7 @@ if ($modal) {
                 </div>  
                 <span style="text-align:center;">
                     <p><h3>Invoice / Bill</h3> </p>
+                    <p><h6><b>BIN Number:</b> <?=$settings->bin_number;?></h6> </p>
                 </span> 
                 <span style="float:left">                
                 <p>

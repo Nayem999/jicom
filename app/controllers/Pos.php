@@ -163,16 +163,16 @@ class Pos extends MY_Controller {
 				}
 			}
 			// print_r($products);die;
-		/*	$seq = isset($_POST['sequence']) ? sizeof($_POST['sequence']) : 0;
-			for ($ri = 0; $ri < $seq; $ri++) {
-				$sequenceVa = $_POST['sequence'][$ri];
+			/*	$seq = isset($_POST['sequence']) ? sizeof($_POST['sequence']) : 0;
+				for ($ri = 0; $ri < $seq; $ri++) {
+					$sequenceVa = $_POST['sequence'][$ri];
 
-				if($sequenceVa != 'sequence_sequence'){
-				$sequence = explode(',', $sequenceVa);
-					for ($ri2=0; $ri2 < count($sequence); $ri2++) { 
-						$this->pos_model->sequenceUpdate($sequence[$ri2]);
+					if($sequenceVa != 'sequence_sequence'){
+					$sequence = explode(',', $sequenceVa);
+						for ($ri2=0; $ri2 < count($sequence); $ri2++) { 
+							$this->pos_model->sequenceUpdate($sequence[$ri2]);
+						}
 					}
-				}
 			}*/
 
 			if (empty($products)) {
@@ -767,6 +767,7 @@ class Pos extends MY_Controller {
 		$this->data['modal'] = false;
 		$this->data['payments'] = $this->pos_model->getAllSalePayments($sale_id);
 		$this->data['created_by'] = $this->site->getUser($inv->created_by);
+		$this->data['settings'] = $this->site->getSettings();
 		$this->data['page_title'] = lang("invoice");
 		$this->load->view($this->theme.'pos/view', $this->data);
 

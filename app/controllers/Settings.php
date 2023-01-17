@@ -70,6 +70,7 @@ class Settings extends MY_Controller {
                 'smtp_port' => $this->input->post('smtp_port') ,
                 'smtp_crypto' => $this->input->post('smtp_crypto') ,
                 'pin_code' => $this->input->post('pin_code') ? $this->input->post('pin_code') : NULL,
+                'bin_number' => $this->input->post('bin_number') ,
                 'receipt_printer' => $this->input->post('receipt_printer') ,
                 'cash_drawer_codes' => $this->input->post('cash_drawer_codes') ,
                 'focus_add_item' => $this->input->post('focus_add_item') ,
