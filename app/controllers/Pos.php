@@ -34,6 +34,7 @@ class Pos extends MY_Controller {
 		if( $this->input->get('edit') ) { $eid = $this->input->get('edit'); }
 		if( $this->input->post('eid') ) { $eid = $this->input->post('eid'); }
 		if( $this->input->post('did') ) { $did = $this->input->post('did'); } else { $did = NULL; }
+	
 		if($eid && !$this->Admin){
 			$this->session->set_flashdata('error', lang('access_denied'));
 			redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'pos');
@@ -83,6 +84,7 @@ class Pos extends MY_Controller {
 			$order_discount = 0;
 			$percentage = '%';
 			$i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
+			// echo $_POST['product_discount'][$r]
 			for ($r = 0; $r < $i; $r++) {
 				$item_id = $_POST['product_id'][$r];
 				$warranty_year = $_POST['war'][$r];
@@ -98,6 +100,8 @@ class Pos extends MY_Controller {
 				$real_unit_price = $this->tec->formatDecimal($_POST['real_unit_price'][$r]);
 				$item_quantity = $_POST['quantity'][$r];
 				$item_discount = isset($_POST['product_discount'][$r]) ? $_POST['product_discount'][$r] : '0';
+				$item_qnty_type = isset($_POST['qnty_type'][$r]) ? $_POST['qnty_type'][$r] : 0;
+				$item_per_type_qnty = isset($_POST['per_type_qnty'][$r]) ? $_POST['per_type_qnty'][$r] : 0;
 
 				if (isset($item_id) && isset($real_unit_price) && isset($item_quantity)) {
 					$product_details = $this->site->getProductByID($item_id);
@@ -156,6 +160,8 @@ class Pos extends MY_Controller {
 						'cost' => $product_details->cost,
 						'warranty_year' => $warranty_year,
 						'store_id' => $store_id,
+						'qnty_type' => $item_qnty_type,
+						'per_type_qnty' => $item_per_type_qnty,
 						);
 
 					$total += $item_net_price * $item_quantity;

@@ -72,11 +72,13 @@ function loadItems() {
 
            // alert(item.row.seq);
 
-            var product_id = item.row.id, StockQty = item.row.StockQty , item_type = item.row.type, item_war = item.row.war ,  item_seq = item.row.seq , item_tax_method = parseFloat(item.row.tax_method), combo_items = item.combo_items, item_qty = item.row.qty, sQty = parseFloat(item.row.sQty), item_aqty = parseFloat(item.row.quantity), item_type = item.row.type, item_ds = item.row.discount, item_code = item.row.code, item_name = item.row.name.replace(/"/g, "&#034;").replace(/'/g, "&#039;");
+            var product_id = item.row.id, StockQty = item.row.StockQty , item_type = item.row.type, item_war = item.row.war ,  item_seq = item.row.seq , item_tax_method = parseFloat(item.row.tax_method), combo_items = item.combo_items, item_qty = item.row.qty, sQty = parseFloat(item.row.sQty), item_aqty = parseFloat(item.row.quantity), item_type = item.row.type, item_ds = item.row.discount, item_qnty_type = item.row.qnty_type, item_per_type_qnty = item.row.per_type_qnty, item_code = item.row.code, item_name = item.row.name.replace(/"/g, "&#034;").replace(/'/g, "&#039;");
             var unit_price = parseFloat(item.row.real_unit_price);
             var net_price = unit_price;
 
             var ds = item_ds ? item_ds : '0';
+            var item_qnty_type = item_qnty_type ? item_qnty_type : 0;
+            var item_per_type_qnty = item_per_type_qnty ? item_per_type_qnty : 0;
             var item_discount = formatDecimal(ds);
             if (ds.indexOf("%") !== -1) {
                 var pds = ds.split("%");
@@ -114,7 +116,7 @@ function loadItems() {
             var newTr = $('<tr id="' + row_no + '" class="' + item_id + '" data-item-id="' + item_id + '"></tr>');
             tr_html = '<td><input name="product_id[]" type="hidden" class="rid" value="' + product_id + '"><button type="button" class="btn bg-purple btn-block btn-xs edit" id="' + row_no + '" data-item="' + item_id + '"><span class="sname" id="name_' + row_no + '">' + item_name + ' (' + item_code + ')( Stock Qty '+ StockQty +')</span></button></td>';
             // <input class="rprice" name="net_price[]" type="hidden" id="price_' + row_no + '" value="' + formatDecimal(item_price) + '">
-            tr_html += '<td class="text-right"><input class="realuprice" name="real_unit_price[]" type="hidden" value="' + item.row.real_unit_price + '"><input class="rdiscount" name="product_discount[]" type="hidden" id="discount_' + row_no + '" value="' + ds + '"><span class="text-right sprice" id="sprice_' + row_no + '">' + formatMoney(parseFloat(net_price) + parseFloat(pr_tax_val)) + '</span></td>';
+            tr_html += '<td class="text-right"><input class="realuprice" name="real_unit_price[]" type="hidden" value="' + item.row.real_unit_price + '"><input class="rdiscount" name="product_discount[]" type="hidden" id="discount_' + row_no + '" value="' + ds + '"><input name="qnty_type[]" type="hidden" value="' + item_qnty_type + '"><input name="per_type_qnty[]" type="hidden" value="' + item_per_type_qnty + '"><span class="text-right sprice" id="sprice_' + row_no + '">' + formatMoney(parseFloat(net_price) + parseFloat(pr_tax_val)) + '</span></td>';
             tr_html += '<td><input class="form-control input-qty kb-pad text-center rquantity" name="quantity[]" type="text" value="' + formatDecimal(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onKeyup="quantityFild('+product_id+','+row_no+')"></td>';
             tr_html += SequenceIcone;
             //class="text-right"
@@ -273,6 +275,8 @@ $(document).ready(function(){
         var unit_price = formatDecimal(row.find('.realuprice').val());
         var net_price = unit_price;
         var ds = item.row.discount ? item.row.discount : '0';
+        var item_per_type_qnty = item.row.per_type_qnty ? item.row.per_type_qnty : '0';
+        var item_qnty_type = item.row.qnty_type ? item.row.qnty_type : '0';
         item_discount = formatDecimal(parseFloat(ds));
         if (ds.indexOf("%") !== -1) {
             var pds = ds.split("%");
@@ -301,6 +305,8 @@ $(document).ready(function(){
         $('#nPrice').val(unit_price);
         $('#nQuantity').val(item.row.qty);
         $('#nDiscount').val(ds);
+        $('#qnty_type').val(item_qnty_type);
+        $('#per_type_qnty').val(item_per_type_qnty);
         $('#proModal').modal({backdrop:'static'});
     });
 
@@ -347,6 +353,8 @@ $(document).ready(function(){
         spositems[item_id].row.qty = parseFloat($('#nQuantity').val()),
         spositems[item_id].row.real_unit_price = price,
         spositems[item_id].row.discount = $('#nDiscount').val() ? $('#nDiscount').val() : '0',
+        spositems[item_id].row.qnty_type = $('#qnty_type').val() ? $('#qnty_type').val() : 0,
+        spositems[item_id].row.per_type_qnty = $('#per_type_qnty').val() ? $('#per_type_qnty').val() : 0,
         localStorage.setItem('spositems', JSON.stringify(spositems));
         $('#proModal').modal('hide');
 

@@ -937,8 +937,8 @@
               <input type="text" class="form-control input-sm kb-pad" id="nDiscount" onClick="this.select();" placeholder="<?=lang('discount')?>">
             </div>
             <div class="form-group">
-              <?=lang('per_uom_qnty', 'per_uom_qnty')?>
-              <input type="text" class="form-control input-sm kb-pad" id="per_uom_qnty" onClick="this.select();" placeholder="<?=lang('per_uom_qnty')?>">
+              <?=lang('per_type_qnty', 'per_type_qnty')?>
+              <input type="text" class="form-control input-sm kb-pad" id="per_type_qnty" placeholder="<?=lang('per_type_qnty')?>">
             </div>
           </div>
           <div class="col-sm-6">
@@ -948,12 +948,12 @@
             </div>
 
             <div class="form-group">
-              <?= lang("qnty_uom", "qnty_uom"); ?>
-              <select id="qnty_uom" class="form-control qnty_uom select2" style="width:100%;">
-                <option value="">Select</option>
-                <option value="Bucket">bucket</option>
-                <option value="Carton">carton</option>
-                <option value="Bag">bag</option>               
+              <?= lang("qnty_type", "qnty_type"); ?>
+              <select id="qnty_type" class="form-control qnty_type select2" style="width:100%;">
+                <option value="0">Select</option>
+                <option value="1">bucket</option>
+                <option value="2">carton</option>
+                <option value="3">bag</option>               
               </select>
             </div>
 
