@@ -315,6 +315,7 @@ class Pos extends MY_Controller {
 					'customer_id' => $customer_id,
 					'paid_by' => $this->input->post('paid_by'),
 					'cheque_no' => $this->input->post('cheque_no'),
+					'tt_no' => $this->input->post('tt_no'),
 					'cc_no' => $this->input->post('cc_no'),
 					'gc_no' => $this->input->post('paying_gift_card_no'),
 					'cc_holder' => $this->input->post('cc_holder'),

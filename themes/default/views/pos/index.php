@@ -718,6 +718,7 @@
                 <input type="hidden" name="paying_gift_card_no" id="paying_gift_card_no_val" value=""/>
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
                 <input type="hidden" name="cheque_no" id="cheque_no_val" value=""/>
+                <input type="hidden" name="tt_no" id="tt_no_val" value=""/>
                 <input type="hidden" name="bank_id" id="bank_id_val" value=""/>
                 <input type="hidden" name="cc_month" id="cc_month_val" value=""/>
                 <input type="hidden" name="cc_year" id="cc_year_val" value=""/>
@@ -1059,6 +1060,9 @@
                     <option value="Cheque">
                     <?= lang("cheque"); ?>
                     </option>
+                    <option value="TT">
+                    <?= lang("tt"); ?>
+                    </option>
                     
                      
                   </select>
@@ -1094,9 +1098,17 @@
                   </div>
                 </div>
                 <div class="pcheque" style="display:none;">
-                  <div class="form-group">
-                    <?= lang("cheque_no", "cheque_no"); ?>
-                    <input type="text" id="cheque_no"class="form-control cheque_no  kb-text"/>
+                  <div class="ccheque" style="display:none;">
+                    <div class="form-group">
+                      <?= lang("cheque_no", "cheque_no"); ?>
+                      <input type="text" id="cheque_no"class="form-control cheque_no  kb-text"/>
+                    </div>
+                  </div>
+                  <div class="tcheque" style="display:none;">
+                    <div class="form-group">
+                      <?= lang("tt_no", "tt_no"); ?>
+                      <input type="text" id="tt_no"class="form-control tt_no  kb-text"/>
+                    </div>
                   </div>
                   <div class="form-group">
                     <?= lang("Select Bank", "bank"); ?>
