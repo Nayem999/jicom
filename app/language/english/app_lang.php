@@ -206,6 +206,7 @@ $lang['tt_no']                              = "TT No";
 $lang['clear']                              = "Clear";
 $lang['cf1']                                = "Custom Field 1";
 $lang['cf2']                                = "Custom Field 2";
+$lang['credit_limit']                       = "Credit Limit";
 $lang['code_error']                         = "Code Error";
 $lang['please_add_product']                 = "Please add product";
 $lang['paid_less_than_amount']              = "Paid amount is less than paying";

@@ -1261,6 +1261,16 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label" for="credit_limit">
+                <?= lang("credit_limit"); ?>
+              </label>
+              <?= form_input('credit_limit', '', 'class="form-control input-sm kb-text" id="credit_limit"'); ?>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer" style="margin-top:0;">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">

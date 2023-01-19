@@ -52,6 +52,11 @@
             </div>
 
             <div class="form-group">
+              <label class="control-label" for="credit_limit"><?= $this->lang->line("Credit Limit"); ?></label>
+              <?= form_input('credit_limit', set_value('credit_limit',$customer->credit_limit), 'class="form-control input-sm" id="credit_limit"');?>
+            </div>
+
+            <div class="form-group">
               <?php echo form_submit('edit_customer', $this->lang->line("edit_customer"), 'class="btn btn-primary"');?>
             </div>
           </div>
