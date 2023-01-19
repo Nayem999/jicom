@@ -982,8 +982,8 @@ $(document).ready(function(){
     $('#payModal').on('select2-close', '#paid_by', function (e) {
         $('#paid_by_val').val($(this).val());
     });
-    $('#payModal').on('blur', '#payment_date', function (e) {
-        $('#payment_date_val').val($(this).val());
+    $('#payModal').on('blur', '#delivery_date', function (e) {
+        $('#delivery_date_val').val($(this).val());
     });
     $('#payModal').on('change', '#pcc_no', function (e) {
         $('#cc_no_val').val($(this).val());

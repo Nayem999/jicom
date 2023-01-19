@@ -722,7 +722,7 @@
                 <input type="hidden" name="amount" id="amount_val" value="<?= $eid ? $sale->paid : ''; ?>"/>
                 <input type="hidden" name="balance_amount" id="balance_val" value=""/>
                 <input type="hidden" name="paid_by" id="paid_by_val" value="cash"/>
-                <input type="hidden" name="payment_date" id="payment_date_val" value="<?=date('Y-m-d')?>"/>
+                <input type="hidden" name="delivery_date" id="delivery_date_val" value="<?=date('Y-m-d')?>"/>
                 <input type="hidden" name="cc_no" id="cc_no_val" value=""/>
                 <input type="hidden" name="paying_gift_card_no" id="paying_gift_card_no_val" value=""/>
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
@@ -1058,8 +1058,8 @@
               </div>
               <div class="col-xs-6">
                 <div class="form-group">
-                  <label class="control-label" for="payment_date"><?= lang("payment_date"); ?></label>
-                  <input name="payment_date[]" type="text" id="payment_date" class="pa form-control kb-pad datepicker" />
+                  <label class="control-label" for="delivery_date"><?= lang("delivery_date"); ?></label>
+                  <input name="delivery_date[]" type="text" id="delivery_date" class="pa form-control kb-pad datepicker" />
                 </div>
               </div>
               <div class="col-xs-6">
