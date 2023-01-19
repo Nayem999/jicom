@@ -115,6 +115,13 @@ if ($modal) {
 
 <div id="wrapper">
 
+
+
+
+
+
+
+
     <div id="receiptData">
 
     <div class="no-print">
@@ -131,7 +138,50 @@ if ($modal) {
 
         <?php } ?>
 
+
+        <?php if ($Settings->java_applet) { ?>
+
+        <span class="col-xs-3"><a class="btn btn-block btn-primary" onClick="printReceipt()"><?= lang("print"); ?></a></span>
+
+        <span class="col-xs-3"><a class="btn btn-block btn-info" type="button" onClick="openCashDrawer()"><?= lang('open_cash_drawer'); ?></a></span>
+
+        <div style="clear:both;"></div>
+
+        <?php } else { ?>
+
+        <span class="pull-right col-xs-3">
+
+        <a href="javascript:window.print()" id="web_print" class="btn btn-block btn-primary"
+
+        onClick="window.print();return false;"><?= lang("web_print"); ?></a>
+
+        </span> 
+
+        <span class="pull-right col-xs-3">
+
+        <a href="<?= site_url('pos/chalan/6'); ?>" id="web_print" class="btn btn-block btn-primary">Chalan</a>
+
+        </span>
+
+
+        <?php } ?>
+
+        <span class="pull-left col-xs-3"><a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a></span>
+
+
+
+        <span class="col-xs-3">
+
+        <a class="btn btn-block btn-warning" href="<?= site_url('pos'); ?>"><?= lang("back_to_pos"); ?></a>
+
+        </span>
+
     </div>
+
+
+
+ 
+
 
     <div id="receipt-data">   
 
@@ -164,10 +214,13 @@ if ($modal) {
                     echo '<strong>Time: </strong>'.$this->tec->hrst($datetime[1]).'<br>'; 
                     //$userifo = $this->tec->getUser($this->session->userdata('user_id'));
                     $userifo = $this->tec->getUser($inv->created_by);
-                    //print_r($userifo);
+                    //print_r($payments);
                       
-                    foreach ($userifo as $key => $value)                    
-                    echo '<strong>Sold By: </strong>'.$value->first_name.' '.$value->last_name;
+                    foreach ($userifo as $key => $value)  {                  
+                    echo '<strong>Sold By: </strong>'.$value->first_name.' '.$value->last_name; }
+                    if($payments[0]->delivery_date){
+                        echo '<br><strong>Delivery Date: </strong>'.$this->tec->hrsd($payments[0]->delivery_date).'<br>'; 
+                    }
                     //echo $this->tec->hrld($inv->date); ?> 
                 </span>
 
@@ -217,11 +270,14 @@ if ($modal) {
                         <td class="text-left">' . product_name($row->product_name);
                        echo '<br>';
                        // print_r($sequence);
-                            foreach ($sequence as $key => $seque) {
-                                if($seque->sequence !=''){
-                                    echo 'S/L No: ('.$seque->sequence.') <br>';
-                                } 
-                        }
+                       if($sequence)
+                       {
+                           foreach ($sequence as $key => $seque) {
+                               if($seque->sequence !=''){
+                                   echo 'S/L No: ('.$seque->sequence.') <br>';
+                               } 
+                            }
+                       }
                     echo '</td>';                   
 
                   
@@ -263,8 +319,7 @@ if ($modal) {
 
                         <td colspan="1" class="text-right"><?= $this->tec->formatMoney($inv->grand_total + $rounding); ?></td>
 
-                    </tr>
- -->
+                    </tr>-->
            
 
                     
@@ -371,48 +426,13 @@ if ($modal) {
       <input type="radio" class="radioBtnClass"  <?php if($inv->warranty == 'Not'){echo  'checked'; }?>  value="0" id="warranty-no" name="warranty">No
     
     </div> -->
-    <?php if ($Settings->java_applet) { ?>
 
-        <span class="col-xs-12"><a class="btn btn-block btn-primary" onClick="printReceipt()"><?= lang("print"); ?></a></span>
-
-        <span class="col-xs-12"><a class="btn btn-block btn-info" type="button" onClick="openCashDrawer()"><?= lang('open_cash_drawer'); ?></a></span>
-
-        <div style="clear:both;"></div>
-
-    <?php } else { ?>
-
-         <span class="pull-right col-xs-12">
-
-        <a href="javascript:window.print()" id="web_print" class="btn btn-block btn-primary"
-
-           onClick="window.print();return false;"><?= lang("web_print"); ?></a>
-
-    </span> 
-
-    <span class="pull-right col-xs-12">
-
-        <a href="<?= site_url('pos/chalan/6'); ?>" id="web_print" class="btn btn-block btn-primary">Chalan</a>
-
-    </span>
-
-
-    <?php } ?>
-
-    <span class="pull-left col-xs-12"><a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a></span>
-
-
-
-    <span class="col-xs-12">
-
-        <a class="btn btn-block btn-warning" href="<?= site_url('pos'); ?>"><?= lang("back_to_pos"); ?></a>
-
-    </span>
 
     <?php if (!$Settings->java_applet) { ?>
 
         <div style="clear:both;"></div>
 
-        <div class="col-xs-12" style="background:#F5F5F5; padding:10px;">
+        <div class="col-xs-12" style="display: none; background:#F5F5F5; padding:10px;">
 
             <p style="font-weight:bold;">Please don't forget to disble the header and footer in browser print
 

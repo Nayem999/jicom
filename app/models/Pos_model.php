@@ -1537,6 +1537,21 @@ public function checkProductQty($product_id) {
         return false; 
 
  }
+    public function payment_by_customer($id=null)
+    {
+        $total=0;
+        if($id){
+            $this->db->select('payments.amount');    
+            $this->db->from('payments');    
+            $q = $this->db->where('customer_id', $id )->get(); 
+            if($q->num_rows() > 0) {    
+                foreach (($q->result()) as $row) {    
+                    $total += $row->amount;    
+                }    
+            }
+        }
+        return $total;
+    }
 
   /* function storeProQtyUpdateEdit($eid,$item_id,$item_quantity){
 

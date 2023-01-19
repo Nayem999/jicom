@@ -755,7 +755,6 @@ class Pos extends MY_Controller {
 	function view($sale_id = NULL, $noprint = NULL, $warranty = NULL)
 	{
 		
-		
 		if($this->input->get('id')){ $sale_id = $this->input->get('id'); }
 		$this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 		$this->data['message'] = $this->session->flashdata('message');
@@ -765,6 +764,10 @@ class Pos extends MY_Controller {
 		$this->load->helper('text');
 		$this->data['rows'] = $this->pos_model->getAllSaleItems($sale_id);
 		$this->data['customer'] = $this->pos_model->getCustomerByID($inv->customer_id);
+
+		$this->data['life_sales_customer'] = $this->sales_model->salesAmountByCustomer('grand_total',$inv->customer_id);
+		$this->data['life_payment_customer'] = $this->pos_model->payment_by_customer($inv->customer_id);
+
 		$cID = $this->site->findMergeIdbycp('customer_id',$inv->customer_id);
 		$this->data['cID'] = $cID;
 		if(is_array($cID )){
@@ -797,7 +800,11 @@ class Pos extends MY_Controller {
 		$this->data['customer'] = $this->pos_model->getCustomerByID($inv->customer_id);
 		$cID = $this->site->findMergeIdbycp('customer_id',$inv->customer_id);
 		$this->data['cID'] = $cID;
-		$this->data['mergeval'] = $this->marge_model->GetMergeTotalVal($cID[0]->supplier_id,$inv->customer_id);  
+		if(!empty($cID[0]->supplier_id) && !empty($inv->customer_id))
+		{
+
+			$this->data['mergeval'] = $this->marge_model->GetMergeTotalVal($cID[0]->supplier_id,$inv->customer_id);  
+		}
 		 
 		$this->data['inv'] = $inv;
 		$this->data['sid'] = $sale_id;
@@ -829,7 +836,7 @@ class Pos extends MY_Controller {
 		$this->data['modal'] = false;
 		$this->data['payments'] = $this->pos_model->getAllSalePayments($sale_id);
 		$this->data['created_by'] = $this->site->getUser($inv->created_by);
-
+// print_r($this->pos_model->getAllSalePayments($sale_id));die;
 		$receipt = $this->load->view($this->theme.'pos/view', $this->data, TRUE);
 		$subject = lang('email_subject');
 

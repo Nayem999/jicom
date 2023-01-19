@@ -133,6 +133,41 @@ if ($modal) {
 
         <?php } ?>
 
+        <?php if ($Settings->java_applet) { ?>
+
+        <span class="col-xs-3"><a class="btn btn-block btn-primary" onClick="printReceipt()"><?= lang("print"); ?></a></span>
+
+        <span class="col-xs-3"><a class="btn btn-block btn-info" type="button" onClick="openCashDrawer()"><?= lang('open_cash_drawer'); ?></a></span>
+
+        <div style="clear:both;"></div>
+
+        <?php } else { ?>
+
+        <span class="pull-right col-xs-3">
+
+        <a href="javascript:window.print()" id="web_print" class="btn btn-block btn-primary"
+
+        onClick="window.print();return false;"><?= lang("web_print"); ?></a>
+
+        </span>
+
+        <span class="pull-right col-xs-3">
+
+        <a href="<?= site_url('pos/chalan/'.$inv->id); ?>" id="web_print" class="btn btn-block btn-primary">Chalan</a>
+
+        </span>
+
+        <?php } ?>
+
+        <span class="pull-left col-xs-3"><a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a></span>
+
+
+
+        <span class="col-xs-3">
+
+        <a class="btn btn-block btn-warning" href="<?= site_url('pos'); ?>"><?= lang("back_to_pos"); ?></a>
+
+        </span>
     </div>
 
     <div id="receipt-data">   
@@ -490,7 +525,25 @@ if ($modal) {
               $tAdAmount = $tAdAmount-$inv->paid;              
             }*/
 
-            ?>     
+            ?>    <br> 
+            <table class="table table-bordered table-condensed" width="300px">
+                <tbody>
+                    <tr>
+                        <td class="col-xs-5">Sales</td>
+                        <td class="text-right col-xs-7"><?=$life_sales_customer;?></td>
+                    </tr>
+                    <tr>
+                        <td class="col-xs-5">Collected</td>
+                        <td class="text-right col-xs-7"><?=$life_payment_customer;?></td>
+                    </tr>
+                    <tr>
+                        <td class=" col-xs-5">Current Due</td>
+                        <td class="text-right col-xs-7"><?=$life_sales_customer-$life_payment_customer;?></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
             <?= $inv->note ? '<p class="text-center">' . $this->tec->decode_html($inv->note) . '</p>' : ''; ?>
             
             <div class="warranty" style="text-align:left; <?php if($inv->warranty == 'Not'){  echo  'display:none;'; }?> " >
@@ -537,47 +590,13 @@ if ($modal) {
     </div>
 
 <?php } ?> 
-    <?php if ($Settings->java_applet) { ?>
-
-        <span class="col-xs-12"><a class="btn btn-block btn-primary" onClick="printReceipt()"><?= lang("print"); ?></a></span>
-
-        <span class="col-xs-12"><a class="btn btn-block btn-info" type="button" onClick="openCashDrawer()"><?= lang('open_cash_drawer'); ?></a></span>
-
-        <div style="clear:both;"></div>
-
-    <?php } else { ?>
-
-        <span class="pull-right col-xs-12">
-
-        <a href="javascript:window.print()" id="web_print" class="btn btn-block btn-primary"
-
-           onClick="window.print();return false;"><?= lang("web_print"); ?></a>
-
-    </span>
-
-    <span class="pull-right col-xs-12">
-
-        <a href="<?= site_url('pos/chalan/'.$inv->id); ?>" id="web_print" class="btn btn-block btn-primary">Chalan</a>
-
-    </span>
-
-    <?php } ?>
-
-    <span class="pull-left col-xs-12"><a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a></span>
-
-
-
-    <span class="col-xs-12">
-
-        <a class="btn btn-block btn-warning" href="<?= site_url('pos'); ?>"><?= lang("back_to_pos"); ?></a>
-
-    </span>
+    
 
     <?php if (!$Settings->java_applet) { ?>
 
         <div style="clear:both;"></div>
 
-        <div class="col-xs-12" style="background:#F5F5F5; padding:10px;">
+        <div class="col-xs-12" style=" display: none; background:#F5F5F5; padding:10px;">
 
             <p style="font-weight:bold;">Please don't forget to disble the header and footer in browser print
 

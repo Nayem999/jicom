@@ -190,7 +190,7 @@ class Marge_model extends CI_Model
         $purchsesid = array();
 
         $this->db->select('adv_collection.add_date as datetime, SUM(adv_collection) as advcoll');
-         $q = $this->db->get_where('adv_collection', array('customer_id' => $cusromer));
+        $q = $this->db->get_where('adv_collection', array('customer_id' => $cusromer));
 
             if($q->num_rows() > 0) {
                 foreach (($q->result()) as $row) {
@@ -202,7 +202,7 @@ class Marge_model extends CI_Model
                     }
                 } 
             }
-        else return 'No data pound';
+            else return 'No data pound';
 
         $this->db->select('sales.id,sales.date as datetime,sales.grand_total');
         $q = $this->db->get_where('sales', array('customer_id' => $cusromer));
@@ -238,43 +238,43 @@ class Marge_model extends CI_Model
 
         }         
         $this->db->select('adv_payment.adv_id,adv_payment.add_date as datetime, SUM(adv_amount) as advmount');
-         $q = $this->db->get_where('adv_payment', array('suppliers_id' => $supplier));
+        $q = $this->db->get_where('adv_payment', array('suppliers_id' => $supplier));
 
-            if($q->num_rows() > 0) {
-                foreach (($q->result()) as $row) {
-                    $rows['datetime'] = $row->datetime ;
-                    $rows['total'] = $row->advmount ;
-                    $rows['pgtotal'] = $row->advmount ;
-                    $rows['type'] = 'Advance Payment';
-                    if($row->advmount !=''){
-                    $results[] = $rows ;
-                    }
-                } 
-            }
+        if($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $rows['datetime'] = $row->datetime ;
+                $rows['total'] = $row->advmount ;
+                $rows['pgtotal'] = $row->advmount ;
+                $rows['type'] = 'Advance Payment';
+                if($row->advmount !=''){
+                $results[] = $rows ;
+                }
+            } 
+        }
         else return 'No data pound';
         
-         $this->db->select('purchases.id,purchases.date as datetime, purchases.total');
-         $q = $this->db->get_where('purchases', array('supplier_id' => $supplier));
+        $this->db->select('purchases.id,purchases.date as datetime, purchases.total');
+        $q = $this->db->get_where('purchases', array('supplier_id' => $supplier));
 
-            if($q->num_rows() > 0) {
-                foreach (($q->result()) as $row) {
-                    $rows['datetime'] = $row->datetime ;
-                    $rows['total'] = $row->total ;
-                    $rows['pgtotal'] = $row->total ;
-                    $rows['type'] = 'purchases' ;
-                    $rows['sale'] = '0.00' ;
-                    $rows['id'] = $row->id;
-                    $results[] = $rows ;
-                    $purchsesid[] = $row->id ;
-                }
+        if($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $rows['datetime'] = $row->datetime ;
+                $rows['total'] = $row->total ;
+                $rows['pgtotal'] = $row->total ;
+                $rows['type'] = 'purchases' ;
+                $rows['sale'] = '0.00' ;
+                $rows['id'] = $row->id;
+                $results[] = $rows ;
+                $purchsesid[] = $row->id ;
             }
+        }
         else return 'No data pound';        
 
         $this->db->select('purchase_payments.p_pay_id,purchase_payments.date as datetime, SUM(amount) as amount,purchase_payments.purchases_id DESC');
         $this->db->where_in('purchases_id', $purchsesid); 
         $this->db->group_by("date(date)");
         $this->db->order_by("p_pay_id", "DESC"); 
-         $q = $this->db->get_where('purchase_payments', array('supplier_id' => $supplier));
+        $q = $this->db->get_where('purchase_payments', array('supplier_id' => $supplier));
         if($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
                 $rows['datetime'] = $row->datetime ;
