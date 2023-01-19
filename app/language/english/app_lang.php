@@ -264,6 +264,7 @@ $lang['category_name']                      = "Category Name";
 $lang['date']                               = "Date";
 $lang['grand_total']                        = "Grand Total";
 $lang['paid_by']                            = "Paid by";
+$lang['payment_date']                       = "Payment Date";
 $lang['view_invoice']                       = "View sale";
 $lang['edit_invoice']                       = "Edit Sale";
 $lang['alert_x_sale']                       = "You are going to delete sale, please click ok to delete.";

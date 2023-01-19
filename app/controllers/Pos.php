@@ -276,7 +276,6 @@ class Pos extends MY_Controller {
 			        }
     			}
         	}
- 
         	
 			$data = array(
 				'date' => $date,
@@ -309,6 +308,8 @@ class Pos extends MY_Controller {
 
 			if (!$suspend && $paid) {
 				$amount = $this->tec->formatDecimal($paid > $grand_total ? ($paid - $this->input->post('balance_amount')) : $paid);
+				if($this->input->post('payment_date')){$payment_date=date('Y-m-d',$this->input->post('payment_date'));}else{$payment_date=date('Y-m-d H:i:s');}
+
 				$payment = array(
 					'date' => $incDate,
 					'amount' => $amount,
@@ -329,6 +330,7 @@ class Pos extends MY_Controller {
 					'pos_balance' => $this->tec->formatDecimal($this->input->post('balance_amount')),
 					'collect_id'  => $collect_id,
 					'store_id' => $store_id,
+					'payment_date' => $payment_date,
 					);
 				$data['paid'] = $amount;
 

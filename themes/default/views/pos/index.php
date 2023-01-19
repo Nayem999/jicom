@@ -1,5 +1,13 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
+<style>
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+  /* background: green !important; */
+  color: green !important;
+}
+
+</style>
 
 <html>
 <head>
@@ -714,6 +722,7 @@
                 <input type="hidden" name="amount" id="amount_val" value="<?= $eid ? $sale->paid : ''; ?>"/>
                 <input type="hidden" name="balance_amount" id="balance_val" value=""/>
                 <input type="hidden" name="paid_by" id="paid_by_val" value="cash"/>
+                <input type="hidden" name="payment_date" id="payment_date_val" value="<?=date('Y-m-d')?>"/>
                 <input type="hidden" name="cc_no" id="cc_no_val" value=""/>
                 <input type="hidden" name="paying_gift_card_no" id="paying_gift_card_no_val" value=""/>
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
@@ -1044,7 +1053,13 @@
                 <div class="form-group">
                   <?= lang("amount", "amount"); ?>
                   <input name="amount[]" type="text" id="amount" 
-									class="pa form-control kb-pad amount"/>
+									class="pa form-control kb-pad amount" />
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="control-label" for="payment_date"><?= lang("payment_date"); ?></label>
+                  <input name="payment_date[]" type="text" id="payment_date" class="pa form-control kb-pad datepicker" />
                 </div>
               </div>
               <div class="col-xs-6">
@@ -1978,3 +1993,12 @@ function changeStpre(){
 
 </body>
 </html>
+<script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/moment.min.js" type="text/javascript"></script>
+<script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
+</script>
