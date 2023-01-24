@@ -68,10 +68,12 @@ class Sales extends MY_Controller {
             $this->db->dbprefix('sales').".total_tax, ".$this->db->dbprefix('sales').".total_discount,".
             $this->db->dbprefix('sales').".grand_total,".$this->db->dbprefix('sales').".paid, ".
             $this->db->dbprefix('sales').".paid_by,(".$this->db->dbprefix('sales').".grand_total -".
-            $this->db->dbprefix('sales').".paid) as deu ," .$this->db->dbprefix('sales').".status, ".$this->db->dbprefix('sales').".warranty"); 
+            $this->db->dbprefix('sales').".paid) as deu ," .$this->db->dbprefix('sales').".status, ".$this->db->dbprefix('bank_pending').".type"); 
 	   
 	    $this->datatables->join('customers', 'customers.id=sales.customer_id');  
         $this->datatables->join('stores', 'stores.id=sales.store_id');	     
+        $this->datatables->join('payments', 'payments.sale_id=sales.id', 'LEFT');	    
+        $this->datatables->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	     
 
         $this->datatables->from('sales');
 
@@ -107,16 +109,15 @@ class Sales extends MY_Controller {
 		
 		$this->datatables->where('sales_type', 'sale');
 
-        if($customer) { $this->datatables->where('customer_id', $customer); }
-        if($start_date) { $this->datatables->where('date >=', $start_date.' 00:00:00'); }
-        if($end_date) { $this->datatables->where('date <=', $end_date.' 23:59:59'); } 
+        if($customer) { $this->datatables->where('sales.customer_id', $customer); }
+        if($start_date) { $this->datatables->where('sales.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->datatables->where('sales.date <=', $end_date.' 23:59:59'); } 
 
-        if($today !=NULL){
-
-          $this->datatables->like('date', $today);
-
+        if($today !=NULL){ 
+            // $this->datatables->like('sales.date', $today); 
+            $this->datatables->where('sales.date >=', $today.' 00:00:00'); 
+            $this->datatables->where('sales.date <=', $today.' 23:59:59');
         }
-
         echo $this->datatables->generate();
 
 	}
