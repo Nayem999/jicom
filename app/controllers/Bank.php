@@ -1400,5 +1400,49 @@ class Bank extends MY_Controller
 		redirect('bank/pending_expenses'); 	
 	}
 
+	function excel_bank() {
+		
+		$this->db->select(
+		$this->db->dbprefix('bank_account') . ".bank_account_id as bank_account_id,".
+		$this->db->dbprefix('bank_account') . ".bank_name, ".    		
+		$this->db->dbprefix('bank_account') . ".account_name, ".
+		$this->db->dbprefix('bank_account') . ".account_no, ".
+		$this->db->dbprefix('stores') . ".name as storename, ".
+		$this->db->dbprefix('bank_account') . ".current_amount,");
+		$this->db->from('bank_account');
+		$this->db->join('stores', 'bank_account.store_id=stores.id');
+		
+		if(!$this->Admin){
+			$this->db->where('store_id', $this->session->userdata('store_id'));
+		}
+		$this->db->where('status', '1'); 
+		
+		$query = $this->db->get()->result();
+		// Excel file name for download 
+		$fileName = "bank_list_data_" . date('Y-m-d') . ".xls"; 			
+		// Column names 
+		$fields = array('Bank Name', 'Account Name', 'Account No', 'Store Name', 'Current Amount');
+		// Display column names as first row 
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($query) > 0){ 
+			// Output each row of the data 
+			foreach($query as $row){ 
+				$lineData = array($row->bank_name, $row->account_name, $row->account_no, $row->storename, $row->current_amount); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+			
+		// Headers for download 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+			
+		// Render excel data 
+		echo $excelData;  
+
+    }
+
 }
 

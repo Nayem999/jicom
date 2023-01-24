@@ -57,7 +57,7 @@
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button><br><br>
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button>&nbsp;<button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Excel</button><br><br>
                     
                         <?=  form_open("expenses");?>
 
@@ -187,5 +187,11 @@
     $(".dataTables_length, .dataTables_filter ").css("display", "block");
     $(".dataTables_paginate ").css("display", "block");
     $("#fileData_filter ").css("display", "block"); 
+  });  
+
+  $("#excelWindow").click(function () {    
+        var data=$("#category").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val();    
+        var url='<?=site_url('expenses/excel_expenses/');?>'+'/'+data;
+        location.replace(url)
   });  
 </script> 

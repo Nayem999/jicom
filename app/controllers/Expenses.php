@@ -501,4 +501,54 @@ class Expenses extends MY_Controller
             redirect('expenses');            
         }        
     }  
+
+    function excel_expenses($data) {
+        $data_arr=explode("_",$data);
+    	$category = $data_arr[0] ? $data_arr[0] : NULL;
+    	$start_date = $data_arr[1] ? $data_arr[1]." 00:00:00" : NULL;
+        $end_date = $data_arr[2] ? $data_arr[2]." 23:59:59" : NULL;        
+
+        $this->db->select(
+        $this->db->dbprefix('expenses') . ".id as id, date, reference, amount,".
+        $this->db->dbprefix('expens_category') . ".name as category, note,".
+        $this->db->dbprefix('expenses') . ".paid_by, CONCAT(" . 
+        $this->db->dbprefix('users') . ".first_name, ' ', " . 
+        $this->db->dbprefix('users') . ".last_name) as user,");
+        $this->db->from('expenses');
+        $this->db->join('users', 'users.id=expenses.created_by', 'left');
+        $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id', 'left'); 
+        $this->db->group_by('expenses.id');
+        if($category) { $this->db->where('c_id', $category); }
+        if($start_date) { $this->db->where('date >=', $start_date); }
+        if($end_date) { $this->db->where('date <=', $end_date); } 
+        if($this->session->userdata('store_id') !=0){
+            $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
+        } 
+        
+        $query = $this->db->get()->result();
+        // Excel file name for download 
+        $fileName = "expense_data_" . date('Y-m-d') . ".xls"; 
+        
+        // Column names 
+        $fields = array('DATE', 'REFERENCE', 'AMOUNT', 'CATEGORY', 'NOTE', 'PAID BY', 'CREATED BY');
+        // Display column names as first row 
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query) > 0){ 
+            // Output each row of the data 
+            foreach($query as $row){ 
+                $lineData = array($row->date, $row->reference, $row->amount, $row->category, $row->note, $row->paid_by, $row->user); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+         
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+         
+        // Render excel data 
+        echo $excelData;        
+    }
 }
