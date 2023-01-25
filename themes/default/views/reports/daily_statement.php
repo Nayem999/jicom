@@ -12,7 +12,8 @@ if(isset($_POST['start_date'])){
             <div class="box box-primary">          
                 <div class="box-body"> 
                   <div class="panel-body">
-                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print</button> 
+                  <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+                    <button type="button" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print</button> 
                     <?= form_open("");?>
                     <div class="row">
                         <div class="col-sm-3">
@@ -21,8 +22,12 @@ if(isset($_POST['start_date'])){
                                 <?= form_input('start_date', set_value('start_date'), 'class="form-control datepicker" id="start_date"');?>
                             </div>
                         </div>   
-                        <div class="col-sm-6">
-                          <h3 class="box-title">Date : <?= $date_range ? $date_range : 'Today\'s'; ?></h3>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label" for="end_date"><?= lang("end_date"); ?></label>
+                                <?= form_input('end_date', set_value('end_date'), 'class="form-control datepicker" id="end_date"');?>
+                            </div>
+                          <!-- <h3 class="box-title">Date : <?= $date_range ? $date_range : 'Today\'s'; ?></h3> -->
                         </div>
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
@@ -304,5 +309,11 @@ if(isset($_POST['start_date'])){
      $(".dataTables_length, .dataTables_filter ").css("display", "block");
      $(".dataTables_paginate ").css("display", "block");
      $("#fileData_filter ").css("display", "block");  
-   });  
+   }); 
+   $("#excelWindow").click(function () {  
+        var data=$("#start_date").val()+'_'+$("#end_date").val();    
+        var url='<?=site_url('reports/excel_daily_statement/');?>'+'/'+data;
+        location.replace(url);
+
+    }); 
 </script> 

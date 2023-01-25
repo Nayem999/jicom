@@ -40,24 +40,135 @@ class Reports extends MY_Controller
         $meta = array('page_title' => lang('Cash Book'), 'bc' => $bc);
         $this->page_construct('reports/cash_book', $this->data, $meta); 
     }
+
     public function daily_statement(){
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
         $results = array(); 
-        $this->data['todaySale'] = $this->reports_model->todaySale($start_date);
-        $this->data['todayCollection'] = $this->reports_model->todayCollection($start_date); 
-        $this->data['expenses'] = $this->reports_model->expenses($start_date); 
-        $this->data['bankPays'] =  $this->reports_model->bankPays($start_date);  
-        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date);  
-        $this->data['bankWithdrow'] = $this->reports_model->banksWithdrow($start_date);
-        $this->data['payment'] = $this->reports_model->supplierPayment($start_date);  
-        $this->data['loanPay'] = $this->reports_model->loanPays($start_date);
-        $this->data['loanCollect'] = $this->reports_model->loanCollect($start_date); 
-        $this->data['donations'] = $this->reports_model->donationsPay($start_date);
+        $this->data['todaySale'] = $this->reports_model->todaySale($start_date,$end_date);
+        $this->data['todayCollection'] = $this->reports_model->todayCollection($start_date,$end_date); 
+        $this->data['expenses'] = $this->reports_model->expenses($start_date,$end_date); 
+        $this->data['bankPays'] =  $this->reports_model->bankPays($start_date,$end_date);  
+        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
+        $this->data['bankWithdrow'] = $this->reports_model->banksWithdrow($start_date,$end_date);
+        $this->data['payment'] = $this->reports_model->supplierPayment($start_date,$end_date);  
+        $this->data['loanPay'] = $this->reports_model->loanPays($start_date,$end_date);
+        $this->data['loanCollect'] = $this->reports_model->loanCollect($start_date,$end_date); 
+        $this->data['donations'] = $this->reports_model->donationsPay($start_date,$end_date);
         $this->data['results'] = $results; 
         $this->data['date_range'] = $start_date;
         $bc = array(array('link' => '#', 'page' => lang('daily_Statement')), array('link' => '#', 'page' => lang('Daily_Report')));
         $meta = array('page_title' => lang('Daily_Statement'), 'bc' => $bc);
         $this->page_construct('reports/daily_statement', $this->data, $meta); 
+    }
+
+    public function excel_daily_statement($data=''){
+        $data_arr=explode("_",$data);
+
+        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
+        $end_date = $data_arr[1] ? $data_arr[1] : NULL;  
+        $results = array(); 
+        $todaySale = $this->reports_model->todaySale($start_date,$end_date);
+        $todayCollection = $this->reports_model->todayCollection($start_date,$end_date); 
+        $expenses = $this->reports_model->expenses($start_date,$end_date); 
+        $bankPays =  $this->reports_model->bankPays($start_date,$end_date);  
+        $bankWithdrow = $this->reports_model->banksWithdrow($start_date,$end_date);
+        $payment = $this->reports_model->supplierPayment($start_date,$end_date);  
+        $loanPay = $this->reports_model->loanPays($start_date,$end_date);
+        $loanCollect = $this->reports_model->loanCollect($start_date,$end_date); 
+        $donations = $this->reports_model->donationsPay($start_date,$end_date);
+        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
+        $this->data['results'] = $results; 
+        $this->data['date_range'] = $start_date;
+        
+
+        $fileName = "daily_statement_" . date('Y-m-d_h_i_s') . ".xls"; 
+        // Column names 
+        $fields = array('Date', 'Cusrtomer', 'Collections', 'Cash Sale', 'Total Cash', 'Exp-Descriptions', 'Bank Pay', 'Expenses');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $totalCcolled=0;
+        $totalCashColled = 0;  
+        $totalExpenses = 0;
+        $totalBank = 0;
+        $previousBanance =0;
+        if(count($todayCollection) > 0){ 
+            foreach($todayCollection as $row){
+                $totalCcolled += $row->payment_amount;   
+                $collDate = date('Y-m-d', strtotime($row->payment_date));  
+                $lineData = array($collDate, $row->customer_name, $row->payment_amount, '', $row->payment_amount, '', '', ''); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($todaySale) > 0){ 
+            foreach($todaySale as $row){
+                $totalCashColled += $row->payment_amount;   
+                $collDate = date('Y-m-d', strtotime($row->date));  
+                $lineData = array($collDate, $row->customer_name, '', $row->payment_amount, $row->payment_amount, '', '', ''); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($loanCollect) > 0){ 
+            foreach($loanCollect as $row){
+                $totalCcolled += $row->amount;   
+                $collDate = date('Y-m-d', strtotime($row->entry_date));  
+                $lineData = array($collDate, $row->name, '', $row->amount, 0, 0, 0, 0); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($bankWithdrow) > 0){ 
+            foreach($bankWithdrow as $row){
+                $totalCcolled += $row->tran_amount;   
+                $collDate = date('Y-m-d', strtotime($row->tran_date));  
+                $lineData = array($collDate, $row->bank_name, $row->tran_amount, 0, 0, 0, 0, 0); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($loanPay) > 0){ 
+            foreach($loanPay as $row){
+                $totalExpenses += $row->amount;   
+                $collDate = date('Y-m-d', strtotime($row->entry_date));  
+                $lineData = array($collDate, '', '', 0, 0,$row->name, 0, $row->amount); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($bankPays) > 0){ 
+            foreach($bankPays as $row){
+                $totalBank += $row->tran_amount;   
+                $collDate = date('Y-m-d', strtotime($row->tran_date));  
+                $lineData = array($collDate, '-', '-', '-', '-', $row->bank_name.'('.$row->account_name.')' ,$row->tran_amount, '-'); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($expenses) > 0){ 
+            foreach($expenses as $row){
+                $totalExpenses += $row->amount;   
+                $collDate = date('Y-m-d', strtotime($row->date));  
+                $lineData = array($collDate, '-', '-', '-', '-', $row->name, '-', $row->amount); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($donations) > 0){ 
+            foreach($donations as $row){
+                $totalExpenses += $row->amount;   
+                $collDate = date('Y-m-d', strtotime($row->entry_date));  
+                $lineData = array($collDate, '-', '-', '-', '-', $row->name, '-', $row->amount); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+        if(count($payment) > 0){ 
+            foreach($payment as $row){
+                $totalExpenses += $row->payment_amount;   
+                $collDate = date('Y-m-d', strtotime($row->payment_date));  
+                $lineData = array($collDate, '', '', 0, 0, $row->name .' '.$row->payment_note, 0, $row->payment_amount); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }
+          
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+         
+        // Render excel data 
+        echo $excelData; 
     }
     public function daily_statement_csv(){
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;  
@@ -510,6 +621,58 @@ class Reports extends MY_Controller
 
     }
 
+    function get_excel_sales($data='')  {
+        $data_arr=explode("_",$data);
+
+        $customer = $data_arr[0] ? $data_arr[0] : NULL;
+        $user = $data_arr[1] ? $data_arr[1] : NULL;
+        $start_date = $data_arr[2] ? $data_arr[2] : NULL;
+        $end_date = $data_arr[3] ? $data_arr[3] : NULL;
+
+        $this->db->select(
+            $this->db->dbprefix('sales').".id as sid , ". 
+            $this->db->dbprefix('sales').".date, ".
+            $this->db->dbprefix('sales').".customer_name, ".
+            $this->db->dbprefix('stores').".name as storename, ".
+            $this->db->dbprefix('users').".username as createdby, ".
+            $this->db->dbprefix('sales').".total, ".
+            $this->db->dbprefix('sales').".total_tax, ".
+            $this->db->dbprefix('sales').".total_discount,".
+            $this->db->dbprefix('sales').".grand_total, ".
+            $this->db->dbprefix('sales').".paid, (".$this->db->dbprefix('sales').".grand_total -".$this->db->dbprefix('sales').".paid) as balance");
+        $this->db->from('sales');
+        $this->db->join('stores', 'stores.id=sales.store_id');
+        $this->db->join('users', 'users.id=sales.created_by');  
+        if($customer) { $this->db->where('customer_id', $customer); }
+        if($user) { $this->db->where('sales.created_by', $user); }
+        if($start_date) { $this->db->where('date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->db->where('date <=', $end_date.' 23:59:59'); }
+        if(!$this->Admin){
+           $this->db->where('sales.store_id',$this->session->userdata('store_id'));
+        }
+        $query_data = $this->db->get()->result();
+        $fileName = "sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('DATE', 'CUSTOMER', 'STORE NAME', 'CREATED BY', 'TOTAL', 'TAX', 'DISCOUNT', 'GRAND TOTAL', 'PAID', 'BALANCE');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query_data) > 0){ 
+            foreach($query_data as $row){ 
+                $lineData = array($row->date, $row->customer_name, $row->storename, $row->createdby, $row->total, $row->total_tax, $row->total_discount, $row->grand_total, $row->paid, $row->balance); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData;    
+
+    }
+
     function products() {
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $warehouse = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
@@ -586,38 +749,38 @@ class Reports extends MY_Controller
             $this->db->dbprefix('sale_items').".subtotal)*".
             $this->db->dbprefix('products').".tax)/100), 0), 2)
             as profit");
-            $this->db->from('sale_items');
-            $this->db->join('products', 'sale_items.product_id=products.id', 'left' );
-            $this->db->join('stores', 'stores.id=sale_items.store_id', 'left' );
-            $this->db->group_by('products.id');
-            if($product) { $this->datatables->where('products.id', $product); }
-            if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
-            if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
-            if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
-            if(!$this->Admin){
-                $this->db->where('sale_items.store_id',$this->session->userdata('store_id'));
-            }
-            
-            $query = $this->db->get()->result();
-            $fileName = "product_report_" . date('Y-m-d_h_i_s') . ".xls"; 
-            $fields = array('NAME', 'STORE NAME', 'CODE', 'SOLD', 'TAX', 'COST', 'INCOME', 'PROFIT');
-            $excelData = implode("\t", array_values($fields)) . "\n"; 
-            
-            if(count($query) > 0){ 
-                foreach($query as $row){ 
-                    $lineData = array($row->name, $row->storename, $row->code, $row->sold, $row->tax, $row->cost, $row->income, $row->profit); 
-                    $excelData .= implode("\t", array_values($lineData)) . "\n"; 
-                } 
-            }else{ 
-                $excelData .= 'No records found...'. "\n"; 
+        $this->db->from('sale_items');
+        $this->db->join('products', 'sale_items.product_id=products.id', 'left' );
+        $this->db->join('stores', 'stores.id=sale_items.store_id', 'left' );
+        $this->db->group_by('products.id');
+        if($product) { $this->datatables->where('products.id', $product); }
+        if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
+        if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
+        if(!$this->Admin){
+            $this->db->where('sale_items.store_id',$this->session->userdata('store_id'));
+        }
+        
+        $query_data = $this->db->get()->result();
+        $fileName = "product_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('NAME', 'STORE NAME', 'CODE', 'SOLD', 'TAX', 'COST', 'INCOME', 'PROFIT');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query_data) > 0){ 
+            foreach($query_data as $row){ 
+                $lineData = array($row->name, $row->storename, $row->code, $row->sold, $row->tax, $row->cost, $row->income, $row->profit); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
-             
-            // Headers for download 
-            header("Content-Type: application/vnd.ms-excel"); 
-            header("Content-Disposition: attachment; filename=\"$fileName\""); 
-             
-            // Render excel data 
-            echo $excelData;        
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData;        
 
     } 
     function sold_purchase() { 

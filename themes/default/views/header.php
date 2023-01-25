@@ -288,24 +288,24 @@
             <li id="reports_daily_statement"><a href="<?= site_url('reports/daily_statement'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Daily Statement'); ?>
               </a></li>
-              <li id="reports_hand_cash"><a href="<?= site_url('reports/hand_cash'); ?>"><i class="fa fa-circle-o"></i>
+              <!-- <li id="reports_hand_cash"><a href="<?= site_url('reports/hand_cash'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Hand Cash'); ?>
-              </a></li>
+              </a></li> -->
               <li id="reports_todayhighlight"><a href="<?= site_url('reports/todayhighlight'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Today\'s Highlights'); ?>
               </a></li>
-              <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash'); ?>
+              <!-- <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Petty Cash'); ?></a></li>
               <li id="reports_pettycashlist"><a href="<?= site_url('reports/pettycashlist'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash list'); ?>
+              <?= lang('Petty Cash list'); ?> </a></li>-->
               <li id="reports_payablelist"><a href="<?= site_url('reports/payablelist'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Account Payable'); ?>
+              <?= lang('Account Payable'); ?></a></li>
               <li id="reports_receivablelist"><a href="<?= site_url('reports/receivablelist'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Acount Receivable'); ?>
               </a></li>
-              <li id="reports_netprofit"><a href="<?= site_url('reports/netprofit'); ?>"><i class="fa fa-circle-o"></i>
+              <!-- <li id="reports_netprofit"><a href="<?= site_url('reports/netprofit'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Net Profit'); ?>
-              </a></li>
+              </a></li> -->
             <li id="reports_daily_sales"><a href="<?= site_url('reports/daily_sales'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('daily_sales'); ?>
               </a></li>
@@ -319,10 +319,10 @@
             <li id="reports_payments"><a href="<?= site_url('reports/payments'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('payments_report'); ?>
               </a></li> -->
-            <li class="divider"></li>
-            <li id="reports_registers"><a href="<?= site_url('reports/registers'); ?>"><i class="fa fa-circle-o"></i>
+            <!-- <li class="divider"></li> -->
+            <!-- <li id="reports_registers"><a href="<?= site_url('reports/registers'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('registers_report'); ?>
-              </a></li>
+              </a></li> -->
             <li class="divider"></li>
             <li id="reports_top_products"><a href="<?= site_url('reports/top_products'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('top_products'); ?>
@@ -336,9 +336,9 @@
             <li id="reports_productQuery"><a href="<?= site_url('reports/productQuery'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Product Query'); ?>
               </a></li>
-            <li id="reports_sequenceReport"><a href="<?= site_url('reports/sequenceReport'); ?>"><i class="fa fa-circle-o"></i>
+            <!-- <li id="reports_sequenceReport"><a href="<?= site_url('reports/sequenceReport'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Sequence Report'); ?>
-              </a></li>
+              </a></li> -->
             <li id="reports_products_staff"><a href="<?= site_url('reports/products_staff'); ?>"><i class="fa fa-circle-o"> </i>Products list (Staff) </a></li>
             <li id="reports_products_all"><a href="<?= site_url('reports/products_all'); ?>"><i class="fa fa-circle-o"> </i>Products list (All) </a></li>
             <li id="reports_product_stock"><a href="<?= site_url('reports/product_stock'); ?>"><i class="fa fa-circle-o"> </i>Products Stock </a></li>

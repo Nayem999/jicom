@@ -800,21 +800,27 @@ class Reports_model extends CI_Model
     	}
     }
 
-    public function todaySale($start_date=NULL){
+    public function todaySale($start_date=NULL,$end_date=NULL){
         $this->db->select('sales.id as sale_id, sales.paid, sales.date, sales.grand_total, sales.customer_name, sales.customer_id, sales.invno, sales.collection_id,  today_collection.payment_amount'); 
         $this->db->from('sales');  
         $this->db->join('customers','customers.id=sales.customer_id');
         $this->db->join('today_collection','today_collection.today_collect_id=sales.collection_id','left');  
-        if($start_date){ 
+        if($start_date && $end_date){ 
             $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
-            $this->db->where('sales.date <=', $start_date.' 23:59:59');   
-        }else{
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
             $this->db->like('sales.date', date('Y-m-d'));
         }  
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function todayCollection($start_date=NULL){
+    public function todayCollection($start_date=NULL,$end_date=NULL){
     	$coll_id = array();
     	$sales = $this->todaySale($start_date);
     	foreach ($sales as $key => $value) {
@@ -825,8 +831,12 @@ class Reports_model extends CI_Model
         if($coll_id){
         	$this->db->where_not_in('today_collection.today_collect_id',$coll_id);
         }
-        $this->db->join('customers','customers.id=today_collection.customer_id');   
-        if($start_date){ 
+        $this->db->join('customers','customers.id=today_collection.customer_id');  
+		if($start_date && $end_date){ 
+            $this->db->where('today_collection.payment_date >=', $start_date); 
+            $this->db->where('today_collection.payment_date <=', $end_date);   
+        }
+        else if($start_date){ 
             $this->db->like('today_collection.payment_date', $start_date);
         }else{ 
             $this->db->like('today_collection.payment_date', date('Y-m-d'));
@@ -834,13 +844,17 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function expenses($start_date=NULL){ 
+    public function expenses($start_date=NULL,$end_date=NULL){ 
         $this->db->select('expenses.date, expenses.amount, expens_category.name, expenses.reference'); 
         $this->db->from('expenses'); 
         $this->db->join('expens_category','expens_category.cat_id=expenses.c_id','left');
         //if(!$this->Admin){ $this->db->where('expenses.store_id',$this->session->userdata('store_id'));} 
-        //if($store_id){ $this->db->where('expenses.store_id',$store_id);}     
-        if($start_date) {
+        //if($store_id){ $this->db->where('expenses.store_id',$store_id);}   
+		if($start_date && $end_date){ 
+            $this->db->where('expenses.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('expenses.date <=', $end_date.' 23:59:59');   
+        }  
+        else if($start_date) {
             $this->db->where('expenses.date >=', $start_date.' 00:00:00'); 
             $this->db->where('expenses.date <=', $start_date.' 23:59:59');
         }
@@ -850,12 +864,16 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function bankPays($start_date=NULL){ 
+    public function bankPays($start_date=NULL,$end_date=NULL){ 
         $this->db->select('tranjiction.tran_date, tranjiction.tran_amount, tranjiction.tran_type, bank_account.bank_name, bank_account.account_name, bank_account.account_no'); 
         $this->db->from('tranjiction'); 
         $this->db->join('bank_account','bank_account.bank_account_id=tranjiction.bank_account_id','left');
         $this->db->where('tranjiction.tran_type',1);   
-        if($start_date){
+		if($start_date && $end_date){ 
+            $this->db->where('tranjiction.tran_date >=', $start_date); 
+            $this->db->where('tranjiction.tran_date <=', $end_date);   
+        }  
+        else if($start_date){
             $this->db->like('tranjiction.tran_date', $start_date);
         }else{
             $this->db->like('tranjiction.tran_date', date('Y-m-d'));
@@ -863,10 +881,14 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function totalBankCash2($bank_id=NULL,$end_date=NULL){ 
+    public function totalBankCash2($bank_id=NULL,$end_date=NULL,$start_date=NULL){ 
 		$this->db->select('tranjiction.tran_date, SUM(tran_amount) as tran_amount, tranjiction.tran_type');         
         $this->db->where('tranjiction.tran_type',1); 
-        if($end_date){
+		if($start_date && $end_date){ 
+            $this->db->where('tranjiction.tran_date >=', $start_date.' 00:00:00'); 
+            $this->db->where('tranjiction.tran_date <=', $end_date.' 23:59:59');   
+        }  
+        else if($end_date){
             $this->db->where('tranjiction.tran_date <=', $end_date.' 23:59:59');
         }
         if($bank_id){
@@ -879,7 +901,11 @@ class Reports_model extends CI_Model
 
 		$this->db->select('tranjiction.tran_date, SUM(tran_amount) as tran_amount, tranjiction.tran_type');         
         $this->db->where('tranjiction.tran_type',0); 
-        if($end_date){
+		if($start_date && $end_date){ 
+            $this->db->where('tranjiction.tran_date >=', $start_date.' 00:00:00'); 
+            $this->db->where('tranjiction.tran_date <=', $end_date.' 23:59:59');   
+        }  
+        else if($end_date){
             $this->db->where('tranjiction.tran_date <=', $end_date.' 23:59:59');
         }  
         if($bank_id){
@@ -891,12 +917,16 @@ class Reports_model extends CI_Model
 		$result2 = $query->row(); 
 		return $result->tran_amount - $result2->tran_amount;
 	}
-	public function banksWithdrow($start_date=NULL){ 
+	public function banksWithdrow($start_date=NULL,$end_date=NULL){ 
 		$this->db->select('tranjiction.tran_date, tranjiction.tran_amount, tranjiction.tran_type, bank_account.bank_name, bank_account.account_name, bank_account.account_no'); 
         $this->db->from('tranjiction'); 
         $this->db->join('bank_account','bank_account.bank_account_id=tranjiction.bank_account_id','left');
         $this->db->where('tranjiction.tran_type',0);   
-        if($start_date){
+		if($start_date && $end_date){ 
+            $this->db->where('tranjiction.tran_date >=', $start_date.' 00:00:00'); 
+            $this->db->where('tranjiction.tran_date <=', $end_date.' 23:59:59');   
+        }  
+        else if($start_date){
             $this->db->like('tranjiction.tran_date', $start_date);
         }else{
             $this->db->like('tranjiction.tran_date', date('Y-m-d'));
@@ -916,11 +946,15 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result();*/ 
     }
-    public function supplierPayment($start_date=NULL){ 
+    public function supplierPayment($start_date=NULL,$end_date=NULL){ 
         $this->db->select('today_purchase_payment.*, suppliers.*');  
         $this->db->from('today_purchase_payment'); 
         $this->db->join('suppliers','suppliers.id=today_purchase_payment.supplier_id');      
-        if($start_date) {
+		if($start_date && $end_date){ 
+            $this->db->where('today_purchase_payment.payment_date >=', $start_date.' 00:00:00'); 
+            $this->db->where('today_purchase_payment.payment_date <=', $end_date.' 23:59:59');   
+        }  
+        else if($start_date) {
             $this->db->where('today_purchase_payment.payment_date >=', $start_date.' 00:00:00'); 
             $this->db->where('today_purchase_payment.payment_date <=', $start_date.' 23:59:59');
         }
@@ -930,12 +964,16 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function loanPays($start_date=NULL){ 
+    public function loanPays($start_date=NULL,$end_date=NULL){ 
         $this->db->select('payloaner.entry_date, payloaner.amount, payloaner.type, loaner.name '); 
         $this->db->from('payloaner');          
         $this->db->where('payloaner.type','pay');  
         $this->db->join('loaner','loaner.id=payloaner.loaner_id');
-        if($start_date){
+		if($start_date && $end_date){ 
+            $this->db->where('payloaner.entry_date >=', $start_date); 
+            $this->db->where('payloaner.entry_date <=', $end_date);   
+        }  
+        else if($start_date){
             $this->db->like('payloaner.entry_date', $start_date);
         }else{
             $this->db->like('payloaner.entry_date', date('Y-m-d'));
@@ -943,13 +981,17 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function loanCollect($start_date=NULL){ 
+    public function loanCollect($start_date=NULL,$end_date=NULL){ 
         $this->db->select('entry_date, amount, payloaner.type,  loaner.name'); 
         $this->db->from('payloaner');    
         //$this->db->group_by('payloaner.loaner_id');
         $this->db->join('loaner','loaner.id=payloaner.loaner_id');      
         $this->db->where('payloaner.type','receive');  
-        if($start_date){
+		if($start_date && $end_date){ 
+            $this->db->where('payloaner.entry_date >=', $start_date); 
+            $this->db->where('payloaner.entry_date <=', $end_date);   
+        }  
+        else if($start_date){
             $this->db->like('payloaner.entry_date', $start_date);
         }else{
             $this->db->like('payloaner.entry_date', date('Y-m-d'));
@@ -957,16 +999,21 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
-    public function donationsPay($start_date = NULL){   
+    public function donationsPay($start_date = NULL,$end_date=NULL){   
     	$this->db->select('amount, donations_persons_id, entry_date, type, payment_type, name');
     	$this->db->join('donations_persons','donations_persons.id=donations_pay.donations_persons_id'); 
-    	if($start_date){
+		if($start_date && $end_date){ 
+            $this->db->where('entry_date >=', $start_date); 
+            $this->db->where('entry_date <=', $end_date);   
+        }  
+        else if($start_date){
             $this->db->like('entry_date', $start_date);
         }else{
             $this->db->like('entry_date', date('Y-m-d'));
         } 
     	$this->db->from('donations_pay');  
-    	$query = $this->db->get('');  
+    	// $query = $this->db->get('');  
+    	$query = $this->db->get();  
     	return $query->result();
     }
     public function donations(){  

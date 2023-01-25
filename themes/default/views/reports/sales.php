@@ -97,7 +97,8 @@ $v = "?v=1";
             <div class="box box-primary">
 
                 <div class="box-header">
-					<button type="button" onclick="printIt()" style="width:120px; float:right" class="btn bg-navy btn-block btn-flat" id="daily_sales">Print report</button>
+                <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+					<button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn bg-navy btn-block btn-flat" id="daily_sales">Print report</button>
                     <a href="#" class="btn btn-default btn-sm toggle_form pull-right"><?= lang("show_hide"); ?></a>
 
                     <h3 class="box-title"><?= lang('customize_report'); ?></h3>
@@ -345,6 +346,11 @@ $v = "?v=1";
     // window.print();            
             
   });
+    $("#excelWindow").click(function () {  
+        var data=$("#customer").val()+'_'+$("#user").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val();    
+        var url='<?=site_url('reports/get_excel_sales/');?>'+'/'+data;
+        location.replace(url);
 
+    });
 </script>
 
