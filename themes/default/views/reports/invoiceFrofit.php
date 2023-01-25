@@ -31,7 +31,7 @@
 
     $(document).ready(function(){
 
-        $('#form').hide();
+        /* $('#form').hide();
 
         $('.toggle_form').click(function(){
 
@@ -39,7 +39,7 @@
 
             return false;
 
-        });
+        }); */
 
     });
 
@@ -50,7 +50,7 @@
     }
     /*#fileData_length {
     display: none !important;*/
-}
+
 </style>
  
 <section class="content">
@@ -64,6 +64,7 @@
                 <div class="box-header">
 
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
+                    <a href="<?= site_url('reports/excel_invoiceProfit'); ?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a> 
 
                 </div>
                 <?php if($this->session->userdata('group_id') == 2){

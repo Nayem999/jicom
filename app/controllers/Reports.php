@@ -740,6 +740,37 @@ class Reports extends MY_Controller
         echo $excelData; 
     }
 
+	function get_excel_products_stock() {
+        $this->db->select(
+            $this->db->dbprefix('products').".id as pid,".
+            $this->db->dbprefix('products').".name as pname ,".
+            $this->db->dbprefix('categories').".name as cname, ".
+            $this->db->dbprefix('products').".code as code, quantity, cost, price");
+        $this->db->from('products');
+        $this->db->join('categories', 'categories.id=products.category_id');
+        $this->db->group_by('products.id');;
+            
+        $query = $this->db->get()->result();
+        $fileName = "products_stock_report_" . date('Y-m-d_h_i_s') . ".xls"; 			
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query) > 0){ 
+            // Output each row of the data 
+            foreach($query as $row){ 
+                $lineData = array($row->pname, $row->cname, $row->code, $row->quantity); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+
+        echo $excelData; 
+    }
+
     function profit( $income, $cost, $tax) {
         return floatval($income)." - ".floatval($cost)." - ".floatval($tax);
     }
@@ -1268,6 +1299,31 @@ class Reports extends MY_Controller
         ); 
         $this->data['results'] = $this->reports_model->invoiceProfit();
         $this->page_construct('reports/invoiceFrofit', $this->data, $meta);  
+    }
+    
+    public function excel_invoiceProfit(){ 
+
+        $query = $this->reports_model->invoiceProfit();
+        $fileName = "invoice_profit_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
+		$fields = array('Date', 'Store Name', 'Inv NO', 'Quentity', 'Customer Name', 'Grand Total', 'Cost Price', 'Profit');
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($query) > 0){ 
+			foreach($query as $key => $result){ 
+                $storeName = $this->site->getDataByElement('stores','id',$result['store_id']);
+				$lineData = array($result['date'], $storeName[0]->name, $result['id'], $result['qty'], $result['customer_name'], $result['total'], $result['cost_price'], $result['total']-$result['cost_price']); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+			
+		// Headers for download 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+			
+		// Render excel data 
+		echo $excelData;  
     }
 
     public function salaryReport(){
