@@ -1,16 +1,18 @@
 <?php
- $catID ='';
+ $catID = $startDate = $endDate = '';
  $v = "?v=1";
 
     if($this->input->post('start_date')){
 
         $v .= "&start_date=".$this->input->post('start_date');
+        $startDate=$this->input->post('start_date');
 
     }
 
     if($this->input->post('end_date')) {
 
         $v .= "&end_date=".$this->input->post('end_date');
+        $endDate=$this->input->post('end_date');
     }
 
     if ($this->input->post('category')) {
@@ -57,7 +59,7 @@
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button>&nbsp;<button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Excel</button><br><br>
+                    <button type="button" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button>&nbsp;<button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</button><br><br>
                     
                         <?=  form_open("expenses");?>
 
@@ -71,7 +73,7 @@
                                         $cat[$category->cat_id] = $category->name;
                                     }
                                     ?>
-                                    <?= form_dropdown('category', $cat, set_value('category'), 'class="form-control select2 tip" id="category" style="width:100%;"'); ?>
+                                    <?= form_dropdown('category', $cat, $catID , 'class="form-control select2 tip" id="category" style="width:100%;"'); ?>
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -80,7 +82,7 @@
 
                                     <label class="control-label" for="date"><?= lang("Start date"); ?></label>
 
-                                    <?= form_input('start_date', set_value('date'), 'class="form-control datepicker" id="start_date"');?>
+                                    <?= form_input('start_date', $startDate, 'class="form-control datepicker" id="start_date"');?>
 
                                 </div>
 
@@ -91,7 +93,7 @@
 
                                     <label class="control-label" for="date"><?= lang("End date"); ?></label>
 
-                                    <?= form_input('end_date', set_value('date'), 'class="form-control datepicker" id="end_date"');?>
+                                    <?= form_input('end_date', $endDate, 'class="form-control datepicker" id="end_date"');?>
 
                                 </div>
 

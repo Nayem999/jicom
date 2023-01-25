@@ -46,7 +46,7 @@
                 <div class="box-header">
 
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <a href="<?=site_url('bank/excel_bank');?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Excel</a><br><br>
+                    <a href="<?=site_url('bank/excel_bank');?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a><br><br>
                 </div>
 
                 <div class="box-body">

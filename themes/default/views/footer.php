@@ -12,7 +12,7 @@
 
     </div>
 
-    <a href="http://wedothewebs.com/">Copyright &copy; <?= date('Y') . ' wedothewebs ' //. $Settings->site_name; ?>. All rights reserved.</a>
+    <a href="https://jicom.gdnserver.com/">Copyright &copy; <?= date('Y') . ' jicom ' //. $Settings->site_name; ?>. All rights reserved.</a>
 
 </footer>
 
@@ -270,13 +270,8 @@
     	var site_url = "<?php echo site_url('products/SequenceSearch'); ?>/"+val;
     	$("#SequenceResult").load(site_url) ;
     });
-
-    
-
-
 </script>
 
 </body>
 
 </html>
-
