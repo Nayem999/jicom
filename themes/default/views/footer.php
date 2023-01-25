@@ -224,6 +224,11 @@
 	  $( ".posModal" ).hide();
 	  // $( ".posModal" ).style.display = "none";
 	}
+
+	function approveCollection(id) { 		 
+	 var site_url = "<?php echo site_url('collection/approveCollection'); ?>/"+id; //append id at end
+	 $("#paySalary").load(site_url);
+	}
     function setsequence(row_no){
             var sequence = $('#arry').val();
             var site_url = "<?php echo site_url('purchases/SeqcheckDB'); ?>/"+sequence; 

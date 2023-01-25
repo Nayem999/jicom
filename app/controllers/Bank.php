@@ -694,7 +694,7 @@ class Bank extends MY_Controller
 		$this->data['page_title'] = lang('Panding Cheque List');
         $bc = array(array('link' => '#', 'page' => lang(' List')));
         $meta = array('page_title' => lang('Panding Cheque List'), 'bc' => $bc);
-		$this->page_construct('bank/pendingCheque', $this->data); 		
+		$this->page_construct('bank/pendingCheque', $this->data,$meta); 		
 	}
 
 	public function get_pendingCheque(){

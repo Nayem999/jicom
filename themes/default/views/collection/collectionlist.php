@@ -42,6 +42,13 @@ $v = "?v=1";
 
             return '';
         }
+        function fnc_status(x) {
+            if(x !== null) {
+                return '<a href="<?=base_url();?>uploads/'+x+'" target="_blank" class="btn btn-primary btn-block btn-xs"><i class="fa fa-chain"></i></a>';
+            }
+
+            return '';
+        }
 
         $('#purData').dataTable({
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, '<?= lang('all'); ?>']],
@@ -58,12 +65,12 @@ $v = "?v=1";
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
 
             },
-            "aoColumns": [ null,null, {"mRender":hrld}, null, null,null]
+            "aoColumns": [ null,null, null, null, null,null,null]
 
         });
 
     });
-
+    // {"mRender":hrld}
 </script>
 
 <style type="text/css">.table td:nth-child(3) { text-align: right; }</style>
@@ -166,13 +173,15 @@ $v = "?v=1";
 
                                 <th class="col-xs-2">Store name</th>
 
-                                <th class="col-xs-3">Date and Time</th>
+                                <th class="col-xs-2">Date and Time</th>
                                 
                                 <th class="col-xs-2">Amount</th>
 
                                 <th class="col-xs-2">Note</th> 
 
-                                <th class="col-xs-1">Action</th> 
+                                <th class="col-xs-1">Status</th> 
+
+                                <th class="col-xs-2">Action</th> 
 
                             </tr>
 

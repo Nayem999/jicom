@@ -31,7 +31,8 @@ class Collection extends MY_Controller
         $this->db->dbprefix('stores') . ".name as storename, ".
         $this->db->dbprefix('today_collection') . ".payment_date as payment_date," . 
         $this->db->dbprefix('today_collection') . ".payment_amount, " .  
-        $this->db->dbprefix('today_collection') . ".payment_note", FALSE);
+        $this->db->dbprefix('today_collection') . ".payment_note, " .  
+        $this->db->dbprefix('today_collection') . ".payment_status", FALSE);
         $this->datatables->join('customers', 'customers.id=today_collection.customer_id');
         $this->datatables->join('stores', 'customers.store_id=stores.id'); 
         if(!$this->Admin){
@@ -39,6 +40,8 @@ class Collection extends MY_Controller
         }
         $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
                 
+          <a href='javascript:;' onClick='approveCollection($1)' title='Status Change' class='tip btn btn-primary btn-xs'><i class='fa fa-university'></i></a>
+
          <a href='#' onClick=\"MyWindow=window.open('" . site_url('collection/view/$1/1') . "', 'MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,resizable=yes,width=350,height=600'); return false;\" title='".lang("view collection")."' class='tip btn btn-primary btn-xs'><i class='fa fa-list'></i></a>
 
          <a href='" . site_url('collection/collectdelete/$1') . "' onClick=\"return confirm('". lang('You are going to delete payment , please click ok to delete') ."')\" title='".lang("delete_payment")."' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>
@@ -493,5 +496,21 @@ class Collection extends MY_Controller
          
     } 
 
+    public function approveCollection($id){
+      $this->data['info'] = $this->sales_model->getCollectByID($id);
+      $this->data['title'] = 'Collection Approve';
+      $this->data['id'] = $id;
+      $this->load->view($this->theme.'collection/approveCollection', $this->data,$id);	
+    }
+
+    public function collectionApproed($id){
+  
+      $dataAppr = array( 'payment_status' => $this->input->post('payment_status') );
+      
+      $this->sales_model->updateCollectionID($dataAppr,$id);	
+       
+      redirect('collection'); 
+    
+    }
     
 }

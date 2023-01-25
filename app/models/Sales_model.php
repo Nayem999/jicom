@@ -723,4 +723,11 @@ public function salesProfitByDate($start,$end,$store_id=NULL){
         return $total ;    
     }
 
+    public function updateCollectionID($data,$id) {
+        if($this->db->update('today_collection', $data, array('today_collect_id' => $id))) {
+            return true;
+        }
+        return false;	
+     }
+
 }
