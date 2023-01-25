@@ -45,6 +45,7 @@
                                  <option value="">Select</option>
                                  <option value="cash">Cash</option>
                                  <option value="cheque">Cheque</option>
+                                 <option value="TT">TT</option>
                                  <option value="card">Card</option>
                                </select>
                             </div>

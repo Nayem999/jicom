@@ -270,6 +270,7 @@ class Collection extends MY_Controller
               redirect('collection/collectionpayment');
             } 
         }
+        
         foreach ($salesCustomers as $key => $value) {
            $totalDeu = $totalDeu + $value->deu;
          }
@@ -367,7 +368,7 @@ class Collection extends MY_Controller
         
         $grand_total  = 0;
 
-        if($type=='cheque' || $type=='card'){
+        if($type=='cheque' || $type=='card' || $type=='TT'){
           $bankPending = array(
             'customer_id'  => $this->input->post('customer'),
             'amount'       => $this->input->post('colAmount'),
@@ -447,7 +448,7 @@ class Collection extends MY_Controller
       
       $banks = $this->site->wheres_rows('bank_account',null); 
     
-      if($type == 'cheque'){
+      if($type == 'cheque' || $type == 'TT'){
         $output= '<div class="form-group">
               <p>Bank information </p> 
                  <select class="form-control select2 tip" name="bank" required="required" id="type">
@@ -456,12 +457,19 @@ class Collection extends MY_Controller
             foreach ($banks as $key => $bank) {
               $output .='<option value="'.$bank->bank_account_id.'">'.$bank->bank_name .' ('.$bank->account_name.' ) ( '.$bank->account_no.')</option>';
             }
-                        
-        $output .='</select></div>
-                <div class="form-group">
-                <label>Cheque No </label>
-            <input type="text" name="cheque_no" class="form-control" required="required">
-                </div>'; 
+        if($type == 'cheque')  {
+          $output .='</select></div>
+                  <div class="form-group">
+                  <label>Cheque No </label>
+              <input type="text" name="cheque_no" class="form-control" required="required">
+                  </div>'; 
+        }else{
+            $output .='</select></div>
+            <div class="form-group">
+            <label>TT No </label>
+        <input type="text" name="cheque_no" class="form-control" required="required">
+            </div>'; 
+        }  
         echo $output;
       }else if($type == 'card'){
 
