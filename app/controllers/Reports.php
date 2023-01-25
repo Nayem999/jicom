@@ -561,6 +561,65 @@ class Reports extends MY_Controller
         echo $this->datatables->generate();
 
     } 
+
+    function get_excel_products($data='')  {
+        $data_arr=explode("_",$data);
+        $store_id =$data_arr[0] ?$data_arr[0] : NULL;
+        $product = $data_arr[1] ? $data_arr[1] : NULL;
+        $start_date = $data_arr[2] ? $data_arr[2] : NULL;
+        $end_date = $data_arr[3] ? $data_arr[3] : NULL;
+ 
+       
+        $this->db->select(
+            $this->db->dbprefix('products').".name, ".
+            $this->db->dbprefix('stores').".name as storename , ".
+            $this->db->dbprefix('products').".code, COALESCE(sum(".
+            $this->db->dbprefix('sale_items').".quantity), 0) as sold, ROUND(COALESCE(((sum(".
+            $this->db->dbprefix('sale_items').".subtotal)*".
+            $this->db->dbprefix('products').".tax)/100), 0), 2) as tax, COALESCE(sum(".
+            $this->db->dbprefix('sale_items').".quantity)*".
+            $this->db->dbprefix('sale_items').".cost, 0) as cost, COALESCE(sum(".
+            $this->db->dbprefix('sale_items').".subtotal), 0) as income, ROUND((COALESCE(sum(".
+            $this->db->dbprefix('sale_items').".subtotal), 0)) - COALESCE(sum(".
+            $this->db->dbprefix('sale_items').".quantity)*".
+            $this->db->dbprefix('sale_items').".cost, 0) -COALESCE(((sum(".
+            $this->db->dbprefix('sale_items').".subtotal)*".
+            $this->db->dbprefix('products').".tax)/100), 0), 2)
+            as profit");
+            $this->db->from('sale_items');
+            $this->db->join('products', 'sale_items.product_id=products.id', 'left' );
+            $this->db->join('stores', 'stores.id=sale_items.store_id', 'left' );
+            $this->db->group_by('products.id');
+            if($product) { $this->datatables->where('products.id', $product); }
+            if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
+            if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
+            if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
+            if(!$this->Admin){
+                $this->db->where('sale_items.store_id',$this->session->userdata('store_id'));
+            }
+            
+            $query = $this->db->get()->result();
+            $fileName = "product_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+            $fields = array('NAME', 'STORE NAME', 'CODE', 'SOLD', 'TAX', 'COST', 'INCOME', 'PROFIT');
+            $excelData = implode("\t", array_values($fields)) . "\n"; 
+            
+            if(count($query) > 0){ 
+                foreach($query as $row){ 
+                    $lineData = array($row->name, $row->storename, $row->code, $row->sold, $row->tax, $row->cost, $row->income, $row->profit); 
+                    $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+                } 
+            }else{ 
+                $excelData .= 'No records found...'. "\n"; 
+            } 
+             
+            // Headers for download 
+            header("Content-Type: application/vnd.ms-excel"); 
+            header("Content-Disposition: attachment; filename=\"$fileName\""); 
+             
+            // Render excel data 
+            echo $excelData;        
+
+    } 
     function sold_purchase() { 
 
         if((!$this->Admin) && (!$this->Manager)){
@@ -586,6 +645,42 @@ class Reports extends MY_Controller
         $this->page_construct('reports/reports_purchses', $this->data, $meta);
     } 
 
+    function excel_sold_purchase($data='') { 
+
+        if((!$this->Admin) && (!$this->Manager)){
+            $this->session->set_flashdata('error', lang("access_denied"));
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+        
+        if(!$this->Admin){
+            $warehouse = $this->session->userdata('store_id');
+        }else{
+            $warehouse = $data; 
+        }     
+            
+        $query_data = $this->reports_model->saleAndPurseCount($warehouse); 
+        $fileName = "sold_purchase_report_" . date('Y-m-d_h_i_s') . ".xls";  
+        $fields = array('NAME', 'CODE', 'SOLD', 'PURCHASES');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query_data) > 0){ 
+            foreach($query_data as $row){ 
+                $soldValue=$row['sold'] - $row['sreturn'];
+                $lineData = array($row['name'], $row['code'], $soldValue, $row['purchase']); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData;        
+    } 
+
     function productQuery() {
         $type = $this->input->post('type');    
         $pcode = $this->input->post('pcode');   //49w750d'; 
@@ -609,7 +704,7 @@ class Reports extends MY_Controller
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
         $meta = array('page_title' => lang('products_report'), 'bc' => $bc);
         $this->page_construct('reports/products_staff', $this->data, $meta);
-     }
+    }
 
     function products_all() {
 	
@@ -630,7 +725,7 @@ class Reports extends MY_Controller
 		$bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
 		$meta = array('page_title' => lang('products_report'), 'bc' => $bc);
 		$this->page_construct('reports/products_all', $this->data, $meta);
-	 }
+	}
  
 	function get_products_staff() {
          $this->load->library('datatables');
@@ -898,6 +993,7 @@ class Reports extends MY_Controller
         echo $this->datatables->generate();
 
     }
+
     public function todayhighlight(){
         if((!$this->Admin) && (!$this->Manager)) {            
             $this->session->set_flashdata('error', lang('access_denied'));            
@@ -1026,6 +1122,7 @@ class Reports extends MY_Controller
         $this->page_construct('reports/pettycash', $this->data, $meta);       
 
     } 
+
     public function pettycashview() {
 
         if (!$this->Admin) {            
@@ -1052,6 +1149,7 @@ class Reports extends MY_Controller
         $this->datatables->unset_column('id');        
         echo $this->datatables->generate();  
     }
+
     public function pettycashlist(){
        if (!$this->Admin) {            
         $this->session->set_flashdata('error', lang('access_denied'));            
@@ -1070,6 +1168,7 @@ class Reports extends MY_Controller
         );    
         $this->page_construct('reports/pettycashlist', $this->data, $meta); 
     }
+
     public function pattycashdelete($id){
 
         $this->sales_model->pattycashdelete($id);
@@ -1077,6 +1176,7 @@ class Reports extends MY_Controller
         redirect('reports/pettycashlist');
 
     }
+
     public function netprofit(){
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
           if((!$this->Admin) && (!$this->Manager)) {            
@@ -1136,6 +1236,7 @@ class Reports extends MY_Controller
         $this->page_construct('reports/netprofit', $this->data, $meta);         
 
     }
+
     public function product_stock() { 
     if(!$this->Admin) {        
         $this->session->set_flashdata('error', lang('access_denied'));            
@@ -1159,8 +1260,6 @@ class Reports extends MY_Controller
         $meta = array('page_title' => lang('Products_stock'), 'bc' => $bc);
         $this->page_construct('reports/products_stock', $this->data, $meta);
     }
-
-
 
     public function store_product_stock(){        
         if((!$this->Admin) && (!$this->Manager)) {        
@@ -1191,6 +1290,7 @@ class Reports extends MY_Controller
         $this->page_construct('reports/products_stock_store', $this->data, $meta);
 
     }
+
     public function get_store_product_stock() {
         $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
 
@@ -1425,6 +1525,7 @@ class Reports extends MY_Controller
 		// Render excel data 
 		echo $excelData; 
     }
+
     public function sequenceReport(){ 
         $this->data['page_title'] = 'Product Sequence';        
         $bc = array(
@@ -1439,6 +1540,7 @@ class Reports extends MY_Controller
         );  
         $this->page_construct('reports/sequenceReport', $this->data, $meta);  
     }
+
     public function get_sequence(){
          $this->load->library('datatables');
          $this->datatables->select($this->db->dbprefix('pro_sequence').".sequence_id as seid,
@@ -1461,6 +1563,7 @@ class Reports extends MY_Controller
         
          echo $this->datatables->generate();
     }
+
     public function warrentyReport(){ 
         $this->data['page_title'] = 'Warranty';        
         $bc = array(

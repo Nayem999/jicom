@@ -246,7 +246,6 @@ $v = "?v=1";
             
   });
   $("#excelWindow").click(function () {  
-    alert();  
         var data=$("#warehouse").val();    
         var url='<?=site_url('reports/get_excel_products_stock_store/');?>'+'/'+data;
         location.replace(url)

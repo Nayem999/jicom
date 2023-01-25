@@ -119,7 +119,8 @@ $v = "?v=1";
 
                 <div class="box-header">
                 
-                	<button type="button" onclick="printIt()" style="width:120px; float:right" class="btn bg-navy btn-block btn-flat" id="daily_sales">Print report</button>
+                	<button type="button" onclick="printIt()" style="width:120px; float:right;display:none;" class="btn bg-navy btn-block btn-flat" id="daily_sales">Print report</button>
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
 
                     <a href="#" class="btn btn-default btn-sm toggle_form pull-right"><?= lang("show_hide"); ?></a>
 
@@ -317,6 +318,11 @@ $v = "?v=1";
     // window.print();            
             
   });
+  $("#excelWindow").click(function () {  
+        var data=$("#product").val()+'_'+$("#warehouse").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val();    
+        var url='<?=site_url('reports/get_excel_products/');?>'+'/'+data;
+        location.replace(url);
 
+    }); 
 </script>
 

@@ -64,8 +64,8 @@ $v = "?v=1";
         display: none !important ;
     }
     /*#fileData_length {
-    display: none !important;*/
-}
+    display: none !important;}*/
+
 </style>
 
 
@@ -80,7 +80,7 @@ $v = "?v=1";
                 <div class="box-header"> 
 
                     <h3 class="box-title">Sold and Purchase</h3>
-
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
                 </div>
 
                 <div class="box-body">
@@ -224,6 +224,11 @@ $v = "?v=1";
     $("#fileData_filter ").css("display", "block");         
             
   });
+  $("#excelWindow").click(function () {  
+        var data=$("#warehouse").val();    
+        var url='<?=site_url('reports/excel_sold_purchase/');?>'+'/'+data;
+        location.replace(url);
 
+    });
 </script>
 
