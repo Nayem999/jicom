@@ -52,6 +52,7 @@ function monthName($id){
 
                 <div class="box-header">
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</button>
                     <?php if($this->session->userdata('group_id') == 2){
 
                         $u_id = $this->session->userdata('user_id') ;
@@ -177,5 +178,10 @@ function monthName($id){
         });
 
     });
+    $("#excelWindow").click(function () {    
+        var data=$("#start_date").val()+'_'+$("#end_date").val();    
+        var url='<?=site_url('reports/excel_salaryReport/');?>'+'/'+data;
+        location.replace(url)
+    }); 
 
 </script>

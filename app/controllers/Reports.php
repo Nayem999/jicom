@@ -667,14 +667,14 @@ class Reports extends MY_Controller
         $this->db->group_by('products.id');;
         $this->db->where('products.quantity >', 0);
             
-        $query = $this->db->get()->result();
+        $query_data = $this->db->get()->result();
         $fileName = "products_report_staff_" . date('Y-m-d_h_i_s') . ".xls"; 			
         $fields = array('NAME', 'CATEGORY', 'CODE', 'SALE PRICE');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         
-        if(count($query) > 0){ 
+        if(count($query_data) > 0){ 
             // Output each row of the data 
-            foreach($query as $row){ 
+            foreach($query_data as $row){ 
                 $lineData = array($row->pname, $row->cname, $row->code, $row->price); 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
@@ -719,14 +719,14 @@ class Reports extends MY_Controller
         $this->db->join('categories', 'categories.id=products.category_id');
         $this->db->group_by('products.id');;
             
-        $query = $this->db->get()->result();
+        $query_data = $this->db->get()->result();
         $fileName = "products_report_all_" . date('Y-m-d_h_i_s') . ".xls"; 			
         $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY', 'COST', 'SALE PRICE');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         
-        if(count($query) > 0){ 
+        if(count($query_data) > 0){ 
             // Output each row of the data 
-            foreach($query as $row){ 
+            foreach($query_data as $row){ 
                 $lineData = array($row->pname, $row->cname, $row->code, $row->quantity, $row->cost, $row->price); 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
@@ -750,14 +750,14 @@ class Reports extends MY_Controller
         $this->db->join('categories', 'categories.id=products.category_id');
         $this->db->group_by('products.id');;
             
-        $query = $this->db->get()->result();
+        $query_data = $this->db->get()->result();
         $fileName = "products_stock_report_" . date('Y-m-d_h_i_s') . ".xls"; 			
         $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         
-        if(count($query) > 0){ 
+        if(count($query_data) > 0){ 
             // Output each row of the data 
-            foreach($query as $row){ 
+            foreach($query_data as $row){ 
                 $lineData = array($row->pname, $row->cname, $row->code, $row->quantity); 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
@@ -1217,6 +1217,46 @@ class Reports extends MY_Controller
         echo $this->datatables->generate();
     }
 
+    public function get_excel_products_stock_store($data='') {
+        $warehouse = $data ? $data : NULL;
+        $this->db->select(
+            $this->db->dbprefix('product_store_qty').".id as pid,
+            ".$this->db->dbprefix('products').".name as pname ,
+            ".$this->db->dbprefix('products').".code as code ,
+            ".$this->db->dbprefix('stores').".name as sname, 
+            ".$this->db->dbprefix('product_store_qty').".quantity as quantity ");
+        $this->db->from('product_store_qty');
+        $this->db->join('stores', 'stores.id=product_store_qty.store_id');
+        $this->db->join('products', 'products.id=product_store_qty.product_id'); 
+        $this->db->group_by('product_store_qty.id');
+        $this->db->where('products.quantity !=', '0.00');
+        if($warehouse) { $this->db->where('store_id', $warehouse); }   
+        if(!$this->Admin) {
+            $this->db->where('store_id', $this->session->userdata('store_id'));
+           }
+        if($this->session->userdata('store_id') !=0){
+            $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
+        } 
+        
+        $query = $this->db->get()->result();
+        // Excel file name for download 
+        $fileName = "products_stock_store_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('PRODUCT NAME', 'CODE', 'STORE', 'QUANTITY');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query) > 0){ 
+            foreach($query as $row){ 
+                $lineData = array($row->pname, $row->code, $row->sname, $row->quantity); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+        echo $excelData;  
+    }
+
     public function receivablelist(){
         if((!$this->Admin) && (!$this->Manager)) {        
         $this->session->set_flashdata('error', lang('access_denied'));            
@@ -1303,13 +1343,13 @@ class Reports extends MY_Controller
     
     public function excel_invoiceProfit(){ 
 
-        $query = $this->reports_model->invoiceProfit();
+        $query_data = $this->reports_model->invoiceProfit();
         $fileName = "invoice_profit_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
 		$fields = array('Date', 'Store Name', 'Inv NO', 'Quentity', 'Customer Name', 'Grand Total', 'Cost Price', 'Profit');
 		$excelData = implode("\t", array_values($fields)) . "\n"; 
 		
-		if(count($query) > 0){ 
-			foreach($query as $key => $result){ 
+		if(count($query_data) > 0){ 
+			foreach($query_data as $key => $result){ 
                 $storeName = $this->site->getDataByElement('stores','id',$result['store_id']);
 				$lineData = array($result['date'], $storeName[0]->name, $result['id'], $result['qty'], $result['customer_name'], $result['total'], $result['cost_price'], $result['total']-$result['cost_price']); 
 				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
@@ -1328,8 +1368,7 @@ class Reports extends MY_Controller
 
     public function salaryReport(){
         $sd = $this->input->post('start_date');
-        $ed = $this->input->post('end_date');
-        $this->data['page_title'] = 'Salary Report';        
+        $ed = $this->input->post('end_date');       
         $bc = array(
             array(
                 'link' => '#',
@@ -1342,6 +1381,49 @@ class Reports extends MY_Controller
         ); 
         $this->data['results'] = $this->reports_model->salaryReport($sd,$ed); 
         $this->page_construct('reports/salaryReport', $this->data, $meta);  
+    }
+
+    public function excel_salaryReport($data){
+        $data_arr=explode("_",$data);
+
+        $sd = $data_arr[0];
+        $ed = $data_arr[1];
+        $query_data = $this->reports_model->salaryReport($sd,$ed); 
+        $fileName = "salary_report_" . date('Y-m-d_h_i_s') . ".xls"; 			
+		$fields = array('Date and Time', 'Store Name', 'Month & Year', 'Amount', 'Employee Name', 'Note');
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($query_data) > 0){ 
+			foreach($query_data as $key => $result){ 
+                $storeName = $this->site->getDataByElement('stores','id',$result->store_id);
+                $mont_id=$result->month_id;
+                if($mont_id == '01'){ $output = 'January'; }
+                elseif($mont_id == '02'){ $output = 'February'; }
+                elseif($mont_id == '03'){ $output = 'March';}
+                elseif($mont_id == '04'){ $output = 'April';}
+                elseif($mont_id == '05'){ $output = 'May';  }
+                elseif($mont_id == '06'){ $output = 'June'; }
+                elseif($mont_id == '07'){ $output = 'July'; }
+                elseif($mont_id == '08'){ $output = 'August';}
+                elseif($mont_id == '09'){ $output = 'September';}
+                elseif($mont_id == '10'){ $output = 'October';  }
+                elseif($mont_id == '11'){ $output = 'November'; }
+                elseif($mont_id == '12'){ $output = 'December'; }
+                else{$output='';}
+                $m_y=$output.' , '.$result->year;
+				$lineData = array($this->tec->hrld($result->pay_date), $storeName[0]->name , $m_y, $result->amount, $result->name, $result->note); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+			
+		// Headers for download 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+			
+		// Render excel data 
+		echo $excelData; 
     }
     public function sequenceReport(){ 
         $this->data['page_title'] = 'Product Sequence';        
