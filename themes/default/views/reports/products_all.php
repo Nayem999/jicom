@@ -85,18 +85,11 @@
                 <div class="box-header">
 
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
+                    <a href="<?= site_url('reports/get_excel_products_all'); ?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a> <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
 
                 </div>
 
                 <div class="box-body">
-
-                        <div class="padding">
-                        
-                        <button type="button" onclick="printIt()" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
-                        </div>
-                        <br />
-                        <br />
-
 						<div class="table-responsive" id="page_content">
                         <div class="row">
                         <div class="col-xs-6">

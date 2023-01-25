@@ -654,6 +654,40 @@ class Reports extends MY_Controller
          echo $this->datatables->generate();
 
     }
+
+	function get_excel_products_staff() {
+        $this->db->select(
+            $this->db->dbprefix('products').".id as pid,".
+            $this->db->dbprefix('products').".name as pname ,".
+            $this->db->dbprefix('categories').".name as cname,".
+            $this->db->dbprefix('products').".code as code, 
+		   price ");
+        $this->db->from('products');
+        $this->db->join('categories', 'categories.id=products.category_id');
+        $this->db->group_by('products.id');;
+        $this->db->where('products.quantity >', 0);
+            
+        $query = $this->db->get()->result();
+        $fileName = "products_report_staff_" . date('Y-m-d_h_i_s') . ".xls"; 			
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'SALE PRICE');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query) > 0){ 
+            // Output each row of the data 
+            foreach($query as $row){ 
+                $lineData = array($row->pname, $row->cname, $row->code, $row->price); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+
+        echo $excelData;  
+
+    }
 	
 	function get_products_all() {
          $this->load->library('datatables');
@@ -673,6 +707,37 @@ class Reports extends MY_Controller
          $this->datatables->unset_column('pid');
 		
          echo $this->datatables->generate();
+    }
+
+	function get_excel_products_all() {
+        $this->db->select(
+            $this->db->dbprefix('products').".id as pid,".
+            $this->db->dbprefix('products').".name as pname ,".
+            $this->db->dbprefix('categories').".name as cname, ".
+            $this->db->dbprefix('products').".code as code, quantity, cost, price");
+        $this->db->from('products');
+        $this->db->join('categories', 'categories.id=products.category_id');
+        $this->db->group_by('products.id');;
+            
+        $query = $this->db->get()->result();
+        $fileName = "products_report_all_" . date('Y-m-d_h_i_s') . ".xls"; 			
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY', 'COST', 'SALE PRICE');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query) > 0){ 
+            // Output each row of the data 
+            foreach($query as $row){ 
+                $lineData = array($row->pname, $row->cname, $row->code, $row->quantity, $row->cost, $row->price); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+
+        echo $excelData; 
     }
 
     function profit( $income, $cost, $tax) {

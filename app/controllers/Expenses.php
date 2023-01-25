@@ -527,7 +527,7 @@ class Expenses extends MY_Controller
         
         $query = $this->db->get()->result();
         // Excel file name for download 
-        $fileName = "expense_data_" . date('Y-m-d') . ".xls"; 
+        $fileName = "expense_data_" . date('Y-m-d_h_i_s') . ".xls"; 
         
         // Column names 
         $fields = array('DATE', 'REFERENCE', 'AMOUNT', 'CATEGORY', 'NOTE', 'PAID BY', 'CREATED BY');

@@ -1419,7 +1419,7 @@ class Bank extends MY_Controller
 		
 		$query = $this->db->get()->result();
 		// Excel file name for download 
-		$fileName = "bank_list_data_" . date('Y-m-d') . ".xls"; 			
+		$fileName = "bank_list_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
 		// Column names 
 		$fields = array('Bank Name', 'Account Name', 'Account No', 'Store Name', 'Current Amount');
 		// Display column names as first row 
