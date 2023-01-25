@@ -122,7 +122,7 @@
                                     
 									<th style="width: 40px;"><?php echo $this->lang->line("status"); ?></th>
                                     
-                                    <th class="col-xs-1"><?php echo 'warranty'; ?></th>
+                                    <th class="col-xs-1"><?php echo 'Cheque Status'; ?></th>
 
 									<th style="width:205px; text-align:center;"><?php echo $this->lang->line("actions"); ?></th>
 
