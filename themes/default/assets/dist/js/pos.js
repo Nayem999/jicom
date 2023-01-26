@@ -862,6 +862,11 @@ $(document).ready(function(){
 
     $('#amount').change(function(e) {
         var total_paying = $(".amount").val();
+        if(total_paying>round_total)
+        {
+            $(".amount").val(round_total);
+            total_paying=round_total;
+        }
         $('#total_paying').text(formatMoney(total_paying));
         if(Settings.rounding != 0) {
             $('#balance').text(formatMoney(total_paying - round_total));

@@ -126,15 +126,15 @@ class Pos extends MY_Controller {
 					$pr_item_discount = $this->tec->formatDecimal($pr_discount * $item_quantity);
 					$product_discount += $pr_item_discount;
 
-					$pr_item_tax = 0; $item_tax = 0; $tax = "";
+					$pr_item_tax = 0; $item_tax = 0; $tax = 0;
 						if (isset($product_details->tax) && $product_details->tax != 0) {
 
 					        if ($product_details && $product_details->tax_method == 1) {
 					            $item_tax = $this->tec->formatDecimal((($unit_price) * $product_details->tax) / 100);
-					            $tax = $product_details->tax . "%";
+					            $tax = $product_details->tax ;
 					        } else {
 					            $item_tax = $this->tec->formatDecimal((($unit_price) * $product_details->tax) / (100 + $product_details->tax));
-					            $tax = $product_details->tax . "%";
+					            $tax = $product_details->tax ;
 					            $item_net_price -= $item_tax;
 					        }
 
