@@ -22,17 +22,17 @@
 						</div>
 						<?php } ?>
 						<div class="form-group">
-							<label class="control-label" for="code"><?= $this->lang->line("name"); ?></label>
+							<label class="control-label" for="code"><?= $this->lang->line("name"); ?>*</label>
 							<?= form_input('name', set_value('name'), 'class="form-control input-sm" id="name"'); ?>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label" for="email_address"><?= $this->lang->line("email_address"); ?></label>
+							<label class="control-label" for="email_address"><?= $this->lang->line("email_address"); ?>*</label>
 							<?= form_input('email', set_value('email'), 'class="form-control input-sm" id="email_address"'); ?>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label" for="phone"><?= $this->lang->line("phone"); ?></label>
+							<label class="control-label" for="phone"><?= $this->lang->line("phone"); ?>*</label>
 							<?= form_input('phone', set_value('phone'), 'class="form-control input-sm" id="phone"');?>
 						</div>
 

@@ -253,7 +253,7 @@ class Pos extends MY_Controller {
 				if(($eid ==NULL) && ($tCollectAmount !=0)){
         			$collect_id = $this->sales_model->payPayment($payPaymentdata);
 
-        			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='CC'){
+        			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='CC' || $this->input->post('paid_by') =='TT'){
 
 				          $bankPending = array(
 				            'customer_id'  => $customer_id,
@@ -264,15 +264,18 @@ class Pos extends MY_Controller {
 				            'store_id'       => 1,
 				            'payment_type' =>  1,
 				            'bank_id' =>  $this->input->post('bank_id'),
+							'store_id'     => $store_id,
 				          );
 				          if($this->input->post('cc_no')){
 				          	$bankPending['cheque_no'] = $this->input->post('cc_no');
 				          }else if($this->input->post('cheque_no')){
 				          	$bankPending['cheque_no'] = $this->input->post('cheque_no');
 				          } 
+				          else if($this->input->post('tt_no')){
+				          	$bankPending['cheque_no'] = $this->input->post('tt_no');
+				          } 
 
 			          	$this->bank_model->bankPendingTranjection($bankPending);
-			          
 			        }
     			}
         	}

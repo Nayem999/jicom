@@ -45,8 +45,8 @@ class Customers extends MY_Controller
 	function add() { 
 
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
-
 		$this->form_validation->set_rules('email', $this->lang->line("email_address"), 'valid_email');
+		$this->form_validation->set_rules('phone', $this->lang->line("phone"), 'required');
 
 		if ($this->Admin){
 
@@ -55,14 +55,16 @@ class Customers extends MY_Controller
 		}
 
 		if ($this->form_validation->run() == true) {
+			if($this->input->post('credit_limit')){$credit_limit=$this->input->post('credit_limit');}else{$credit_limit=0;}
+			if($this->input->post('opening_blance')){$opening_blance=$this->input->post('opening_blance');}else{$opening_blance=0;}
 
 			$data = array('name' => $this->input->post('name'),
 				'email' => $this->input->post('email'),
 				'phone' => $this->input->post('phone'),
 				'cf1' => $this->input->post('cf1'),
 				'cf2' => $this->input->post('cf2'), 
-				'credit_limit' => $this->input->post('credit_limit'), 
-				'opening_blance' => $this->input->post('opening_blance')
+				'credit_limit' => $credit_limit, 
+				'opening_blance' => $opening_blance,
 			);
 			if($this->session->userdata('store_id') !=0){
 				$data['store_id'] = $this->session->userdata('store_id');

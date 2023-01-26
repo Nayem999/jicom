@@ -1199,7 +1199,7 @@
           <div class="col-xs-12">
             <div class="form-group">
               <label class="control-label" for="code">
-                <?= lang("name"); ?>
+                <?= lang("name"); ?>*
               </label>
               <?= form_input('name', '', 'class="form-control input-sm kb-text" id="cname"'); ?>
             </div>
@@ -1228,7 +1228,7 @@
           <div class="col-xs-6">
             <div class="form-group">
               <label class="control-label" for="cemail">
-                <?= lang("email_address"); ?>
+                <?= lang("email_address"); ?>*
               </label>
               <?= form_input('email', '', 'class="form-control input-sm kb-text" id="cemail"'); ?>
             </div>
@@ -1236,7 +1236,7 @@
           <div class="col-xs-6">
             <div class="form-group">
               <label class="control-label" for="phone">
-                <?= lang("phone"); ?>
+                <?= lang("phone"); ?>*
               </label>
               <?= form_input('phone', '', 'class="form-control input-sm kb-pad" id="cphone"');?>
             </div>

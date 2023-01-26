@@ -434,6 +434,49 @@ class Reports extends MY_Controller
             'month_type' => 'long',
             'day_type' => 'long'
             );
+        $config['template'] = ' ';
+
+        $this->load->library('calendar', $config);
+
+        $sales = $this->reports_model->getDailySales($year, $month,$store_id);
+
+        if(!empty($sales)) {
+            foreach($sales as $sale){
+                $daily_sale[$sale->date] = "<span class='text-warning'>". $sale->tax."</span><br>".$sale->discount."<br><span class='text-success'>".$sale->total."</span><br><span style='border-top:1px solid #DDD;'>".$sale->grand_total."</span>";
+            }
+        } else {
+            $daily_sale = array();
+        }
+
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['calender'] = $this->calendar->generate($year, $month, $daily_sale);
+
+        $start = $year.'-'.$month.'-01 00:00:00';
+        $end = $year.'-'.$month.'-'.days_in_month($month, $year).' 23:59:59';
+        $this->data['total_purchases'] = $this->reports_model->getTotalPurchases($start, $end,$store_id);
+        $this->data['total_sales'] = $this->reports_model->getTotalSales($start, $end,$store_id);
+        $this->data['total_expenses'] = $this->reports_model->getTotalExpenses($start, $end,$store_id);
+
+        $this->data['page_title'] = $this->lang->line("daily_sales");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
+        $meta = array('page_title' => lang('daily_sales'), 'bc' => $bc);
+        $this->page_construct('reports/daily', $this->data, $meta);
+
+    }
+    
+    function bk_daily_sales($year = NULL, $month = NULL)  {
+        $this->data['warehouses'] = $this->site->getAllStores();
+        $store_id = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
+        if (!$year) { $year = date('Y'); }
+        if (!$month) { $month = date('m'); }
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->lang->load('calendar');
+        $config = array(
+            'show_next_prev' => TRUE,
+            'next_prev_url' => site_url('reports/daily_sales'),
+            'month_type' => 'long',
+            'day_type' => 'long'
+            );
         $config['template'] = '
 
         {table_open}<table border="0" cellpadding="0" cellspacing="0" class="table table-bordered" style="min-width:522px;">{/table_open}
