@@ -752,13 +752,14 @@ class Reports extends MY_Controller
             $this->db->dbprefix('products').".tax)/100), 0), 2)
             as profit", FALSE)
         ->from('sale_items')
+        ->join('sales', 'sale_items.sale_id=sales.id')
         ->join('products', 'sale_items.product_id=products.id', 'left' )
         ->join('stores', 'stores.id=sale_items.store_id', 'left' )
         ->group_by('products.id');
 
         if($product) { $this->datatables->where('products.id', $product); }
-        if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
-        if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
+        if($start_date) { $this->datatables->where('sales.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->datatables->where('sales.date <=', $end_date.' 23:59:59'); }
         if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
         if(!$this->Admin){
             $this->datatables->where('sale_items.store_id',$this->session->userdata('store_id'));
