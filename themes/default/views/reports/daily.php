@@ -1,220 +1,191 @@
+<?php
+$v = "?v=1";
+if (isset($_POST['start_date'])) {
+    $v .= "&start_date=" . $this->input->post('start_date');
+    $start_date = $this->input->post('start_date');
+}
+// $previousBanance=$handcash->amount;
+?>
 <section class="content">
-
     <div class="row">
-
-        <div class="col-xs-12">
-
+        <div class="col-sm-12">
             <div class="box box-primary">
-
-                <div class="box-header">
-                
-                <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn bg-navy btn-block btn-flat" id="daily_sales">Print report</button>
-
-                    <h3 class="box-title"><span class='text-warning'><?=$this->lang->line('tax')?> = <?= lang('orange'); ?></span>, <?=$this->lang->line('discount')?> = <?= lang('grey'); ?> &amp; <span class='text-success'><?=$this->lang->line('total')?> = <?= lang('green'); ?></span></h3><br>
-
-                    <?= form_open("reports/daily_sales/"); ?>
-                    <div class="row">
-                    <?php if($this->Admin){ ?>
-                        <div class="col-sm-4">
-                        <div class="form-group">
-                             <?= lang('Warehouse','Warehouse'); ?>
-                            <?php
-                            $wr[''] = lang("select")." ".lang("warehouse");
-                            foreach($warehouses as $warehouse) {
-                                $wr[$warehouse->id] = $warehouse->name;
-                            }
-                            ?>
-                            <?= form_dropdown('warehouse', $wr, set_value('warehouse'), 'class="form-control select2 tip" id="warehouse" required="required" style="width:100%;"'); ?> 
-                        </div>
-                        </div>
-                        <div class="col-xs-12">
-
-                                <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
-
-                            </div>
-                    <?php } ?>
-                    </div>
-                <?= form_close();?>
-
-                </div>
-
                 <div class="box-body">
-
-                    <div class="col-sm-12">
-
+                    <div class="panel-body">
+                        <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+                        <button type="button" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print</button>
+                        <?= form_open(""); ?>
                         <div class="row">
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-
-                                <div class="info-box bg-aqua">
-
-                                    <span class="info-box-icon"><i class="fa fa-shopping-cart"></i></span>
-
-                                    <div class="info-box-content">
-
-                                        <span class="info-box-text"><?= lang('sales_value'); ?></span>
-
-                                        <span class="info-box-number"><?= $this->tec->formatMoney($total_sales->total_amount) ?></span>
-
-                                        <div class="progress">
-
-                                            <div style="width: 100%" class="progress-bar"></div>
-
-                                        </div>
-
-                                        <span class="progress-description">
-
-                                            <?= $total_sales->total .' ' . lang('sales'); ?> |
-
-                                            <?= $this->tec->formatMoney($total_sales->paid) . ' ' . lang('received') ?> |
-
-                                            <?= $this->tec->formatMoney($total_sales->tax) . ' ' . lang('tax') ?>
-
-                                        </span>
-
-                                    </div>
-
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="start_date"><?= lang("start_date"); ?></label>
+                                    <?= form_input('start_date', set_value('start_date'), 'class="form-control datepicker" id="start_date"'); ?>
                                 </div>
-
                             </div>
-                            
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-
-                                <div class="info-box bg-yellow">
-
-                                    <span class="info-box-icon"><i class="fa fa-plus"></i></span>
-
-                                    <div class="info-box-content">
-
-                                        <span class="info-box-text"><?= lang('purchases_value'); ?></span>
-
-                                        <span class="info-box-number"><?= $this->tec->formatMoney($total_purchases->total_amount) ?></span>
-
-                                        <div class="progress">
-
-                                            <div style="width: 0%" class="progress-bar"></div>
-
-                                        </div>
-
-                                        <span class="progress-description">
-
-                                            <?= $total_purchases->total ?> <?= lang('purchases'); ?>
-
-                                        </span>
-
-                                    </div>
-
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="end_date"><?= lang("end_date"); ?></label>
+                                    <?= form_input('end_date', set_value('end_date'), 'class="form-control datepicker" id="end_date"'); ?>
                                 </div>
-
                             </div>
-
-
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-
-                                <div class="info-box bg-red">
-
-                                    <span class="info-box-icon"><i class="fa fa-circle-o"></i></span>
-
-                                    <div class="info-box-content">
-
-                                        <span class="info-box-text"><?= lang('expenses_value'); ?></span>
-
-                                        <span class="info-box-number"><?= $this->tec->formatMoney($total_expenses->total_amount) ?></span>
-
-                                        <div class="progress">
-
-                                            <div style="width: 0%" class="progress-bar"></div>
-
-                                        </div>
-
-                                        <span class="progress-description">
-
-                                            <?= $total_expenses->total ?> <?= lang('expenses'); ?>
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
                             </div>
-
-
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-
-                                <div class="info-box bg-green">
-
-                                    <span class="info-box-icon"><i class="fa fa-dollar"></i></span>
-
-                                    <div class="info-box-content">
-
-                                        <span class="info-box-text"><?= lang('profit_loss'); ?></span>
-
-                                        <span class="info-box-number"><?= $this->tec->formatMoney($total_sales->total_amount-$total_purchases->total_amount-$total_expenses->total_amount) ?></span>
-
-                                        <div class="progress">
-
-                                            <div style="width: 100%" class="progress-bar"></div>
-
-                                        </div>
-
-                                        <span class="progress-description">
-
-                                            <?= $total_sales->total_amount.' - '.$total_purchases->total_amount.' - '.$total_expenses->total_amount;?>
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
                         </div>
-
-                        <div class="clearfix"></div>
-
-                        <div class="calendar table-responsive" id="page_content" >
-
-                            <?=$calender?>
-
-                        </div>
-
+                        <?= form_close(); ?>
                     </div>
+                    <div class="table-responsive" id="print_content">
+                        <div class="col-xs-12">
+                            <?
+                            $salesItemQnty = array();
+                            $salesItemAmount = array();
+                            $productArr = array();
+                            if ($dailySaleItem) {
+                                foreach ($dailySaleItem as $key => $result) {
 
+                                    if ($result->sale_id != null && $result->product_id != null) {
+
+                                        $productArr[$result->product_id] = $result->product_name;
+                                        $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
+                                        $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
+                                    }
+                                }
+                            }
+                            // print_r($productArr);die;
+                            ?>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th> SL</th>
+                                        <th> Inv. No</th>
+                                        <th> Cusrtomer</th>
+                                        <th> Qnty.</th>
+                                        <?
+                                        foreach ($productArr as $key => $val) {
+                                        ?><th><?= $val ?></th> <?
+                                                        }
+                                                            ?>
+                                        <th> Cash </th>
+                                        <th> CHEQ/TT</th>
+                                        <th> Bank</th>
+                                        <th> Credit</th>
+                                    </tr>
+                                    <?php
+                                    $total_qnty = 0;
+                                    $total_cash = 0;
+                                    $total_cheque = 0;
+                                    $total_cc = 0;
+                                    // print_r($dailySale);die;
+                                    $total_item_amount = array();
+                                    if ($dailySale) {
+                                        $i = 1;
+                                        foreach ($dailySale as $key => $result) {
+                                            $total_qnty += array_sum($salesItemQnty[$result->sale_id]);
+                                    ?>
+                                            <tr>
+                                                <td><?= $i++; ?></td>
+                                                <td><?= $result->sale_id; ?></td>
+                                                <td><?= $result->customer_name; ?></td>
+                                                <td><?= array_sum($salesItemQnty[$result->sale_id]); ?></td>
+                                                <?
+                                                foreach ($productArr as $key => $val) {
+                                                ?><td><?= isset($salesItemAmount[$result->sale_id][$key]) ? $salesItemAmount[$result->sale_id][$key] : 0; ?></td> <?
+                                                                                                                                                                                                if (isset($salesItemAmount[$result->sale_id][$key])) {
+                                                                                                                                                                                                    if (array_key_exists($key, $total_item_amount)) {
+                                                                                                                                                                                                        $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        $total_item_amount[$key] = 0;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    if (array_key_exists($key, $total_item_amount)) {
+                                                                                                                                                                                                        $total_item_amount[$key] += 0;
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        $total_item_amount[$key] = 0;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                }
+                                                                                                                                                                                                }
+                                                                                                                                                                                                ?>
+                                                <td><? if ($result->paid_by == "cash") {
+                                                        echo $result->payment_amount;
+                                                        $total_cash += $result->payment_amount;
+                                                    } ?></td>
+                                                <td><? if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                                                        echo $result->payment_amount;
+                                                        $total_cheque += $result->payment_amount;
+                                                    } ?></td>
+                                                <td><? if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                                                        echo $result->bank_name;
+                                                    } ?></td>
+                                                <td><? if ($result->paid_by == "CC") {
+                                                        echo $result->payment_amount;
+                                                        $total_cc += $result->payment_amount;
+                                                    } ?></td>
+
+                                            </tr>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th> </th>
+                                        <th></th>
+                                        <th> Grand Total</th>
+                                        <th><?=$total_qnty ;?> </th>
+                                        <?
+                                            foreach ($productArr as $key => $val) {
+                                            ?><th><?=$total_item_amount[$key];?></th> <?
+                                            }
+                                        ?>
+                                        <th> <?=$total_cash ;?>  </th>
+                                        <th> <?=$total_cheque ;?> </th>
+                                        <th> </th>
+                                        <th> <?=$total_cc ;?> </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
-<script>
-
- $("#daily_sales").click(function () {
-	 
-	$(".text-center a ").css("display", "none");
-	
-	 var content = "<html> <br> <h2 style='text-align:center'>Daily Sales <br></h2>";
-	 content += document.getElementById("page_content").innerHTML ;
-     content += "</body>";
-     content += "</html>";
-	 var printWin = window.open('','','left=20,top=40,width=600,height=500,toolbar=0,scrollbars=0,status =0');
-	 printWin.document.write('<link rel="stylesheet" href="http://localhost/spos-new/themes/default/assets/bootstrap/css/bootstrap.min.css" type="text/css" />');
-
-     printWin.document.write(content);
-     
-	 printWin.focus();
-     printWin.print();
-	 printWin.close();
-   
-    // window.print();            
-            
-  });
-
+<script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/moment.min.js" type="text/javascript"></script>
+<script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.datepicker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
 </script>
+<script>
+    $("#printWindow").click(function() {
+        $(".dataTables_info").css("display", "none");
+        $(".dataTables_length, .dataTables_filter ").css("display", "none");
 
+        $(".dataTables_paginate ").css("display", "none");
+        $("#fileData_filter ").css("display", "none");
+        var content = "<html> <br><img width='800px' src='<?= base_url('themes/default/assets/images/chalan.png'); ?>'><br><p style='text-align:center'>Daily Statement | <?php echo $this->Settings->site_name; ?> </p><style> table {font-family: arial, sans-serif;border-collapse: collapse;width: 100%;}td, th {border: 1px solid #dddddd;text-align: left;padding: 2px;} tr:nth-child(even) {background-color: #dddddd;} </style>";
+        content += document.getElementById("print_content").innerHTML;
+        content += "</body>";
+        content += "</html>";
+        var printWin = window.open('', '', 'left=20,top=40,width=700,height=550 ');
+        printWin.document.write(content);
+        printWin.focus();
+        printWin.print();
+        printWin.close();
+        $(".dataTables_info").css("display", "block");
+        $(".dataTables_length, .dataTables_filter ").css("display", "block");
+        $(".dataTables_paginate ").css("display", "block");
+        $("#fileData_filter ").css("display", "block");
+    });
+    $("#excelWindow").click(function() {
+        var data = $("#start_date").val() + '_' + $("#end_date").val();
+        var url = '<?= site_url('reports/excel_daily_sales/'); ?>' + '/' + data;
+        location.replace(url);
+    });
+</script>

@@ -421,46 +421,110 @@ class Reports extends MY_Controller
       <?php 
     }
 
-    function daily_sales($year = NULL, $month = NULL)  {
-        $this->data['warehouses'] = $this->site->getAllStores();
-        $store_id = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
-        if (!$year) { $year = date('Y'); }
-        if (!$month) { $month = date('m'); }
-        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->lang->load('calendar');
-        $config = array(
-            'show_next_prev' => TRUE,
-            'next_prev_url' => site_url('reports/daily_sales'),
-            'month_type' => 'long',
-            'day_type' => 'long'
-            );
-        $config['template'] = ' ';
+    function daily_sales()  {
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
 
-        $this->load->library('calendar', $config);
+        $this->data['dailySale'] = $this->reports_model->dailySaleReport($start_date,$end_date);
+        $this->data['dailySaleItem'] = $this->reports_model->dailySaleItemReport($start_date,$end_date); 
 
-        $sales = $this->reports_model->getDailySales($year, $month,$store_id);
-
-        if(!empty($sales)) {
-            foreach($sales as $sale){
-                $daily_sale[$sale->date] = "<span class='text-warning'>". $sale->tax."</span><br>".$sale->discount."<br><span class='text-success'>".$sale->total."</span><br><span style='border-top:1px solid #DDD;'>".$sale->grand_total."</span>";
-            }
-        } else {
-            $daily_sale = array();
-        }
-
-        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['calender'] = $this->calendar->generate($year, $month, $daily_sale);
-
-        $start = $year.'-'.$month.'-01 00:00:00';
-        $end = $year.'-'.$month.'-'.days_in_month($month, $year).' 23:59:59';
-        $this->data['total_purchases'] = $this->reports_model->getTotalPurchases($start, $end,$store_id);
-        $this->data['total_sales'] = $this->reports_model->getTotalSales($start, $end,$store_id);
-        $this->data['total_expenses'] = $this->reports_model->getTotalExpenses($start, $end,$store_id);
-
+        $this->data['start_date'] = $start_date;
+        $this->data['end_date'] = $end_date;
+        $results = array(); 
+        $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("daily_sales");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
         $meta = array('page_title' => lang('daily_sales'), 'bc' => $bc);
         $this->page_construct('reports/daily', $this->data, $meta);
+
+    }
+
+    function excel_daily_sales($data=null)  {
+
+        $data_arr=explode("_",$data);
+
+        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
+        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+
+        $dailySale= $this->reports_model->dailySaleReport($start_date,$end_date);
+        $dailySaleItem = $this->reports_model->dailySaleItemReport($start_date,$end_date); 
+
+        $salesItemQnty = array();
+        $salesItemAmount = array();
+        $productArr = array();
+        if ($dailySaleItem) {
+            foreach ($dailySaleItem as $key => $result) {
+
+                if ($result->sale_id != null && $result->product_id != null) {
+
+                    $productArr[$result->product_id] = $result->product_name;
+                    $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
+                    $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
+                }
+            }
+        }
+
+        $fileName = "daily_sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('SL', 'Inv. No', 'Cusrtomer', 'Qnty.');
+        foreach ($productArr as $key => $val) {
+            array_push($fields,$val);            
+        }
+        array_push($fields,'Cash', 'CHEQ/TT', 'Bank', 'Credit');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $total_qnty = $total_cash = $total_cheque =  $total_cc = 0;
+        $i = 1;
+        $total_item_amount = array();
+        if(count($dailySale) > 0){ 
+            foreach($dailySale as $result){ 
+                $total_qnty += array_sum($salesItemQnty[$result->sale_id]);
+                $lineData = array($i++, $result->sale_id, $result->customer_name, array_sum($salesItemQnty[$result->sale_id]));
+
+                        foreach ($productArr as $key => $val) {
+                        isset($salesItemAmount[$result->sale_id][$key]) ? array_push($lineData,$salesItemAmount[$result->sale_id][$key]) : array_push($lineData,0); 
+                                                                                                                                                                            if (isset($salesItemAmount[$result->sale_id][$key])){
+                                 if (array_key_exists($key, $total_item_amount)) {
+                                     $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
+                                 } else {
+                                     $total_item_amount[$key] = 0;
+                                 }
+                             } else {
+                                 if (array_key_exists($key, $total_item_amount)) {
+                                     $total_item_amount[$key] += 0;
+                                 } else {
+                                     $total_item_amount[$key] = 0;
+                                 }
+                            }
+                         }
+
+                        if ($result->paid_by == "cash") {
+                            array_push($lineData,$result->payment_amount);
+                            $total_cash += $result->payment_amount;
+                        }else{array_push($lineData,0);} 
+                        if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                            array_push($lineData,$result->payment_amount);
+                            $total_cheque += $result->payment_amount;
+                        }else{array_push($lineData,0);} 
+                        if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                            array_push($lineData,'');
+                        }else{array_push($lineData,'');}  
+                        if ($result->paid_by == "CC") {
+                            array_push($lineData,$result->payment_amount);
+                            $total_cc += $result->payment_amount;
+                        }else{array_push($lineData,0);} 
+
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData; 
 
     }
     

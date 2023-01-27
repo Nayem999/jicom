@@ -1064,8 +1064,8 @@ class Reports_model extends CI_Model
 		return $results->created_at;
 	}
 	public function last_sms_supplier($type,$supplier_id){
-// 		$a = intval($supplier_id);
-// return $a;
+		// 		$a = intval($supplier_id);
+		// return $a;
 		$customerinfo = $this->reports_model->get_supplier_id($supplier_id); 
 		$supplier = $customerinfo[0]->supplier_id;
 		// if ($customerinfo){
@@ -1148,6 +1148,48 @@ class Reports_model extends CI_Model
         return $query->result(); 
 	}*/
 	
+    public function dailySaleReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('sales.id as sale_id, sales.paid_by, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount,bank_account.bank_name as bank_name '); 
+        $this->db->from('sales');  
+        // $this->db->join('customers','customers.id=sales.customer_id');
+        $this->db->join('today_collection','today_collection.today_collect_id=sales.collection_id','left');  
+        $this->db->join('bank_pending','bank_pending.collection_id=sales.collection_id','left');  
+        $this->db->join('bank_account','bank_pending.bank_id=bank_account.bank_account_id','left');  
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('sales.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
 
+    public function dailySaleItemReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('sales.id as sale_id, products.name as product_name, products.id as product_id, sale_items.quantity, sale_items.subtotal '); 
+        $this->db->from('sales');  
+        $this->db->join('sale_items','sale_items.sale_id=sales.id');
+        $this->db->join('products','products.id=sale_items.product_id');
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('sales.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
 }
 
