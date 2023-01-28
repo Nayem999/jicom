@@ -36,15 +36,15 @@ if (isset($_POST['start_date'])) {
                     </div>
                     <div class="table-responsive" id="print_content">
                         <div class="col-xs-12">
-                            <?
+                            <?php
                             $salesItemQnty = array();
                             $salesItemAmount = array();
                             $productArr = array();
                             if ($dailySaleItem) {
                                 foreach ($dailySaleItem as $key => $result) {
-                                    $productArr[$result->product_id] = $result->product_name;
-                                    $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
-                                    $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
+                                  $productArr[$result->product_id] = $result->product_name;
+                                  $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
+                                  $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
                                 }
                             }
                             // print_r($productArr);die;
@@ -58,11 +58,15 @@ if (isset($_POST['start_date'])) {
                                         <th> Inv. No</th>
                                         <th> Cusrtomer</th>
                                         <th> Qnty.</th>
-                                        <?
-                                        foreach ($productArr as $key => $val) 
-                                        {
-                                            ?><th><?= $val ?></th> <?
-                                        }
+                                        <?php
+                                          foreach ($productArr as $key => $val) 
+                                          {
+                                              ?>
+                                                  <th>
+                                                    <?php echo $val ?>
+                                                  </th> 
+                                              <?php
+                                          }
                                         ?>
                                         <th> Cash </th>
                                         <th> CHEQ/TT</th>
@@ -89,21 +93,21 @@ if (isset($_POST['start_date'])) {
                                                 <?
                                                 foreach ($productArr as $key => $val) {
                                                 ?><td><?= isset($salesItemAmount[$result->sale_id][$key]) ? $salesItemAmount[$result->sale_id][$key] : 0; ?></td> <?
-                                                                                                                                                                                                if (isset($salesItemAmount[$result->sale_id][$key])) {
-                                                                                                                                                                                                    if (array_key_exists($key, $total_item_amount)) {
-                                                                                                                                                                                                        $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
-                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                        $total_item_amount[$key] = 0;
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    if (array_key_exists($key, $total_item_amount)) {
-                                                                                                                                                                                                        $total_item_amount[$key] += 0;
-                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                        $total_item_amount[$key] = 0;
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                }
-                                                                                                                                                                                                }
-                                                                                                                                                                                                ?>
+                                                  if (isset($salesItemAmount[$result->sale_id][$key])) {
+                                                    if (array_key_exists($key, $total_item_amount)) {
+                                                      $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
+                                                    } else {
+                                                      $total_item_amount[$key] = 0;
+                                                    }
+                                                  } else {
+                                                    if (array_key_exists($key, $total_item_amount)) {
+                                                      $total_item_amount[$key] += 0;
+                                                    } else {
+                                                      $total_item_amount[$key] = 0;
+                                                    }
+                                                  }
+                                                }
+                                              ?>
                                                 <td><? if ($result->paid_by == "cash") {
                                                         echo $result->payment_amount;
                                                         $total_cash += $result->payment_amount;
