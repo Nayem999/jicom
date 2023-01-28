@@ -42,16 +42,14 @@ if (isset($_POST['start_date'])) {
                             $productArr = array();
                             if ($dailySaleItem) {
                                 foreach ($dailySaleItem as $key => $result) {
-
-                                    if ($result->sale_id != null && $result->product_id != null) {
-
-                                        $productArr[$result->product_id] = $result->product_name;
-                                        $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
-                                        $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
-                                    }
+                                    $productArr[$result->product_id] = $result->product_name;
+                                    $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
+                                    $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
                                 }
                             }
                             // print_r($productArr);die;
+
+                           
                             ?>
                             <table class="table table-bordered">
                                 <tbody>
@@ -61,10 +59,11 @@ if (isset($_POST['start_date'])) {
                                         <th> Cusrtomer</th>
                                         <th> Qnty.</th>
                                         <?
-                                        foreach ($productArr as $key => $val) {
-                                        ?><th><?= $val ?></th> <?
-                                                        }
-                                                            ?>
+                                        foreach ($productArr as $key => $val) 
+                                        {
+                                            ?><th><?= $val ?></th> <?
+                                        }
+                                        ?>
                                         <th> Cash </th>
                                         <th> CHEQ/TT</th>
                                         <th> Bank</th>

@@ -14,6 +14,7 @@ class Reports extends MY_Controller
         $this->load->model('purchases_model');
         $this->load->model('bank_model');
         $this->load->library('form_validation');
+        $this->load->model('categories_model'); 
     }
     public function cash_book(){
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL; 
@@ -515,6 +516,210 @@ class Reports extends MY_Controller
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
 
             } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData; 
+
+    }
+
+    function expenses_rpt()  {
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+
+        $this->data['categories'] = $this->categories_model->getAllCategories();
+        $this->db->select(
+            $this->db->dbprefix('expenses') . ".id as id, amount,".
+            $this->db->dbprefix('expens_category') . ".name as category_name, ".
+            $this->db->dbprefix('expens_category') . ".cat_id as category_id, ".
+            $this->db->dbprefix('expenses') . ".paid_by, CONCAT(" . 
+            $this->db->dbprefix('users') . ".first_name, ' ', " . 
+            $this->db->dbprefix('users') . ".last_name) as user, ");
+        $this->db->from('expenses');
+        $this->db->join('users', 'users.id=expenses.created_by');
+        $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
+        $this->db->group_by('expenses.id');
+        if($start_date) { $this->db->where('date >=', $start_date); }
+        if($end_date) { $this->db->where('date <=', $end_date); } 
+        if($this->session->userdata('store_id') !=0){
+            $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
+        } 
+
+        $this->data['expensesData'] = $this->db->get()->result();
+
+        $this->data['start_date'] = $start_date;
+        $this->data['end_date'] = $end_date;
+
+        $this->data['page_title'] = $this->lang->line("daily_expenses");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_expenses')));
+        $meta = array('page_title' => lang('daily_expenses'), 'bc' => $bc);
+        $this->page_construct('reports/expenses_rpt', $this->data, $meta);
+
+    }
+
+    function excel_expenses_rpt($data=null)  {
+
+        $data_arr=explode("_",$data);
+
+        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
+        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+
+        $categories = $this->categories_model->getAllCategories();
+        $this->db->select(
+            $this->db->dbprefix('expenses') . ".id as id, amount,".
+            $this->db->dbprefix('expens_category') . ".name as category_name, ".
+            $this->db->dbprefix('expens_category') . ".cat_id as category_id, ".
+            $this->db->dbprefix('expenses') . ".paid_by, CONCAT(" . 
+            $this->db->dbprefix('users') . ".first_name, ' ', " . 
+            $this->db->dbprefix('users') . ".last_name) as user, ");
+        $this->db->from('expenses');
+        $this->db->join('users', 'users.id=expenses.created_by');
+        $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
+        $this->db->group_by('expenses.id');
+        if($start_date) { $this->db->where('date >=', $start_date); }
+        if($end_date) { $this->db->where('date <=', $end_date); } 
+        if($this->session->userdata('store_id') !=0){
+            $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
+        } 
+
+        $expensesData = $this->db->get()->result();
+
+        $expData = array();
+        $chkArr = array();$chkArr2 = array();$chkArr3 = array();$chkArr4 = array();
+        $userArr = array();
+        $cashAmt=$bankAmt=$grandAmt=array();
+        if ($expensesData) {
+            foreach ($expensesData as $key => $result) {
+                    $userArr[$result->user]=$result->user;
+                if (array_key_exists($result->user.'_'.$result->category_id, $chkArr)) {
+                    $expData[$result->user][$result->category_id] += $result->amount;
+                }
+                else{
+                    $chkArr[]=$result->user.'_'.$result->category_id;
+                    $expData[$result->user][$result->category_id] = $result->amount;
+                }
+
+                if($result->paid_by=="cash")
+                {
+                    if (array_key_exists($result->category_id, $chkArr2)) {
+                        $cashAmt[$result->category_id] += $result->amount;
+                    }
+                    else{
+                        $chkArr2[]=$result->category_id;
+                        $cashAmt[$result->category_id] = $result->amount;
+                    }
+                }
+                elseif($result->paid_by=="cheque" || $result->paid_by=="card"){
+                    if (array_key_exists($result->category_id, $chkArr3)) {
+                        $bankAmt[$result->category_id] += $result->amount;
+                    }
+                    else{
+                        $chkArr3[]=$result->category_id;
+                        $bankAmt[$result->category_id] = $result->amount;
+                    }
+                }
+
+                if (array_key_exists($result->category_id, $chkArr4)) {
+                    $grandAmt[$result->category_id] += $result->amount;
+                }
+                else{
+                    $chkArr4[]=$result->category_id;
+                    $grandAmt[$result->category_id] = $result->amount;
+                }
+            }
+
+        }
+
+        $fileName = "expenses_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('Name');
+        foreach ($categories as $key => $val) {
+            array_push($fields,$val->name);            
+        }
+        array_push($fields,'Total');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $cash_total = $bank_total = $grand_total = 0;
+        if(count($userArr) > 0){ 
+            foreach($userArr as $result){ 
+
+                $lineData = array($result);
+
+                $total=0;
+                foreach ($categories as $key => $val) {
+
+                    if(isset($expData[$result][$val->cat_id]))
+                    {
+                        array_push($lineData,$expData[$result][$val->cat_id]);
+                        $total+=$expData[$result][$val->cat_id];
+                    }
+                    else
+                    {
+                        array_push($lineData,0);
+                    }
+                     
+                }
+                array_push($lineData,$total);
+
+
+
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            } 
+
+            $lineData = array('Cash Total');
+            foreach ($categories as $key => $val) {
+                if(isset($cashAmt[$val->cat_id]))
+                {
+                    array_push($lineData,$cashAmt[$val->cat_id]);
+                    $cash_total+=$cashAmt[$val->cat_id];
+                }
+                else
+                {
+                    array_push($lineData,0);
+                }
+            }
+            array_push($lineData,$cash_total);
+
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('Bank Total');
+            foreach ($categories as $key => $val) {
+                if(isset($bankAmt[$val->cat_id]))
+                {
+                    array_push($lineData,$bankAmt[$val->cat_id]);
+                    $bank_total+=$bankAmt[$val->cat_id];
+                }
+                else
+                {
+                    array_push($lineData,0);
+                }
+            }
+            array_push($lineData,$bank_total);
+
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('Grand Total');
+            foreach ($categories as $key => $val) {
+                if(isset($grandAmt[$val->cat_id]))
+                {
+                    array_push($lineData,$grandAmt[$val->cat_id]);
+                    $grand_total+=$grandAmt[$val->cat_id];
+                }
+                else
+                {
+                    array_push($lineData,0);
+                }
+            }
+            array_push($lineData,$grand_total);
+
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            
         }else{ 
             $excelData .= 'No records found...'. "\n"; 
         } 
