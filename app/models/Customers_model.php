@@ -100,6 +100,7 @@ public function getCustomerLaserByCid($cusromer){
                     $rows['total'] = $row->opening_blance ;
                     $rows['pgtotal'] = $row->opening_blance ;
                     $rows['type'] = 'Opening balance';
+                    $rows['id'] = '';
                     if($row->opening_blance !=''){
                     $results[] = $rows ; 
                     }
@@ -118,6 +119,7 @@ public function getCustomerLaserByCid($cusromer){
                                 $rows['total'] = $ritems->return_amount;
                                 $rows['pgtotal'] = $ritems->return_amount;
                                 $rows['type'] = 'Sales Return Amount'; 
+                                $rows['id'] = '';
                                 if($ritems->return_amount !=''){
                                 $results[] = $rows ; 
                                 }
@@ -137,6 +139,7 @@ public function getCustomerLaserByCid($cusromer){
                                 $rows['datetime'] = $row->date_submit;
                                 $rows['total'] = $ritems->returnamount;
                                 $rows['pgtotal'] = $ritems->returnamount;
+                                $rows['id'] = '';
                                 $rows['type'] = 'Sales Return'; 
                                 if($ritems->returnamount !=''){
                                 $results[] = $rows ; 
@@ -185,7 +188,7 @@ public function getCustomerLaserByCid($cusromer){
                 $rows['sgtotal'] = $row->amount ;
                 $rows['sale'] = '0.00' ;
                 $rows['type'] = 'collection' ;
-                $rows['id'] = $row->id ;
+                $rows['id'] = $row->today_collect_id ;
                 $results[] = $rows ;
             } 
 

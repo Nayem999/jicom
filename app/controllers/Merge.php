@@ -137,6 +137,8 @@ class Merge extends MY_Controller
             $this->load->view($this->theme . 'purchases/view', $this->data);  
         }
         if($type == 'sale'){
+            $this->data['payemnt'] = $this->sales_model->getPaymentByID($id); 
+            $sale_id = $this->data['payemnt']->sale_id;
             $inv = $this->pos_model->getSaleByID($id);
             $this->tec->view_rights($inv->created_by);
             $this->load->helper('text');
@@ -144,11 +146,18 @@ class Merge extends MY_Controller
             $this->data['customer'] = $this->pos_model->getCustomerByID($inv->customer_id);
             $this->data['inv'] = $inv;
             $this->data['sid'] = $sale_id;
-            $this->data['noprint'] = $noprint;
+            // $this->data['noprint'] = $noprint;
+            $this->data['noprint'] ='';
             $this->data['modal'] = false;
             $this->data['payments'] = $this->pos_model->getAllSalePayments($id);
             $this->data['created_by'] = $this->site->getUser($inv->created_by);
             $this->data['page_title'] = lang("invoice");
+            $this->data['message'] = null; 
+            $this->data['cID'] = null; 
+            $this->data['life_payment_customer'] = null; 
+            $this->data['life_sales_customer'] = null; 
+            $this->data['life_payment_customer'] = null; 
+            $this->data['settings'] = $this->site->getSettings();
             $this->load->view($this->theme.'pos/view', $this->data);
         }
         if($type == 'collection'){
@@ -167,6 +176,7 @@ class Merge extends MY_Controller
             $totla_amount = $rows->total;
             
             $this->data['due_amount'] = $rows->total - $rows->paid; 
+            $this->data['message'] = ''; 
             
             $this->load->view($this->theme . 'merge/view_collection', $this->data); 
         }        

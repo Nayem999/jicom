@@ -22,16 +22,16 @@
  					<div class="clearfix"></div>
                     </div>
                     <?php
-                        $emptyvalue = '0.00';
-                        $gtotal ='';
-                        $pgtotal = '';
-                        $sgtotal = '';
+                        $emptyvalue = 0;
+                        $gtotal =0;
+                        $pgtotal = 0;
+                        $sgtotal = 0;
                         $i= 0; 
                         if($results !=''){
                        foreach ($results as $key => $part) {
                                $sort[$key] = strtotime($part['datetime']); 
-                               array_multisort($sort, SORT_ASC, $results); 
-                          } 
+                            } 
+                            array_multisort($sort, SORT_ASC, $results); 
 
                           ?>
                     <div class="table-responsive table" id="page_content">                        
