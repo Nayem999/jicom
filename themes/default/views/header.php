@@ -496,6 +496,20 @@
           </ul>
         </li>  
 
+        <li class="treeview mm_store"> <a href="#"> <i class="fa fa-sitemap"></i> <span>
+          <?= lang('Stores'); ?>
+          </span> <i class="fa fa-angle-left pull-right"></i> </a>
+          <ul class="treeview-menu">
+            <li id="store_index"><a href="<?= site_url('store'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Stores'); ?>
+              </a></li>
+              <?php if($Admin) { ?>          
+              <li id="store_add"><a href="<?= site_url('store/add'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Add Store'); ?></a></li>  
+              <?php } ?>
+            
+          </ul>
+        </li>
+
         <li class="treeview mm_settings"> <a href="#"> <i class="fa fa-cogs"></i> <span>
           <?= lang('settings'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>

@@ -1236,9 +1236,10 @@ class Reports_model extends CI_Model
     }
 
     public function saleCollectionReport($start_date=NULL,$end_date=NULL){
-        $this->db->select('today_collection.payment_amount , today_collection.store_id, payments.paid_by '); 
+        $this->db->select('today_collection.payment_amount , today_collection.store_id, stores.name as store_name, payments.paid_by '); 
         $this->db->from('today_collection');  
 		$this->db->join('payments','today_collection.today_collect_id=payments.collect_id');
+		$this->db->join('stores','stores.id=today_collection.store_id');
 
         if($start_date && $end_date){ 
             $this->db->where('payments.date >=', $start_date.' 00:00:00'); 

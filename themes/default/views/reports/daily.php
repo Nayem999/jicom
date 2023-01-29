@@ -38,12 +38,10 @@ if (isset($_POST['start_date'])) {
                         <div class="col-xs-12">
                             <?php
                             $salesItemQnty = array();
-                            $salesItemAmount = array();
                             $productArr = array();
                             if ($dailySaleItem) {
                                 foreach ($dailySaleItem as $key => $result) {
                                   $productArr[$result->product_id] = $result->product_name;
-                                  $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
                                   $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
                                 }
                             }
@@ -57,7 +55,6 @@ if (isset($_POST['start_date'])) {
                                         <th> SL</th>
                                         <th> Inv. No</th>
                                         <th> Cusrtomer</th>
-                                        <th> Qnty.</th>
                                         <?php
                                           foreach ($productArr as $key => $val) 
                                           {
@@ -79,31 +76,29 @@ if (isset($_POST['start_date'])) {
                                     $total_cheque = 0;
                                     $total_cc = 0;
                                     // print_r($dailySale);die;
-                                    $total_item_amount = array();
+                                    $total_item_qnty = array();
                                     if ($dailySale) {
                                         $i = 1;
                                         foreach ($dailySale as $key => $result) {
-                                            $total_qnty += array_sum($salesItemQnty[$result->sale_id]);
-                                    ?>
+                                        ?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
                                                 <td><?= $result->sale_id; ?></td>
                                                 <td><?= $result->customer_name; ?></td>
-                                                <td><?= array_sum($salesItemQnty[$result->sale_id]); ?></td>
                                                 <?php
                                                 foreach ($productArr as $key => $val) {
-                                                ?><td><?php echo isset($salesItemAmount[$result->sale_id][$key]) ? $salesItemAmount[$result->sale_id][$key] : 0; ?></td> <?php
-                                                  if (isset($salesItemAmount[$result->sale_id][$key])) {
-                                                    if (array_key_exists($key, $total_item_amount)) {
-                                                      $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
+                                                ?><td><?php echo isset($salesItemQnty[$result->sale_id][$key]) ? $salesItemQnty[$result->sale_id][$key] : 0; ?></td> <?php
+                                                  if (isset($salesItemQnty[$result->sale_id][$key])) {
+                                                    if (array_key_exists($key, $total_item_qnty)) {
+                                                      $total_item_qnty[$key] += $salesItemQnty[$result->sale_id][$key];
                                                     } else {
-                                                      $total_item_amount[$key] = 0;
+                                                      $total_item_qnty[$key] = 0;
                                                     }
                                                   } else {
-                                                    if (array_key_exists($key, $total_item_amount)) {
-                                                      $total_item_amount[$key] += 0;
+                                                    if (array_key_exists($key, $total_item_qnty)) {
+                                                      $total_item_qnty[$key] += 0;
                                                     } else {
-                                                      $total_item_amount[$key] = 0;
+                                                      $total_item_qnty[$key] = 0;
                                                     }
                                                   }
                                                 }
@@ -135,10 +130,9 @@ if (isset($_POST['start_date'])) {
                                         <th> </th>
                                         <th></th>
                                         <th> Grand Total</th>
-                                        <th><?php echo $total_qnty ;?> </th>
                                         <?php
                                             foreach ($productArr as $key => $val) {
-                                            ?><th><?php echo $total_item_amount[$key];?></th> <?php
+                                            ?><th><?php echo $total_item_qnty[$key];?></th> <?php
                                             }
                                         ?>
                                         <th> <?php echo $total_cash ;?>  </th>

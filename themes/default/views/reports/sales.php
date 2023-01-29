@@ -72,6 +72,7 @@
                             
                             if ($saleCollection) {
                                 foreach ($saleCollection as $key => $result) {
+                                    $storeArr[$result->store_id] = $result->store_name;
                                     if($result->paid_by=='cash'){
                                         if (in_array($result->store_id, $chkArr4)) {
                                             $cash_collection[$result->store_id] += $result->payment_amount;

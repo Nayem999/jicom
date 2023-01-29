@@ -451,22 +451,16 @@ class Reports extends MY_Controller
         $dailySaleItem = $this->reports_model->dailySaleItemReport($start_date,$end_date); 
 
         $salesItemQnty = array();
-        $salesItemAmount = array();
         $productArr = array();
         if ($dailySaleItem) {
             foreach ($dailySaleItem as $key => $result) {
-
-                if ($result->sale_id != null && $result->product_id != null) {
-
-                    $productArr[$result->product_id] = $result->product_name;
-                    $salesItemAmount[$result->sale_id][$result->product_id] = $result->subtotal;
-                    $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
-                }
+                $productArr[$result->product_id] = $result->product_name;
+                $salesItemQnty[$result->sale_id][$result->product_id] = $result->quantity;
             }
         }
 
         $fileName = "daily_sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('SL', 'Inv. No', 'Cusrtomer', 'Qnty.');
+        $fields = array('SL', 'Inv. No', 'Cusrtomer');
         foreach ($productArr as $key => $val) {
             array_push($fields,$val);            
         }
@@ -474,44 +468,44 @@ class Reports extends MY_Controller
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         $total_qnty = $total_cash = $total_cheque =  $total_cc = 0;
         $i = 1;
-        $total_item_amount = array();
+        $total_item_qnty = array();
         if(count($dailySale) > 0){ 
             foreach($dailySale as $result){ 
-                $total_qnty += array_sum($salesItemQnty[$result->sale_id]);
-                $lineData = array($i++, $result->sale_id, $result->customer_name, array_sum($salesItemQnty[$result->sale_id]));
 
-                        foreach ($productArr as $key => $val) {
-                        isset($salesItemAmount[$result->sale_id][$key]) ? array_push($lineData,$salesItemAmount[$result->sale_id][$key]) : array_push($lineData,0); 
-                                                                                                                                                                            if (isset($salesItemAmount[$result->sale_id][$key])){
-                                 if (array_key_exists($key, $total_item_amount)) {
-                                     $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
-                                 } else {
-                                     $total_item_amount[$key] = 0;
-                                 }
-                             } else {
-                                 if (array_key_exists($key, $total_item_amount)) {
-                                     $total_item_amount[$key] += 0;
-                                 } else {
-                                     $total_item_amount[$key] = 0;
-                                 }
-                            }
-                         }
+                $lineData = array($i++, $result->sale_id, $result->customer_name);
 
-                        if ($result->paid_by == "cash") {
-                            array_push($lineData,$result->payment_amount);
-                            $total_cash += $result->payment_amount;
-                        }else{array_push($lineData,0);} 
-                        if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
-                            array_push($lineData,$result->payment_amount);
-                            $total_cheque += $result->payment_amount;
-                        }else{array_push($lineData,0);} 
-                        if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
-                            array_push($lineData,'');
-                        }else{array_push($lineData,'');}  
-                        if ($result->paid_by == "CC") {
-                            array_push($lineData,$result->payment_amount);
-                            $total_cc += $result->payment_amount;
-                        }else{array_push($lineData,0);} 
+                    foreach ($productArr as $key => $val) {
+                    isset($salesItemQnty[$result->sale_id][$key]) ? array_push($lineData,$salesItemQnty[$result->sale_id][$key]) : array_push($lineData,0); 
+                                                                                                                                                                        if (isset($salesItemQnty[$result->sale_id][$key])){
+                                if (array_key_exists($key, $total_item_qnty)) {
+                                    $total_item_qnty[$key] += $salesItemQnty[$result->sale_id][$key];
+                                } else {
+                                    $total_item_qnty[$key] = 0;
+                                }
+                            } else {
+                                if (array_key_exists($key, $total_item_qnty)) {
+                                    $total_item_qnty[$key] += 0;
+                                } else {
+                                    $total_item_qnty[$key] = 0;
+                                }
+                        }
+                        }
+
+                    if ($result->paid_by == "cash") {
+                        array_push($lineData,$result->payment_amount);
+                        $total_cash += $result->payment_amount;
+                    }else{array_push($lineData,0);} 
+                    if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                        array_push($lineData,$result->payment_amount);
+                        $total_cheque += $result->payment_amount;
+                    }else{array_push($lineData,0);} 
+                    if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                        array_push($lineData,'');
+                    }else{array_push($lineData,'');}  
+                    if ($result->paid_by == "CC") {
+                        array_push($lineData,$result->payment_amount);
+                        $total_cc += $result->payment_amount;
+                    }else{array_push($lineData,0);} 
 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
 
@@ -988,7 +982,7 @@ class Reports extends MY_Controller
                     if (in_array($result->store_id, $chkArr3)) {
                         $credit_sale[$result->store_id] += $result->grand_total;
                     } else {
-                        $chkArr2[]=$result->store_id;
+                        $chkArr3[]=$result->store_id;
                         $credit_sale[$result->store_id] = $result->grand_total;
                     }
                 }
@@ -1013,7 +1007,7 @@ class Reports extends MY_Controller
                     if (in_array($result->store_id, $chkArr4)) {
                         $cash_collection[$result->store_id] += $result->payment_amount;
                     } else {
-                        $chkArr2[]=$result->store_id;
+                        $chkArr4[]=$result->store_id;
                         $cash_collection[$result->store_id] = $result->payment_amount;
                     }
                 }
@@ -1022,7 +1016,7 @@ class Reports extends MY_Controller
                     if (in_array($result->store_id, $chkArr5)) {
                         $bank_collection[$result->store_id] += $result->payment_amount;
                     } else {
-                        $chkArr2[]=$result->store_id;
+                        $chkArr5[]=$result->store_id;
                         $bank_collection[$result->store_id] = $result->payment_amount;
                     }
                 }
