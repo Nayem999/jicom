@@ -2250,4 +2250,75 @@ class Reports extends MY_Controller
          $this->datatables->unset_column('seid');        
          echo $this->datatables->generate();
     }
+
+    public function bank_balance(){
+
+        $bank_id = $this->input->get('bank_id') ? $this->input->get('bank_id') : 0;
+        $this->data['bank_name'] = $this->reports_model->getAllBank();
+        $this->data['bank_data'] = $this->reports_model->getAllBankInfo($bank_id);
+     
+        $this->data['bank_id'] = $bank_id;        
+        $this->data['page_title'] = 'Bank Balance';        
+        $bc = array(
+            array(
+                'link' => '#',
+                'page' => 'Bank Balance'
+            )
+        );        
+        $meta = array(
+            'page_title' => 'Bank Balance',
+            'bc' => $bc
+        );    
+        $this->page_construct('reports/bank_balance', $this->data, $meta); 
+    }
+    public function excel_bank_balance($data){
+
+        $bank_data = $this->reports_model->getAllBankInfo($data);
+     
+        $fileName = "bank_balance_report" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('Date','Bank name','Dr.','Cr.','Balance');
+
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+
+        if(count($bank_data) > 0){ 
+            $total_balance=array(); $chkArr=array();
+            foreach($bank_data as $key=>$val){ 
+                $lineData = array(date("d-M-Y",strtotime($val->create_date)),$val->bank_name,($val->payment_type==1)? $val->amount: 0,($val->payment_type==2)? $val->amount: 0);
+                if($val->payment_type==1)
+                {
+                    if (array_key_exists($val->bank_id, $chkArr)) {
+                        $total_balance[$val->bank_id] += $val->amount;
+                    }
+                    else{
+                        $chkArr[]=$val->bank_id;
+                        $total_balance[$val->bank_id] = $val->amount;
+                    }
+                }
+                else
+                {
+                    if (array_key_exists($val->bank_id, $chkArr)) {
+                        $total_balance[$val->bank_id] -= $val->amount;
+                    }
+                    else{
+                        $chkArr[]=$val->bank_id;
+                        $total_balance[$val->bank_id] = -$val->amount;
+                    }
+                }
+                array_push($lineData,$total_balance[$val->bank_id]);
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            
+            } 
+
+            
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData; 
+    }
 }

@@ -1288,5 +1288,34 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
+    
+    public function getAllBank()
+	{
+		$q = $this->db->get('bank_account');
+		if($q->num_rows() > 0) {
+			foreach (($q->result()) as $row) {
+				$data[] = $row;
+			}
+
+			return $data;
+		}
+	}
+
+    public function getAllBankInfo($id=null)
+	{ 
+
+        $this->db->select('bank_account.bank_account_id as bank_id, bank_account.bank_name, bank_pending.amount  ,bank_pending.payment_type,bank_account.create_date '); 
+        $this->db->from('bank_account');  
+		$this->db->join('bank_pending','bank_account.bank_account_id =bank_pending.bank_id');
+
+        if($id){ 
+            $this->db->where('bank_account.bank_account_id ',$id);   
+        }
+  
+		$this->db->order_by("bank_account.bank_account_id", 'asc');
+
+        $query = $this->db->get();
+        return $query->result(); 
+	}
 }
 
