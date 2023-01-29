@@ -345,8 +345,9 @@
             <li id="reports_store_product_stock"><a href="<?= site_url('reports/store_product_stock'); ?>"><i class="fa fa-circle-o"> </i>Store Stock Product </a></li>
             <li id="reports_invoiceProfit"><a href="<?= site_url('reports/invoiceProfit'); ?>"><i class="fa fa-circle-o"> </i>Invoice Profit</a></li>
             <li id="reports_salaryReport"><a href="<?= site_url('reports/salaryReport'); ?>"><i class="fa fa-circle-o"> </i>Salary Report</a></li>
-            <li id="reports_warrentyReport"><a href="<?= site_url('reports/warrentyReport'); ?>"><i class="fa fa-circle-o"> </i>Warranty Report</a></li>
+            <!-- <li id="reports_warrentyReport"><a href="<?= site_url('reports/warrentyReport'); ?>"><i class="fa fa-circle-o"> </i>Warranty Report</a></li> -->
             <li id="reports_expensesReport"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
+            <li id="reports_creditCollectionReport"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
           </ul>
         </li>
 

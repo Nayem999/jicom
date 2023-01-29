@@ -1149,7 +1149,7 @@ class Reports_model extends CI_Model
 	}*/
 	
     public function dailySaleReport($start_date=NULL,$end_date=NULL){
-        $this->db->select('sales.id as sale_id, sales.paid_by, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount,bank_account.bank_name as bank_name '); 
+        $this->db->select('sales.id as sale_id, sales.paid_by, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount, bank_account.bank_name as bank_name '); 
         $this->db->from('sales');  
         // $this->db->join('customers','customers.id=sales.customer_id');
         $this->db->join('today_collection','today_collection.today_collect_id=sales.collection_id','left');  
@@ -1240,6 +1240,31 @@ class Reports_model extends CI_Model
         $this->db->from('today_collection');  
 		$this->db->join('payments','today_collection.today_collect_id=payments.collect_id');
 		$this->db->join('stores','stores.id=today_collection.store_id');
+
+        if($start_date && $end_date){ 
+            $this->db->where('payments.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('payments.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('payments.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('payments.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('payments.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
+
+    public function creditCollectionReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('today_collection.today_collect_id as collection_id, today_collection.payment_amount,  payments.paid_by, payments.date as payments_date, customers.name as customers_name, bank_account.bank_name '); 
+        $this->db->from('today_collection');  
+		$this->db->join('payments','today_collection.today_collect_id=payments.collect_id');
+		$this->db->join('customers','customers.id=today_collection.customer_id');
+		$this->db->join('bank_pending','bank_pending.collection_id=today_collection.today_collect_id','left');  
+        $this->db->join('bank_account','bank_pending.bank_id=bank_account.bank_account_id','left');  
+
 
         if($start_date && $end_date){ 
             $this->db->where('payments.date >=', $start_date.' 00:00:00'); 

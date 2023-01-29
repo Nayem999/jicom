@@ -726,6 +726,61 @@ class Reports extends MY_Controller
         echo $excelData; 
 
     }
+
+    
+    function credit_collection_rpt()  {
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
+
+        $this->data['creditCollection'] = $this->reports_model->creditCollectionReport($start_date,$end_date); 
+
+        $this->data['start_date'] = $start_date;
+        $this->data['end_date'] = $end_date;
+
+        $this->data['page_title'] = $this->lang->line("credit_collection");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('credit_collection')));
+        $meta = array('page_title' => lang('credit_collection'), 'bc' => $bc);
+        $this->page_construct('reports/credit_collection_rpt', $this->data, $meta);
+
+    }
+
+    function excel_credit_collection_rpt($data=null)  {
+
+        $data_arr=explode("_",$data);
+
+        $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
+        $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
+
+        $creditCollection = $this->reports_model->creditCollectionReport($start_date,$end_date); 
+
+
+        $fileName = "credit_collection_report" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('SL','Date','V. No','Customer','Cash','Chq/TT','Bank');
+
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $i=1;$total_cash=$total_bank=0;
+        if(count($creditCollection) > 0){ 
+            foreach($creditCollection as $key=>$row){ 
+                $lineData = array($i++,date("d-M-Y",strtotime($row->payments_date)),$row->collection_id,$row->customers_name,($row->paid_by == "cash")? $row->payment_amount:0 , ($row->paid_by == "cash")? 0:$row->payment_amount , $row->bank_name );
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+                if($row->paid_by == "cash"){ $total_cash+=$row->payment_amount; }else{ $total_bank+=$row->payment_amount; }
+            } 
+
+            $lineData = array('','','','Grand Total',$total_cash,$total_bank,'');
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData; 
+
+    }
     
     function bk_daily_sales($year = NULL, $month = NULL)  {
         $this->data['warehouses'] = $this->site->getAllStores();
@@ -1213,6 +1268,7 @@ class Reports extends MY_Controller
         echo $excelData;        
 
     } 
+
     function sold_purchase() { 
 
         if((!$this->Admin) && (!$this->Manager)){
