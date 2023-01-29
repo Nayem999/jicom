@@ -1258,13 +1258,17 @@ class Reports_model extends CI_Model
     }
 
     public function creditCollectionReport($start_date=NULL,$end_date=NULL){
+
+		$this->db->select('collection_id');
+		$this->db->from('sales');
+		$where_clause = $this->db->get_compiled_select();
+
         $this->db->select('today_collection.today_collect_id as collection_id, today_collection.payment_amount,  payments.paid_by, payments.date as payments_date, customers.name as customers_name, bank_account.bank_name '); 
         $this->db->from('today_collection');  
 		$this->db->join('payments','today_collection.today_collect_id=payments.collect_id');
 		$this->db->join('customers','customers.id=today_collection.customer_id');
 		$this->db->join('bank_pending','bank_pending.collection_id=today_collection.today_collect_id','left');  
         $this->db->join('bank_account','bank_pending.bank_id=bank_account.bank_account_id','left');  
-
 
         if($start_date && $end_date){ 
             $this->db->where('payments.date >=', $start_date.' 00:00:00'); 
@@ -1278,6 +1282,9 @@ class Reports_model extends CI_Model
 		else{
             $this->db->like('payments.date', date('Y-m-d'));
         }  
+
+		$this->db->where("`today_collect_id` NOT IN ($where_clause)", NULL, FALSE);
+
         $query = $this->db->get();
         return $query->result(); 
     }
