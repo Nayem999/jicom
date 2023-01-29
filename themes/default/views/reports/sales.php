@@ -51,7 +51,7 @@
                                         if (in_array($result->store_id, $chkArr3)) {
                                             $credit_sale[$result->store_id] += $result->grand_total;
                                         } else {
-                                            $chkArr2[]=$result->store_id;
+                                            $chkArr3[]=$result->store_id;
                                             $credit_sale[$result->store_id] = $result->grand_total;
                                         }
                                     }
@@ -76,7 +76,7 @@
                                         if (in_array($result->store_id, $chkArr4)) {
                                             $cash_collection[$result->store_id] += $result->payment_amount;
                                         } else {
-                                            $chkArr2[]=$result->store_id;
+                                            $chkArr4[]=$result->store_id;
                                             $cash_collection[$result->store_id] = $result->payment_amount;
                                         }
                                     }
@@ -85,7 +85,7 @@
                                         if (in_array($result->store_id, $chkArr5)) {
                                             $bank_collection[$result->store_id] += $result->payment_amount;
                                         } else {
-                                            $chkArr2[]=$result->store_id;
+                                            $chkArr5[]=$result->store_id;
                                             $bank_collection[$result->store_id] = $result->payment_amount;
                                         }
                                     }
