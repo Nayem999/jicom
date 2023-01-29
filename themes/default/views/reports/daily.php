@@ -90,9 +90,9 @@ if (isset($_POST['start_date'])) {
                                                 <td><?= $result->sale_id; ?></td>
                                                 <td><?= $result->customer_name; ?></td>
                                                 <td><?= array_sum($salesItemQnty[$result->sale_id]); ?></td>
-                                                <?
+                                                <?php
                                                 foreach ($productArr as $key => $val) {
-                                                ?><td><?= isset($salesItemAmount[$result->sale_id][$key]) ? $salesItemAmount[$result->sale_id][$key] : 0; ?></td> <?
+                                                ?><td><?php echo isset($salesItemAmount[$result->sale_id][$key]) ? $salesItemAmount[$result->sale_id][$key] : 0; ?></td> <?php
                                                   if (isset($salesItemAmount[$result->sale_id][$key])) {
                                                     if (array_key_exists($key, $total_item_amount)) {
                                                       $total_item_amount[$key] += $salesItemAmount[$result->sale_id][$key];
@@ -108,18 +108,18 @@ if (isset($_POST['start_date'])) {
                                                   }
                                                 }
                                               ?>
-                                                <td><? if ($result->paid_by == "cash") {
+                                                <td><?php if ($result->paid_by == "cash") {
                                                         echo $result->payment_amount;
                                                         $total_cash += $result->payment_amount;
                                                     } ?></td>
-                                                <td><? if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                                                <td><?php if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
                                                         echo $result->payment_amount;
                                                         $total_cheque += $result->payment_amount;
                                                     } ?></td>
-                                                <td><? if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
+                                                <td><?php if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
                                                         echo $result->bank_name;
                                                     } ?></td>
-                                                <td><? if ($result->paid_by == "CC") {
+                                                <td><?php if ($result->paid_by == "CC") {
                                                         echo $result->payment_amount;
                                                         $total_cc += $result->payment_amount;
                                                     } ?></td>
@@ -135,16 +135,16 @@ if (isset($_POST['start_date'])) {
                                         <th> </th>
                                         <th></th>
                                         <th> Grand Total</th>
-                                        <th><?=$total_qnty ;?> </th>
-                                        <?
+                                        <th><?php echo $total_qnty ;?> </th>
+                                        <?php
                                             foreach ($productArr as $key => $val) {
-                                            ?><th><?=$total_item_amount[$key];?></th> <?
+                                            ?><th><?php echo $total_item_amount[$key];?></th> <?php
                                             }
                                         ?>
-                                        <th> <?=$total_cash ;?>  </th>
-                                        <th> <?=$total_cheque ;?> </th>
+                                        <th> <?php echo $total_cash ;?>  </th>
+                                        <th> <?php echo $total_cheque ;?> </th>
                                         <th> </th>
-                                        <th> <?=$total_cc ;?> </th>
+                                        <th> <?php echo $total_cc ;?> </th>
                                     </tr>
                                 </tfoot>
                             </table>

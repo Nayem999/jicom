@@ -1191,5 +1191,69 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
     }
+	
+    public function saleReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('sales.id as sale_id, sales.paid_by, sales.status, sales.store_id, sales.collection_id, stores.name as store_name, sales.grand_total, sales.paid '); 
+        $this->db->from('sales');  
+        $this->db->join('stores','stores.id=sales.store_id');  
+  
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('sales.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
+
+    public function saleItemReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('sales.id as sale_id, sales.store_id, stores.name as store_name, products.name as product_name, products.id as product_id, sale_items.quantity, sale_items.subtotal '); 
+        $this->db->from('sales');  
+		$this->db->join('stores','stores.id=sales.store_id');
+        $this->db->join('sale_items','sale_items.sale_id=sales.id');
+        $this->db->join('products','products.id=sale_items.product_id');
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('sales.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
+
+    public function saleCollectionReport($start_date=NULL,$end_date=NULL){
+        $this->db->select('today_collection.payment_amount , today_collection.store_id, payments.paid_by '); 
+        $this->db->from('today_collection');  
+		$this->db->join('payments','today_collection.today_collect_id=payments.collect_id');
+
+        if($start_date && $end_date){ 
+            $this->db->where('payments.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('payments.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('payments.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('payments.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('payments.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
 }
 

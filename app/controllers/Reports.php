@@ -530,8 +530,8 @@ class Reports extends MY_Controller
     }
 
     function expenses_rpt()  {
-        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
-        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
 
         $this->data['categories'] = $this->categories_model->getAllCategories();
         $this->db->select(
@@ -567,8 +567,8 @@ class Reports extends MY_Controller
 
         $data_arr=explode("_",$data);
 
-        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
-        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+        $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
+        $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
 
         $categories = $this->categories_model->getAllCategories();
         $this->db->select(
@@ -877,6 +877,27 @@ class Reports extends MY_Controller
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+
+        $this->data['sale'] = $this->reports_model->saleReport($start_date,$end_date);
+        $this->data['saleItem'] = $this->reports_model->saleItemReport($start_date,$end_date); 
+        $this->data['saleCollection'] = $this->reports_model->saleCollectionReport($start_date,$end_date); 
+
+        $this->data['start_date'] = $start_date;
+        $this->data['end_date'] = $end_date;
+        $results = array(); 
+        $this->data['results'] = $results; 
+        $this->data['page_title'] = $this->lang->line("daily_sales");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
+        $meta = array('page_title' => lang('daily_sales'), 'bc' => $bc);
+        $this->page_construct('reports/sales', $this->data, $meta);
+    }
+
+    function index_bk_29_1_2023() {
+
+        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+
         if($this->input->post('customer')) {
             $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
             $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;
@@ -936,42 +957,144 @@ class Reports extends MY_Controller
     function get_excel_sales($data='')  {
         $data_arr=explode("_",$data);
 
-        $customer = $data_arr[0] ? $data_arr[0] : NULL;
-        $user = $data_arr[1] ? $data_arr[1] : NULL;
-        $start_date = $data_arr[2] ? $data_arr[2] : NULL;
-        $end_date = $data_arr[3] ? $data_arr[3] : NULL;
+        $start_date = $data_arr[0] ? $data_arr[0] : NULL;
+        $end_date = $data_arr[1] ? $data_arr[1] : NULL;
 
-        $this->db->select(
-            $this->db->dbprefix('sales').".id as sid , ". 
-            $this->db->dbprefix('sales').".date, ".
-            $this->db->dbprefix('sales').".customer_name, ".
-            $this->db->dbprefix('stores').".name as storename, ".
-            $this->db->dbprefix('users').".username as createdby, ".
-            $this->db->dbprefix('sales').".total, ".
-            $this->db->dbprefix('sales').".total_tax, ".
-            $this->db->dbprefix('sales').".total_discount,".
-            $this->db->dbprefix('sales').".grand_total, ".
-            $this->db->dbprefix('sales').".paid, (".$this->db->dbprefix('sales').".grand_total -".$this->db->dbprefix('sales').".paid) as balance");
-        $this->db->from('sales');
-        $this->db->join('stores', 'stores.id=sales.store_id');
-        $this->db->join('users', 'users.id=sales.created_by');  
-        if($customer) { $this->db->where('customer_id', $customer); }
-        if($user) { $this->db->where('sales.created_by', $user); }
-        if($start_date) { $this->db->where('date >=', $start_date.' 00:00:00'); }
-        if($end_date) { $this->db->where('date <=', $end_date.' 23:59:59'); }
-        if(!$this->Admin){
-           $this->db->where('sales.store_id',$this->session->userdata('store_id'));
+        $sale = $this->reports_model->saleReport($start_date,$end_date);
+        $saleItem = $this->reports_model->saleItemReport($start_date,$end_date); 
+        $saleCollection = $this->reports_model->saleCollectionReport($start_date,$end_date); 
+
+
+        $salesItemQnty = $productArr = $storeArr = $cash_sale = $credit_sale = $cash_collection = $bank_collection = $chkArr = $chkArr2 = $chkArr3 = $chkArr4 = $chkArr5 = $total_item_qty = array();
+
+        if ($saleItem) {
+            foreach ($saleItem as $key => $result) {
+              $productArr[$result->product_id] = $result->product_name;
+              $storeArr[$result->store_id] = $result->store_name;
+              if (in_array($result->store_name.'_'.$result->product_id, $chkArr)) {
+                $salesItemQnty[$result->store_id][$result->product_id] += $result->quantity;
+              } else {
+                $chkArr[]=$result->store_name.'_'.$result->product_id;
+                $salesItemQnty[$result->store_id][$result->product_id] = $result->quantity;
+              }
+            }
         }
-        $query_data = $this->db->get()->result();
+
+
+        if ($sale) {
+            foreach ($sale as $key => $result) {
+
+                if($result->status=='due'){
+                    if (in_array($result->store_id, $chkArr3)) {
+                        $credit_sale[$result->store_id] += $result->grand_total;
+                    } else {
+                        $chkArr2[]=$result->store_id;
+                        $credit_sale[$result->store_id] = $result->grand_total;
+                    }
+                }
+                else
+                {
+                    if($result->paid_by=='cash'){
+                        if (in_array($result->store_id, $chkArr2)) {
+                            $cash_sale[$result->store_id] += $result->paid;
+                        } else {
+                            $chkArr2[]=$result->store_id;
+                            $cash_sale[$result->store_id] = $result->paid;
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        if ($saleCollection) {
+            foreach ($saleCollection as $key => $result) {
+                if($result->paid_by=='cash'){
+                    if (in_array($result->store_id, $chkArr4)) {
+                        $cash_collection[$result->store_id] += $result->payment_amount;
+                    } else {
+                        $chkArr2[]=$result->store_id;
+                        $cash_collection[$result->store_id] = $result->payment_amount;
+                    }
+                }
+                else
+                {
+                    if (in_array($result->store_id, $chkArr5)) {
+                        $bank_collection[$result->store_id] += $result->payment_amount;
+                    } else {
+                        $chkArr2[]=$result->store_id;
+                        $bank_collection[$result->store_id] = $result->payment_amount;
+                    }
+                }
+            }
+        }
+
+        $fields = array('Name');
+
         $fileName = "sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('DATE', 'CUSTOMER', 'STORE NAME', 'CREATED BY', 'TOTAL', 'TAX', 'DISCOUNT', 'GRAND TOTAL', 'PAID', 'BALANCE');
+        $fields = array('Name');
+        foreach ($productArr as $key => $val) 
+        {
+            array_push($fields,$val);
+        }
+        array_push($fields,"Cash Sale","Credit Sale","Cash Collection","Chq/TT Collection");
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         
-        if(count($query_data) > 0){ 
-            foreach($query_data as $row){ 
-                $lineData = array($row->date, $row->customer_name, $row->storename, $row->createdby, $row->total, $row->total_tax, $row->total_discount, $row->grand_total, $row->paid, $row->balance); 
+        if(count($storeArr) > 0){ 
+            $total_cash_sale = $total_credit_sale = $total_cash_collection = $total_bank_collection = 0;
+            foreach($storeArr as $storeId => $result){ 
+                $lineData = array($result); 
+
+                    foreach ($productArr as $key => $val) {
+                      if (isset($salesItemQnty[$storeId][$key])) {
+                        if (array_key_exists($key, $total_item_qty)) {
+                            array_push($lineData,$salesItemQnty[$storeId][$key]);
+                          $total_item_qty[$key] += $salesItemQnty[$storeId][$key];
+                        } else {
+                            array_push($lineData,$salesItemQnty[$storeId][$key]);
+                          $total_item_qty[$key] = $salesItemQnty[$storeId][$key];
+                        }
+                      } else {
+                        if (array_key_exists($key, $total_item_qty)) {
+                            array_push($lineData,0);
+                          $total_item_qty[$key] += 0;
+                        } else {
+                            array_push($lineData,0);
+                          $total_item_qty[$key] = 0;
+                        }
+                      }
+                    }
+
+                            if(isset($cash_sale[$storeId])){
+                                array_push($lineData,$cash_sale[$storeId]);
+                                $total_cash_sale +=$cash_sale[$storeId];
+                            }else{ array_push($lineData,0);}
+
+                            if(isset($credit_sale[$storeId])){
+                                array_push($lineData,$credit_sale[$storeId]);
+                                $total_credit_sale +=$credit_sale[$storeId];
+                            }else{ array_push($lineData,0);}
+
+                            if(isset($cash_collection[$storeId])){
+                                array_push($lineData,$cash_collection[$storeId]);
+                                $total_cash_collection +=$cash_collection[$storeId];
+                            }else{ array_push($lineData,0);}
+
+                            if(isset($bank_collection[$storeId])){
+                                array_push($lineData,$bank_collection[$storeId]);
+                                $total_bank_collection +=$bank_collection[$storeId];
+                            }else{ array_push($lineData,0);}
+
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
+
+            $lineData=array("Grand Total");
+            foreach ($productArr as $key => $val) {
+                array_push($lineData,$total_item_qty[$key]);
+            }
+            array_push($lineData,$total_cash_sale,$total_credit_sale,$total_cash_collection,$total_bank_collection);
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
         }else{ 
             $excelData .= 'No records found...'. "\n"; 
         } 

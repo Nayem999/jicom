@@ -36,7 +36,7 @@ if (isset($_POST['start_date'])) {
                     </div>
                     <div class="table-responsive" id="print_content">
                         <div class="col-xs-12">
-                            <?
+                            <?php
                             $expData = array();
                             $chkArr = array();$chkArr2 = array();$chkArr3 = array();$chkArr4 = array();
                             $userArr = array();
@@ -87,9 +87,9 @@ if (isset($_POST['start_date'])) {
                                 <tbody>
                                     <tr>
                                         <th> Name</th>
-                                        <?
+                                        <?php
                                             foreach ($categories as $key => $val) {
-                                            ?><th><?= $val->name; ?></th> <?
+                                            ?><th><?= $val->name; ?></th> <?php
                                             }
                                         ?>        
                                         <th> Total</th>
@@ -103,12 +103,12 @@ if (isset($_POST['start_date'])) {
                                     ?>
                                         <tr>
                                             <td><?= $result; ?></td>
-                                            <?
+                                            <?php
                                                 foreach ($categories as $key => $val) {
                                                     
                                                     ?>
                                                     <td>
-                                                        <?
+                                                        <?php
                                                             if(isset($expData[$result][$val->cat_id]))
                                                             {
                                                                 echo $expData[$result][$val->cat_id];
@@ -119,7 +119,7 @@ if (isset($_POST['start_date'])) {
                                                                 echo '0';
                                                             }
                                                      
-                                                    ?></td> <?
+                                                    ?></td> <?php
                                                 }
                                             ?>  
                                             <td><?=$total; ?></td>
@@ -132,11 +132,11 @@ if (isset($_POST['start_date'])) {
                                 <tfoot>
                                     <tr>
                                         <th> Cash Total</th>
-                                        <?
+                                        <?php
                                             foreach ($categories as $key => $val) {
                                                 ?>
                                                 <td>
-                                                    <?                                                     
+                                                    <?php                                                     
                                                     if(isset($cashAmt[$val->cat_id]))
                                                     {
                                                         echo $cashAmt[$val->cat_id];
@@ -147,18 +147,18 @@ if (isset($_POST['start_date'])) {
                                                         echo '0';
                                                     }
                                                     ?>
-                                                </td> <?
+                                                </td> <?php
                                             }
                                         ?>  
                                         <th> <?=$cash_total ;?>  </th>
                                     </tr>
                                     <tr>
                                         <th> Bank Total</th>
-                                        <?
+                                        <?php
                                             foreach ($categories as $key => $val) {
                                                 ?>
                                                 <td>
-                                                    <? 
+                                                    <?php 
                                                         if(isset($bankAmt[$val->cat_id]))
                                                         {
                                                             echo $bankAmt[$val->cat_id];
@@ -169,18 +169,18 @@ if (isset($_POST['start_date'])) {
                                                             echo '0';
                                                         }
                                                     ?>
-                                                </td> <?
+                                                </td> <?php
                                             }
                                         ?>  
                                         <th> <?=$bank_total ;?>  </th>
                                     </tr>
                                     <tr>
                                         <th> Grand Total</th>
-                                        <?
+                                        <?php
                                             foreach ($categories as $key => $val) {
                                                 ?>
                                                 <td>
-                                                    <? 
+                                                    <?php 
                                                         if(isset($grandAmt[$val->cat_id]))
                                                         {
                                                             echo $grandAmt[$val->cat_id];
@@ -191,7 +191,7 @@ if (isset($_POST['start_date'])) {
                                                             echo '0';
                                                         }
                                                     ?>
-                                                </td> <?
+                                                </td> <?php
                                             }
                                         ?>  
                                         <th> <?=$grand_total ;?>  </th>
