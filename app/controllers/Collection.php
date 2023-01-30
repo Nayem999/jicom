@@ -32,9 +32,13 @@ class Collection extends MY_Controller
         $this->db->dbprefix('today_collection') . ".payment_date as payment_date," . 
         $this->db->dbprefix('today_collection') . ".payment_amount, " .  
         $this->db->dbprefix('today_collection') . ".payment_note, " .  
+        $this->db->dbprefix('payments') . ".paid_by , " .  
+        $this->db->dbprefix('bank_pending') . ".type , " .  
         $this->db->dbprefix('today_collection') . ".payment_status", FALSE);
         $this->datatables->join('customers', 'customers.id=today_collection.customer_id');
         $this->datatables->join('stores', 'customers.store_id=stores.id'); 
+        $this->datatables->join('payments', 'payments.collect_id=today_collection.today_collect_id');     
+        $this->datatables->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	
         if(!$this->Admin){
           $this->datatables->where('today_collection.store_id',$this->session->userdata('store_id'));
         }

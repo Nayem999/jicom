@@ -65,7 +65,7 @@ $v = "?v=1";
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
 
             },
-            "aoColumns": [ null,null, null, null, null,null,null]
+            "aoColumns": [ null,null, null, null, null,null,null,null,null]
 
         });
 
@@ -171,14 +171,16 @@ $v = "?v=1";
 
                                 <th class="col-xs-2">Customar name</th>
 
-                                <th class="col-xs-2">Store name</th>
+                                <th class="col-xs-1">Store name</th>
 
                                 <th class="col-xs-2">Date and Time</th>
                                 
-                                <th class="col-xs-2">Amount</th>
+                                <th class="col-xs-1">Amount</th>
 
                                 <th class="col-xs-2">Note</th> 
 
+                                <th class="col-xs-1">Paid By</th> 
+                                <th class="col-xs-1">Cheque Status</th> 
                                 <th class="col-xs-1">Status</th> 
 
                                 <th class="col-xs-2">Action</th> 
