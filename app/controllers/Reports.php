@@ -2258,7 +2258,7 @@ class Reports extends MY_Controller
 
     public function bank_balance(){
 
-        $bank_id = $this->input->get('bank_id') ? $this->input->get('bank_id') : 0;
+        $bank_id = $this->input->post('bank_id') ? $this->input->post('bank_id') : 0;
         $this->data['bank_name'] = $this->reports_model->getAllBank();
         $this->data['bank_data'] = $this->reports_model->getAllBankInfo($bank_id);
      
@@ -2288,7 +2288,7 @@ class Reports extends MY_Controller
         if(count($bank_data) > 0){ 
             $total_balance=array(); $chkArr=array();
             foreach($bank_data as $key=>$val){ 
-                $lineData = array(date("d-M-Y",strtotime($val->create_date)),$val->bank_name,($val->payment_type==1)? $val->amount: 0,($val->payment_type==2)? $val->amount: 0);
+                $lineData = array(date("d-M-Y",strtotime($val->create_date)), $val->bank_name." (".$val->account_no.")" ,($val->payment_type==1)? $val->amount: 0,($val->payment_type==2)? $val->amount: 0);
                 if($val->payment_type==1)
                 {
                     if (array_key_exists($val->bank_id, $chkArr)) {

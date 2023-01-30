@@ -1,4 +1,4 @@
- 
+
 <style type="text/css"> 
      .td-center{
         text-align: center;
@@ -25,7 +25,7 @@
 
                     <div class="panel-body">                       
 
-                        <?= form_open("");?> 
+                        <?= form_open("reports/bank_balance");?> 
 
                         <div class="row">
                         <div class="col-sm-4">
@@ -93,19 +93,20 @@
                             <tbody>
 
                             <?php   
-                            $total_balance=array(); $chkArr=array();
+                            $total_balance=0; 
                                      foreach($bank_data as $key => $val)
                                      {
                                         
                                         ?>
                                             <tr>
                                                 <td><?=$val->create_date;?></td>
-                                                <td><?=$val->bank_name;?></td>
+                                                <td><?=$val->bank_name." (".$val->account_no.")";?></td>
                                                 <td>
                                                     <?php
                                                         if($val->payment_type==1)
                                                         {
                                                             echo $val->amount;
+                                                            $total_balance+=$val->amount;
                                                         }
 
                                                     ?>
@@ -115,33 +116,14 @@
                                                         if($val->payment_type==2)
                                                         {
                                                             echo $val->amount;
+                                                            $total_balance-=$val->amount;
                                                         }
 
                                                     ?>
                                                 </td>
                                                 <td>
                                                     <?php
-                                                        if($val->payment_type==1)
-                                                        {
-                                                            if (array_key_exists($val->bank_id, $chkArr)) {
-                                                                $total_balance[$val->bank_id] += $val->amount;
-                                                            }
-                                                            else{
-                                                                $chkArr[]=$val->bank_id;
-                                                                $total_balance[$val->bank_id] = $val->amount;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (array_key_exists($val->bank_id, $chkArr)) {
-                                                                $total_balance[$val->bank_id] -= $val->amount;
-                                                            }
-                                                            else{
-                                                                $chkArr[]=$val->bank_id;
-                                                                $total_balance[$val->bank_id] = -$val->amount;
-                                                            }
-                                                        }
-                                                        echo  $total_balance[$val->bank_id] ;
+                                                        echo  $total_balance;
                                                     ?>
 
                                                         
