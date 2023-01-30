@@ -57,7 +57,7 @@ if (isset($_POST['start_date'])) {
                                                 <tr>
                                                     <td><?=$i++;?></td>
                                                     <td><?=date("d-M-Y",strtotime($row->payments_date));?></td>
-                                                    <td><?=$row->collection_id;?></td>
+                                                    <td><a href='#' onClick="MyWindow=window.open('<?php echo site_url("collection/view/".$row->collection_id."/1"); ?> ', 'MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,resizable=yes,width=350,height=600'); return false;" title='<?=lang("view collection")?>' class='tip btn btn-primary btn-xs'><i class='fa fa-list'></i></a></td>
                                                     <td><?=$row->customers_name;?></td>
                                                     <td>
                                                         <?php
