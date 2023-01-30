@@ -88,10 +88,10 @@ if (isset($_POST['start_date'])) {
                                    
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4">Grand Total</th>
-                                        <th><?=$total_cash;?></th>
-                                        <th><?=$total_bank;?></th>
-                                        <th></th>
+                                        <th class="text-center" colspan="4">Grand Total</th>
+                                        <th class="text-center"><?=$total_cash;?></th>
+                                        <th class="text-center"><?=$total_bank;?></th>
+                                        <th class="text-center"></th>
                                     </tr>
                                 </tfoot>
                             </table>
