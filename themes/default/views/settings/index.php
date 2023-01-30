@@ -136,7 +136,13 @@
                                 </div>
                                 
 
+                                <div class="form-group">
 
+                                    <?= lang('bin_number', 'bin_number'); ?>
+
+                                    <?= form_input('bin_number', $settings->bin_number, 'class="form-control tip" id="bin_number"'); ?>
+
+                                </div>
 
                             </div>
 
@@ -290,6 +296,7 @@
 
                                 </div>
 
+
                             </div>
 
                             <div class="clearfix"></div>
@@ -299,6 +306,7 @@
                                 <div class="col-md-12">
 
                                     <div class="col-md-6">
+
 
                                         <div class="form-group">
 
