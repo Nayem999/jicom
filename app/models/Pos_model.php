@@ -1165,7 +1165,7 @@ class Pos_model extends CI_Model
 
 
         //$this->db->select("products.* , product_store_qty.quantity as sQuantity");
-        $this->db->join('product_store_qty', 'product_store_qty.product_id = products.id','left');
+        $this->db->join('product_store_qty', 'product_store_qty.product_id = products.id and sale_items.store_id=product_store_qty.store_id','left');
 
 
 
@@ -1204,6 +1204,7 @@ class Pos_model extends CI_Model
         return FALSE;
 
     }
+
     public function getAllSaleLogItems($sale_id, $product = NULL) {
         $this->db->select('sale_items_log.*, products.name as product_name, products.code as product_code, products.tax_method as tax_method') 
         ->join('products', 'products.id=sale_items_log.product_id') 
