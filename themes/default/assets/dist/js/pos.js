@@ -881,6 +881,27 @@ $(document).ready(function(){
         }
     });
 
+    $('#amount').change(function(e) {
+        var total_paying = $(".amount").val();
+        if(total_paying>round_total)
+        {
+            $(".amount").val(round_total);
+            total_paying=round_total;
+        }
+        $('#total_paying').text(formatMoney(total_paying));
+        if(Settings.rounding != 0) {
+            $('#balance').text(formatMoney(total_paying - round_total));
+            $('#balance_val').val(formatDecimal(total_paying - round_total));
+            total_paid = total_paying;
+            grand_total = round_total;
+        } else {
+            $('#balance').text(formatMoney(total_paying - gtotal));
+            $('#balance_val').val(formatDecimal(total_paying - gtotal));
+            total_paid = total_paying;
+            grand_total = gtotal;
+        }
+    });
+
     $('#add-customer').click(function () {
         $('#customerModal').modal({backdrop:'static'});
     });
@@ -989,7 +1010,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#clear-cash-notes', function () {
         $('.quick-cash').find('.badge').remove();
-        $('#amount').val('').keyup().focus();
+        $('#amount').val('').change().focus();
     });
 
     $('#payModal').on('change', '#amount', function (e) {
