@@ -298,6 +298,15 @@ class Pos extends MY_Controller {
 			        }
     			}
         	}
+
+			if($this->input->post('aging_day')>0)
+			{
+				$aging_status=1;
+			}
+			else
+			{
+				$aging_status=0;
+			}
         	
 			$data = array(
 				'date' => $date,
@@ -323,6 +332,8 @@ class Pos extends MY_Controller {
 				'store_id' => $store_id,
 				'note' => $note,
 				'collection_id' => $collect_id ? $collect_id : 0,
+				'aging_day' => $this->input->post('aging_day'),
+				'aging_status' =>$aging_status,
 				);
 			if($suspend) {
 				$data['hold_ref'] = $this->input->post('hold_ref');
