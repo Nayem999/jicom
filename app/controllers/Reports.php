@@ -64,6 +64,7 @@ class Reports extends MY_Controller
     }
 
     public function excel_daily_statement($data=''){
+        $this->load->model('site');
         $data_arr=explode("_",$data);
 
         $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
@@ -78,7 +79,9 @@ class Reports extends MY_Controller
         $loanPay = $this->reports_model->loanPays($start_date,$end_date);
         $loanCollect = $this->reports_model->loanCollect($start_date,$end_date); 
         $donations = $this->reports_model->donationsPay($start_date,$end_date);
-        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
+
+        $bankCash = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
+
         $this->data['results'] = $results; 
         $this->data['date_range'] = $start_date;
         
@@ -164,6 +167,33 @@ class Reports extends MY_Controller
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
         }
+
+        $lineData = array('', 'Total SUM ', $totalCcolled,$totalCashColled, $totalCcolled+$totalCashColled , $totalBank ,$totalExpenses); 
+        $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+        if(isset($start_date)){ 
+            $pdate = date( "Y-m-d", strtotime( $start_date . "-1 day")); 
+            $handcash = $this->site->whereRow('handcash','entry_date',$pdate);
+        }else{
+            $pdate = date( "Y-m-d", strtotime( date('Y-m-d') . "-1 day")); 
+            $handcash = $this->site->whereRow('handcash','entry_date',$pdate);
+        } 
+        if(is_bool($handcash)){
+            $previousBanance =0; 
+        }
+        else
+        {
+            foreach($handcash as $val){
+                $previousBanance += $val['amount']; 
+            }
+        }
+        $lineData = array('', 'Previous Balance', $previousBanance , '', '', ''); 
+        $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+        $lineData = array('', 'Total Cash', $totalCcolled+$totalCashColled + $previousBanance , 'Bank Cash', $bankCash); 
+        $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+        $lineData = array('', 'Expenses + Bank Pay', $totalExpenses+$totalBank, 'Hand Cash', ($totalCcolled+$totalCashColled + $previousBanance) - ($totalExpenses+$totalBank) , ($totalCcolled+$totalCashColled + $previousBanance+$bankCash) - ($totalExpenses+$totalBank) ); 
+        $excelData .= implode("\t", array_values($lineData)) . "\n"; 
           
         header("Content-Type: application/vnd.ms-excel"); 
         header("Content-Disposition: attachment; filename=\"$fileName\""); 
