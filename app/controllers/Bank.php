@@ -234,7 +234,7 @@ class Bank extends MY_Controller
 
             }
 			
-			$data['action'] = "bank/edit/".$id ;
+			$this->data['action'] = "bank/edit/".$id ;
 			
 			$date['submit_button'] = "Update Bank Information";
 			
