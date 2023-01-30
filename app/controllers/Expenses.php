@@ -129,7 +129,8 @@ class Expenses extends MY_Controller
                 'amount' => $this->input->post('amount'),                
                 'created_by' => $this->session->userdata('user_id'),
                 'c_id'  => $this->input->post('category'),                
-                'note' => $this->input->post('note', TRUE)                
+                'note' => $this->input->post('note', TRUE),
+                'employee_id'   => $this->input->post('employee_id')                 
             );
             $store = $this->input->post('warehouse');
             if($store==''){
@@ -169,8 +170,7 @@ class Expenses extends MY_Controller
                     'bank_status'  => 'Pending',
                     'cheque_or_card_no' => $this->input->post('cheque_no'),
                     'amount'       => $this->input->post('amount'),
-                    'created_by'   => $this->session->userdata('user_id') ,
-                    'employee_id'   => $this->input->post('employee_id') 
+                    'created_by'   => $this->session->userdata('user_id') 
                 );
                 $this->site->insertQuery('bank_pending_expenses', $bankPending); 
             }

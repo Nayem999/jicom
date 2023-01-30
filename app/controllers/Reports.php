@@ -532,21 +532,20 @@ class Reports extends MY_Controller
             $this->db->dbprefix('expenses') . ".id as id, amount,".
             $this->db->dbprefix('expens_category') . ".name as category_name, ".
             $this->db->dbprefix('expens_category') . ".cat_id as category_id, ".
-            $this->db->dbprefix('expenses') . ".paid_by, CONCAT(" . 
-            $this->db->dbprefix('users') . ".first_name, ' ', " . 
-            $this->db->dbprefix('users') . ".last_name) as user, ");
+            $this->db->dbprefix('expenses') . ".paid_by, " . 
+            $this->db->dbprefix('employee') . ".name as user " );
         $this->db->from('expenses');
-        $this->db->join('users', 'users.id=expenses.created_by');
+        $this->db->join('employee', 'employee.id=expenses.employee_id');
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->group_by('expenses.id');
-        if($start_date) { $this->db->where('date >=', $start_date); }
-        if($end_date) { $this->db->where('date <=', $end_date); } 
+        if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){
             $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
         } 
 
         $this->data['expensesData'] = $this->db->get()->result();
-
+        // echo $this->db->last_query();die;
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
 
@@ -569,15 +568,14 @@ class Reports extends MY_Controller
             $this->db->dbprefix('expenses') . ".id as id, amount,".
             $this->db->dbprefix('expens_category') . ".name as category_name, ".
             $this->db->dbprefix('expens_category') . ".cat_id as category_id, ".
-            $this->db->dbprefix('expenses') . ".paid_by, CONCAT(" . 
-            $this->db->dbprefix('users') . ".first_name, ' ', " . 
-            $this->db->dbprefix('users') . ".last_name) as user, ");
+            $this->db->dbprefix('expenses') . ".paid_by, " . 
+            $this->db->dbprefix('employee') . ".name as user " );
         $this->db->from('expenses');
-        $this->db->join('users', 'users.id=expenses.created_by');
+        $this->db->join('employee', 'employee.id=expenses.employee_id');
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->group_by('expenses.id');
-        if($start_date) { $this->db->where('date >=', $start_date); }
-        if($end_date) { $this->db->where('date <=', $end_date); } 
+        if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){
             $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
         } 
