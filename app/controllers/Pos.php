@@ -29,6 +29,8 @@ class Pos extends MY_Controller {
 		  }
 		}
         
+		// $this->session->set_flashdata('error', lang('Credit Over'));
+		// $this->session->set_flashdata('warning', lang('Credit Over'));
 
 		if( $this->input->get('hold') ) { $sid = $this->input->get('hold'); }
 		if( $this->input->get('edit') ) { $eid = $this->input->get('edit'); }
@@ -68,6 +70,7 @@ class Pos extends MY_Controller {
 			$customer_id = $this->input->post('customer_id');
 			$customer_details = $this->pos_model->getCustomerByID($customer_id);
 			$customer = $customer_details->name;
+			$customer_credit_limit = $customer_details->credit_limit;
 			//$customer_phone = $customer_details->phone;
 			$note = $this->tec->clear_tags($this->input->post('spos_note'));
 
@@ -219,12 +222,28 @@ class Pos extends MY_Controller {
 			$total_tax = $this->tec->formatDecimal($product_tax + $order_tax);
 			$grand_total = $this->tec->formatDecimal($this->tec->formatDecimal($total) + $total_tax - $order_discount);
 			$paid = $this->input->post('amount') ? $this->input->post('amount') : 0;
+
+			$salesCustomers = $this->sales_model->getCustomerDeu($customer_id);
+			$totalDeu = 0;
+			foreach ($salesCustomers as $key => $value) {
+				$totalDeu = $totalDeu + $value->deu;
+			}
 			if(!$eid) {
 				$status = 'due';
+				$credit_over=$totalDeu + $paid;
 				if ($grand_total > $paid && $paid > 0) {
 					$status = 'partial';
+					$credit_over=$totalDeu + ($paid-$grand_total);
 				} elseif ($grand_total <= $paid) {
 					$status = 'paid';
+					$credit_over=0;
+				}
+				// echo $credit_over."__".$customer_credit_limit;die;
+				if($customer_credit_limit==null){ $customer_credit_limit=0; }
+				if($credit_over>0){
+					if($credit_over>$customer_credit_limit){
+						$this->session->set_flashdata('error', lang('Credit Over'));
+					}
 				}
 			}
 			if(!$this->Admin){
@@ -345,7 +364,7 @@ class Pos extends MY_Controller {
 		}
 
 
-		if ( $this->form_validation->run() == true && !empty($products) )
+		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<$customer_credit_limit)
 		{
 			if($suspend) {
 				unset($data['status'], $data['rounding']);

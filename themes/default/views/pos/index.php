@@ -666,7 +666,7 @@
                           </a></td>
                         <td class="text-right" style="padding-right:10px;"><span id="ds_con">0</span></td>
                         <td width="25%"><a href="#" id="add_tax">
-                          <?=lang('order_tax')?>
+                          <?=lang('order_vat')?>
                           </a></td>
                         <td class="text-right"><span id="ts_con">0</span></td>
                       </tr>
