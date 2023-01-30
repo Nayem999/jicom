@@ -860,7 +860,7 @@ $(document).ready(function(){
         $('#amount').val('').change();
     });
 
-    $('#amount').change(function(e) {
+    $('#amount').keyup(function(e) {
         var total_paying = $(".amount").val();
         if(total_paying>round_total)
         {
@@ -916,12 +916,26 @@ $(document).ready(function(){
             $('.pcheque').slideUp('fast');
             $('.pcash').slideUp('fast');
             $('#amount').val(rounded_total);
+
+            $(".amount").val(rounded_total);
+            $('#amount_val').val(rounded_total);
+            $('#total_paying').text(formatMoney(rounded_total));
+            $('#balance').text(formatMoney(rounded_total - rounded_total));
+            $('#balance_val').val(formatDecimal(rounded_total - rounded_total));
+
             setTimeout(function(){ $('#swipe').val('').focus(); }, 10);
         } else if (p_val == 'Cheque' || p_val == 'TT') {
             $('.pcheque').slideDown();
             $('.pcc').slideUp('fast');
             $('.pcash').slideUp('fast');
             $('#amount').val(rounded_total);
+
+            $(".amount").val(rounded_total);
+            $('#amount_val').val(rounded_total);
+            $('#total_paying').text(formatMoney(rounded_total));
+            $('#balance').text(formatMoney(rounded_total - rounded_total));
+            $('#balance_val').val(formatDecimal(rounded_total - rounded_total));
+
             setTimeout(function(){ $('#cheque_no').focus(); }, 10);
             if (p_val == 'TT'){$('.ccheque').slideUp('fast'); $('.tcheque').slideDown();}
             if (p_val == 'Cheque'){$('.tcheque').slideUp('fast'); $('.ccheque').slideDown();}
@@ -975,7 +989,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#clear-cash-notes', function () {
         $('.quick-cash').find('.badge').remove();
-        $('#amount').val('').change().focus();
+        $('#amount').val('').keyup().focus();
     });
 
     $('#payModal').on('change', '#amount', function (e) {
