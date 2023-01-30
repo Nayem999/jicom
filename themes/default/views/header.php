@@ -195,12 +195,12 @@
           </ul>
         </li>
 
-        <li class="treeview mm_service"> <a href="#"><i class="fa fa-tree" aria-hidden="true"></i><span>Service</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <!-- <li class="treeview mm_service"> <a href="#"><i class="fa fa-tree" aria-hidden="true"></i><span>Service</span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
-            <li id="sales_index"><a href="<?= site_url('service'); ?>"><i class="fa fa-circle-o"></i> List Service</a></li>
+            <li id="sales_index"><a href="<?// site_url('service'); ?>"><i class="fa fa-circle-o"></i> List Service</a></li>
             <li id="sales_opened"><a href="javascript:;" onClick="servicePage('Service')"><i class="fa fa-circle-o"></i> Add Service</a></li>
           </ul>
-        </li>
+        </li> -->
 
         <li class="treeview mm_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
           <?= lang('Product purchases'); ?>
@@ -354,58 +354,58 @@
 
         <!--<li class="treeview mm_quotation"> <a href="#"><i class="fa fa-comment"></i>-->
         <!--   <span>-->
-        <!--    <?= lang('Sms Corner'); ?>-->
+        <!--    <?// lang('Sms Corner'); ?>-->
         <!--   </span> <i class="fa fa-angle-left pull-right"></i> </a>-->
         <!--    <ul class="treeview-menu">-->
         <!--    <li id="smscorner_paymentList"><a href="<?= site_url('smscorner/paymentList'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Supplier Payments'); ?>-->
+        <!--      <?// lang('Supplier Payments'); ?>-->
         <!--      </a></li>-->
         <!--      <li id="smscorner_receivablelist"><a href="<?= site_url('smscorner/receivablelist'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Customer Payment'); ?>-->
+        <!--      <?// lang('Customer Payment'); ?>-->
         <!--      </a></li> -->
         <!--      <li id="smscorner_history"><a href="<?= site_url('smscorner/history'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Sms History'); ?>-->
+        <!--      <?// lang('Sms History'); ?>-->
         <!--      </a></li> -->
         <!--  </ul>-->
         <!--</li>-->
         <!--<li class="treeview mm_quotation"> <a href="#"><i class="fa fa-exchange"></i>-->
         <!--   <span>-->
-        <!--    <?= lang('Quotation'); ?>-->
+        <!--    <?// lang('Quotation'); ?>-->
         <!--   </span> <i class="fa fa-angle-left pull-right"></i> </a>-->
         <!--    <ul class="treeview-menu">-->
         <!--    <li id="quotation_index"><a href="<?= site_url('quotation'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Quotation list'); ?>-->
+        <!--      <?// lang('Quotation list'); ?>-->
         <!--      </a></li>-->
         <!--      <li id="quotation_addQuotation"><a href="<?= site_url('quotation/addQuotation'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Add Quotation'); ?>-->
+        <!--      <?// lang('Add Quotation'); ?>-->
         <!--      </a></li> -->
         <!--  </ul>-->
         <!--</li>-->
         <!--<li class="treeview mm_merge"> <a href="#"><i class="fa fa-exchange"></i>-->
         <!--   <span>-->
-        <!--    <?= lang('Merge'); ?>-->
+        <!--    <?// lang('Merge'); ?>-->
         <!--   </span> <i class="fa fa-angle-left pull-right"></i> </a>-->
         <!--    <ul class="treeview-menu">-->
         <!--    <li id="merge_index"><a href="<?= site_url('merge'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Merge list'); ?>-->
+        <!--      <?// lang('Merge list'); ?>-->
         <!--      </a></li>-->
         <!--      <li id="merge_add_merge"><a href="<?= site_url('merge/add_merge'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Add merge'); ?>-->
+        <!--      <?// lang('Add merge'); ?>-->
         <!--      </a></li>-->
         <!--    <li id="merge_laser"><a href="<?= site_url('merge/laser'); ?>"><i class="fa fa-circle-o"></i>-->
-        <!--      <?= lang('Laser list'); ?>-->
+        <!--      <?// lang('Laser list'); ?>-->
         <!--      </a></li>-->
         <!--  </ul>-->
         <!--</li>-->
         <!-- <li class="treeview mm_gift_cards"> <a href="#"> <i class="fa fa-credit-card"></i> <span>
-          <?= lang('gift_cards'); ?>
+          <?// lang('gift_cards'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
             <li id="gift_cards_index"><a href="<?= site_url('gift_cards'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('list_gift_cards'); ?>
+              <?// lang('list_gift_cards'); ?>
               </a></li>
             <li id="gift_cards_add"><a href="<?= site_url('gift_cards/add'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('add_gift_card'); ?>
+              <?// lang('add_gift_card'); ?>
               </a></li>
           </ul>
         </li> -->   
