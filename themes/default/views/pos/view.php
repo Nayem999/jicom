@@ -228,7 +228,7 @@ if ($modal) {
 
                         <th class="text-center col-xs-3"><?=lang('description');?></th>
 
-                        <th class="text-center col-xs-3"><?=lang('Warranty');?></th>
+                        <th class="text-center col-xs-3">Other Quantity</th>
 
                         <th class="text-center col-xs-1"><?=lang('quantity');?></th>
 
@@ -245,6 +245,7 @@ if ($modal) {
                 <?php
                 $i =0;
                 $tax_summary = array();
+                $qnty_type=array(1=>"Bucket",2=>"Carton",3=>"Bag");
                 $warranty_year='';
                 foreach ($rows as $row) {
                     $sequence = $this->site->getWhereDataByElement('pro_sequence','pro_id','sales_id',$row->product_id,$row->sale_id); 
@@ -264,12 +265,8 @@ if ($modal) {
 
                     echo '<td class="text-center">';
                      
-                        if($row->warranty_year){ 
-                            echo $row->warranty_year;
-                            $warranty_year = $row->warranty_year;
-                        }else{
-                            echo 'No warranty';
-                        }
+                    if($row->qnty_type){echo $qnty_type[$row->qnty_type]." (".$row->per_type_qnty.")";}
+
                     echo'</td>';
 
                     echo '<td class="text-center">' . str_replace('.00','',$row->quantity) . '</td>';
@@ -526,34 +523,41 @@ if ($modal) {
             }*/
 
             ?>    <br> 
-            <table class="table table-bordered table-condensed" width="300px">
-                <tbody>
-                    <tr>
-                        <td class="col-xs-5">Sales</td>
-                        <td class="text-right col-xs-7"><?=$life_sales_customer;?></td>
-                    </tr>
-                    <tr>
-                        <td class="col-xs-5">Collected</td>
-                        <td class="text-right col-xs-7"><?=$life_payment_customer;?></td>
-                    </tr>
-                    <tr>
-                        <td class=" col-xs-5">Current Due</td>
-                        <td class="text-right col-xs-7"><?=$life_sales_customer-$life_payment_customer;?></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="width:250px;">
+
+                <table class="table table-bordered " width="240px">
+                    <tbody>
+                        <tr>
+                            <td class="col-xs-3">All Over Information:</td>
+                            <td class="text-right col-xs-3">Amount</td>
+                        </tr>
+                        <tr>
+                            <td class="col-xs-3">Sales</td>
+                            <td class="text-right col-xs-3"><?=$life_sales_customer;?></td>
+                        </tr>
+                        <tr>
+                            <td class="col-xs-3">Collected</td>
+                            <td class="text-right col-xs-3"><?=$life_payment_customer;?></td>
+                        </tr>
+                        <tr>
+                            <td class=" col-xs-3">Current Due</td>
+                            <td class="text-right col-xs-3"><?=$life_sales_customer-$life_payment_customer;?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
 
             <?= $inv->note ? '<p class="text-center">' . $this->tec->decode_html($inv->note) . '</p>' : ''; ?>
             
-            <div class="warranty" style="text-align:left; <?php if($inv->warranty == 'Not'){  echo  'display:none;'; }?> " >
+            <!-- <div class="warranty" style="text-align:left; <?php if($inv->warranty == 'Not'){  echo  'display:none;'; }?> " >
             <?= $Settings->warranty; ?>
             </div>
 
             <div class="signature" >
             <div class="authorized" ><br><br><span>Authorized Signature</span></div>
             <div class="customer"><br><br><span>Customer Signature <span></div>
-            </div>
+            </div> -->
             <div style="clear:both;"></div>
             </div>  
             <div class="well well-sm">
