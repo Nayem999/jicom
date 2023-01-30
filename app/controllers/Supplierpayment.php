@@ -204,7 +204,7 @@ class Supplierpayment extends MY_Controller
       $suppliers = $this->purchases_model->getSupplierByID($sid);
       foreach ($suppliers as $key => $supplier)  
     	$banks = $this->site->getAllBanks($supplier->store_id);	
-    	if($type=='Cheque'){
+    	if($type=='Cheque' || 'TT'){
     	$output= '<div class="form-group">
 	            <p>Bank information </p> 
 	               <select class="form-control select2 tip" name="bank" required="required" id="type">
@@ -213,12 +213,22 @@ class Supplierpayment extends MY_Controller
 						foreach ($banks as $key => $bank) {
 							$output .='<option value="'.$bank->bank_account_id.'">'.$bank->bank_name .' ('.$bank->account_name.' ) ( '.$bank->account_no.')</option>';
 						}
-						 						
-		$output .='</select></div>
-	            <div class="form-group">
-	            <label>Cheque No </label>
-					<input type="text" name="cheque_no" class="form-control" required="required">
-	            </div>'; 
+						 		if($type=='Cheque'){	
+
+                   $output .='</select></div>
+                             <div class="form-group">
+                             <label>Cheque No </label>
+                         <input type="text" name="cheque_no" class="form-control" required="required">
+                             </div>'; 
+                }
+                else
+                {
+                      $output .='</select></div>
+                      <div class="form-group">
+                      <label>TT No </label>
+                  <input type="text" name="cheque_no" class="form-control" required="required">
+                      </div>'; 
+                }	
 	    echo $output;
         }
     }
@@ -290,7 +300,7 @@ class Supplierpayment extends MY_Controller
         foreach ($getSupplierID as $key => $SupplierID);
         $supplierStore_id = $SupplierID->store_id; 
 
-        if($type=='Cheque'){
+        if($type=='Cheque' || $type=='TT'){
         	if(($bankID=='')||($cheque_no=='')){
         		$this->session->set_flashdata('error', lang('Bank or Cheque no empty'));
         		redirect('supplierpayment/purchase_payment');
