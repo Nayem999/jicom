@@ -152,6 +152,12 @@ class Employee_model extends CI_Model
         $results = $query->result();     
         return $results ; 
     }
+    public function getAllEmployee() {
+        $this->db->from('employee'); 
+        $query = $this->db->get();        
+        $results = $query->result();     
+        return $results ; 
+    }
   
 
 

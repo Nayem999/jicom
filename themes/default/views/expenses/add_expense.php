@@ -19,6 +19,16 @@
                             </div>
                             <?php } ?> 
                             <div class="form-group">
+                            <?= lang("Expenses For*", "Expenses For*"); ?>
+                                <?php
+                                $emp[''] = lang("select")." ".lang("Employee");
+                                foreach($employee as $employee_val) {
+                                    $emp[$employee_val->id] = $employee_val->name;
+                                }
+                                ?>
+                                <?= form_dropdown('employee_id', $emp, set_value('employee_id'), 'class="form-control select2 tip" id="employee_id"  required="required" style="width:100%;"'); ?>
+                            </div>
+                            <div class="form-group">
                                <?= lang('Type', 'Type'); ?>*
                                <select class="form-control select2 tip" name="type" required="required" id="type">
                                  <option value="">Select</option>
@@ -42,15 +52,15 @@
                             <?php } ?>
 
                             <div class="form-group">
-                                    <?= lang('category', 'category'); ?>
-                                    <?php
-                                    $cat[''] = lang("select")." ".lang("category");
-                                    foreach($categories as $category) {
-                                        $cat[$category->cat_id] = $category->name;
-                                    }
-                                    ?>
-                                    <?= form_dropdown('category', $cat, set_value('category'), 'class="form-control select2 tip" id="category"  required="required" style="width:100%;"'); ?>
-                                </div>
+                                <?= lang('category', 'category'); ?>
+                                <?php
+                                $cat[''] = lang("select")." ".lang("category");
+                                foreach($categories as $category) {
+                                    $cat[$category->cat_id] = $category->name;
+                                }
+                                ?>
+                                <?= form_dropdown('category', $cat, set_value('category'), 'class="form-control select2 tip" id="category"  required="required" style="width:100%;"'); ?>
+                            </div>
 
                             <div class="form-group">
                                 <?= lang("reference", "reference"); ?>

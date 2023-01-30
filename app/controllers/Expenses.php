@@ -111,6 +111,7 @@ class Expenses extends MY_Controller
     function add_expense() { 
         $this->load->helper('security');        
         $this->form_validation->set_rules('amount', lang("amount"), 'required');
+        $this->form_validation->set_rules('employee_id', lang("employee_id"), 'required');
         $this->form_validation->set_rules('reference', lang("reference"), 'required');
         $this->form_validation->set_rules('category', lang("category"), 'required');        
         $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');        
@@ -168,7 +169,8 @@ class Expenses extends MY_Controller
                     'bank_status'  => 'Pending',
                     'cheque_or_card_no' => $this->input->post('cheque_no'),
                     'amount'       => $this->input->post('amount'),
-                    'created_by'   => $this->session->userdata('user_id') 
+                    'created_by'   => $this->session->userdata('user_id') ,
+                    'employee_id'   => $this->input->post('employee_id') 
                 );
                 $this->site->insertQuery('bank_pending_expenses', $bankPending); 
             }
@@ -186,6 +188,7 @@ class Expenses extends MY_Controller
             $meta = array( 'page_title' => lang('add_expense'), 'bc' => $bc );
             $this->data['categories'] = $this->categories_model->getAllCategories();
             $this->data['warehouses'] = $this->site->getAllStores();             
+            $this->data['employee'] = $this->employee_model->getAllEmployee();             
             $this->page_construct('expenses/add_expense', $this->data, $meta);            
         }        
     }
