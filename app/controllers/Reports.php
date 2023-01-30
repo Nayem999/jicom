@@ -1160,6 +1160,7 @@ class Reports extends MY_Controller
     function products() {
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $warehouse = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
+        $this->data['customers'] = $this->site->getAllCustomers();  
         $this->data['products'] = $this->reports_model->getAllProducts();
         $this->data['warehouses'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("products_report");
@@ -1174,6 +1175,7 @@ class Reports extends MY_Controller
         $product = $this->input->get('product') ? $this->input->get('product') : NULL;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : NULL;
+        $customer = $this->input->get('customer') ? $this->input->get('customer') : NULL;
  
         $this->load->library('datatables');
         $this->datatables
@@ -1202,6 +1204,7 @@ class Reports extends MY_Controller
         if($start_date) { $this->datatables->where('sales.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->datatables->where('sales.date <=', $end_date.' 23:59:59'); }
         if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
+        if($customer !=NULL) { $this->datatables->where('sales.customer_id',$customer); }
         if(!$this->Admin){
             $this->datatables->where('sale_items.store_id',$this->session->userdata('store_id'));
         }
@@ -1216,6 +1219,7 @@ class Reports extends MY_Controller
         $product = $data_arr[1] ? $data_arr[1] : NULL;
         $start_date = $data_arr[2] ? $data_arr[2] : NULL;
         $end_date = $data_arr[3] ? $data_arr[3] : NULL;
+        $customer = $data_arr[4] ? $data_arr[4] : NULL;
  
        
         $this->db->select(
@@ -1242,6 +1246,7 @@ class Reports extends MY_Controller
         if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
         if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
+        if($customer !=NULL) { $this->datatables->where('sales.customer_id',$customer); }
         if(!$this->Admin){
             $this->db->where('sale_items.store_id',$this->session->userdata('store_id'));
         }
