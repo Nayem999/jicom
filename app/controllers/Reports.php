@@ -2438,4 +2438,57 @@ class Reports extends MY_Controller
         // Render excel data 
         echo $excelData; 
     }
+
+    function aging_rpt()  {
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+
+        $this->data['agingRpt'] = $this->reports_model->agingReport($start_date,$end_date);
+
+        $this->data['start_date'] = $start_date;
+        $this->data['end_date'] = $end_date;
+        $results = array(); 
+        $this->data['results'] = $results; 
+        $this->data['page_title'] = $this->lang->line("Aging Report");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Aging Report')));
+        $meta = array('page_title' => lang('Aging Report'), 'bc' => $bc);
+        $this->page_construct('reports/aging_rpt', $this->data, $meta);
+
+    }
+
+    function excel_aging_rpt($data=null)  {
+
+        $data_arr=explode("_",$data);
+
+        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
+        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+
+        $agingRpt = $this->reports_model->agingReport($start_date,$end_date);
+
+        $fileName = "aging_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('DATE', 'INV NO', 'CUSTOMER','STORE NAME','C.Phone','TOTAL','TAX','DISCOUNT','GRAND TOTAL','PAID','P.BY','BALANCE','STATUS','CHEQUE STATUS');
+
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+
+        if(count($agingRpt) > 0){ 
+            foreach($agingRpt as $result){ 
+
+                $lineData = array(date('d-M-Y',strtotime($result->date)), $result->invoice, $result->customer_name ,$result->storename, $result->phone,$result->total, $result->total_tax, $result->total_discount, $result->grand_total, $result->paid, $result->paid_by, $result->grand_total-$result->paid , $result->status, $result->type);
+                                                                                                                  
+
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            } 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+            
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+            
+        // Render excel data 
+        echo $excelData; 
+
+    }
 }

@@ -1053,6 +1053,16 @@ class Pos extends MY_Controller {
 
       
     }
+
+
+	function aging_status($id){
+		$agingData = array(
+			'aging_status' => 0		
+		);
+		$this->pos_model->warranty($agingData, $id);
+		redirect('reports/aging_rpt');
+
+	}
     
 
 }

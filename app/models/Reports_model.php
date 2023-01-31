@@ -1317,5 +1317,33 @@ class Reports_model extends CI_Model
         $query = $this->db->get();
         return $query->result(); 
 	}
+
+    public function agingReport($start_date=NULL,$end_date=NULL){
+
+        $this->db->select('sales.id as invoice, sales.date, sales.paid_by, sales.customer_name, customers.phone, sales.total,  stores.name as storename, sales.total_tax, sales.total_discount, sales.grand_total, sales.paid, sales.paid_by, sales.status, sales.aging_day, bank_pending.type '); 
+        $this->db->from('sales');  
+
+        $this->db->join('customers', 'customers.id=sales.customer_id');  
+        $this->db->join('stores', 'stores.id=sales.store_id');	     
+        $this->db->join('payments', 'payments.sale_id=sales.id', 'LEFT');	    
+        $this->db->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	
+        
+        $this->db->where('sales.aging_status', '1');  
+        $this->db->where('sales.aging_day >', '0');  
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        }
+		elseif($start_date)
+		{
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $start_date.' 23:59:59');  
+		}
+		else{
+            $this->db->like('sales.date', date('Y-m-d'));
+        }  
+        $query = $this->db->get();
+        return $query->result(); 
+    }
 }
 
