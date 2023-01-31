@@ -186,12 +186,12 @@
               </a></li>
           </ul>
         </li>
-        <li class="treeview mm_service"> <a href="#"><i class="fa fa-tree" aria-hidden="true"></i><span>Service</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <!-- <li class="treeview mm_service"> <a href="#"><i class="fa fa-tree" aria-hidden="true"></i><span>Service</span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
             <li id="sales_index"><a href="<?= site_url('service'); ?>"><i class="fa fa-circle-o"></i> List Service</a></li>
             <li id="sales_opened"><a href="javascript:;" onClick="servicePage('Service')"><i class="fa fa-circle-o"></i> Add Service</a></li>
           </ul>
-        </li>
+        </li> -->
         <li class="treeview mm_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
           <?= lang('Product purchases'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -302,7 +302,7 @@
           </ul>
         </li>
 
-        <li class="treeview mm_merge"> <a href="#"><i class="fa fa-exchange"></i>
+        <!-- <li class="treeview mm_merge"> <a href="#"><i class="fa fa-exchange"></i>
            <span>
             <?= lang('Merge'); ?>
            </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -317,9 +317,9 @@
               <?= lang('Laser list'); ?>
               </a></li>
           </ul>
-        </li>
+        </li> -->
 
-        <li class="treeview mm_gift_cards"> <a href="#"> <i class="fa fa-credit-card"></i> <span>
+        <!-- <li class="treeview mm_gift_cards"> <a href="#"> <i class="fa fa-credit-card"></i> <span>
           <?= lang('gift_cards'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
@@ -330,7 +330,7 @@
               <?= lang('add_gift_card'); ?>
               </a></li>
           </ul>
-        </li>
+        </li> -->
         <li class="treeview mm_gift_cards"> <a href="#"><i class="fa fa-university" aria-hidden="true"></i>
           <span>Bank Account</span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">

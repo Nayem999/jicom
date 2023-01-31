@@ -309,9 +309,9 @@
             <li id="reports_daily_sales"><a href="<?= site_url('reports/daily_sales'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('daily_sales'); ?>
               </a></li>
-            <li id="reports_monthly_sales"><a href="<?= site_url('reports/monthly_sales'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('monthly_sales'); ?>
-              </a></li>
+            <!-- <li id="reports_monthly_sales"><a href="<?= site_url('reports/monthly_sales'); ?>"><i class="fa fa-circle-o"></i>
+              <?// lang('monthly_sales'); ?>
+              </a></li> -->
             <li id="reports_index"><a href="<?= site_url('reports'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('sales_report'); ?>
               </a></li>
