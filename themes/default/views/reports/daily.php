@@ -54,7 +54,7 @@ if (isset($_POST['start_date'])) {
                                     <tr>
                                         <th> SL</th>
                                         <th> Inv. No</th>
-                                        <th> Cusrtomer</th>
+                                        <th> Customer</th>
                                         <?php
                                           foreach ($productArr as $key => $val) 
                                           {

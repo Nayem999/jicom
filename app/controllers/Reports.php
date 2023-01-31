@@ -88,7 +88,7 @@ class Reports extends MY_Controller
 
         $fileName = "daily_statement_" . date('Y-m-d_h_i_s') . ".xls"; 
         // Column names 
-        $fields = array('Date', 'Cusrtomer', 'Collections', 'Cash Sale', 'Total Cash', 'Exp-Descriptions', 'Bank Pay', 'Expenses');
+        $fields = array('Date', 'Customer', 'Collections', 'Cash Sale', 'Total Cash', 'Exp-Descriptions', 'Bank Pay', 'Expenses');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
         $totalCcolled=0;
         $totalCashColled = 0;  
@@ -490,7 +490,7 @@ class Reports extends MY_Controller
         }
 
         $fileName = "daily_sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('SL', 'Inv. No', 'Cusrtomer');
+        $fields = array('SL', 'Inv. No', 'Customer');
         foreach ($productArr as $key => $val) {
             array_push($fields,$val);            
         }

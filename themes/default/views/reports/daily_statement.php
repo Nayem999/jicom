@@ -42,7 +42,7 @@ if(isset($_POST['start_date'])){
                             <tbody> 
                              <tr>
                                <td> Date</td>
-                               <td> Cusrtomer</td>  
+                               <td> Customer</td>  
                                <td> Collections </td> 
                                <td> Cash Sale </td> 
                                <td> Total Cash</td>
