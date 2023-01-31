@@ -55,7 +55,7 @@
           <?php if($Admin) { ?>
           <li><a href="<?= site_url('settings'); ?>"><i class="fa fa-cogs"></i></a></li>
           <?php } ?>
-          <li><a href="<?= site_url('pos/view_bill'); ?>" target="_blank"><i class="fa fa-file-text-o"></i></a></li>
+          <!-- <li><a href="<?= site_url('pos/view_bill'); ?>" target="_blank"><i class="fa fa-file-text-o"></i></a></li> -->
           <li><a href="<?= site_url('pos/shortcuts'); ?>" data-toggle="ajax"><i class="fa fa-key"></i></a></li>
           <li><a href="<?= site_url('pos/register_details'); ?>" data-toggle="ajax">
             <?= lang('register_details'); ?>

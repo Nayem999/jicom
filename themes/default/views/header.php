@@ -41,7 +41,7 @@
             <li class="hidden-xs"><a href="<?= site_url('settings'); ?>"><i class="fa fa-cogs"></i></a></li>
             <?php 
           } ?>
-        <li><a href="<?= site_url('pos/view_bill'); ?>" target="_blank"><i class="fa fa-file-text-o"></i></a></li>
+        <!-- <li><a href="<?= site_url('pos/view_bill'); ?>" target="_blank"><i class="fa fa-file-text-o"></i></a></li> -->
         <li><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i></a></li>
           <?php 
           if($Admin && $qty_alert_num) 
