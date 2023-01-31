@@ -2067,6 +2067,39 @@ class Reports extends MY_Controller
         $this->page_construct('reports/ac_receivable', $this->data, $meta,$cID); 
     }
 
+    public function excel_receivablelist(){
+       
+        if($this->input->post('customer')) 
+        $cID = $this->input->post('customer');
+        else
+        $cID = NULL; 
+
+        $recivabl = $this->reports_model->recablelist($cID);  
+        $customer = $this->reports_model->recablelist($cID); 
+        $tDue = $customer[0]['due']; 
+        $cID = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
+       
+        $fileName = "account_receivable_" . date('Y-m-d_h_i_s') . ".xls"; 			
+		$fields = array('Customer Name', 'Store Name', 'Grand total', 'Paid', 'Balance');
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($recivabl) > 0){ 
+			foreach($recivabl as $key => $recabl){ 
+				$lineData = array($recabl['cname'], $this->site->findeNameByID('stores','id',$recabl['store_id'])->name , $recabl['gtotal'] , $this->tec->formatMoney($recabl['tpaid']), $this->tec->formatMoney($recabl['due']) ); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+			
+		// Headers for download 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+			
+		// Render excel data 
+		echo $excelData;
+    }
+
     public function payablelist(){
         if((!$this->Admin) && (!$this->Manager)) {            
         $this->session->set_flashdata('error', lang('access_denied'));            
