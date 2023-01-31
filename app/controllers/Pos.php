@@ -68,7 +68,7 @@ class Pos extends MY_Controller {
 			$product = "product";
 			$unit_cost = "unit_cost";
 			$tax_rate = "tax_rate";
-
+// echo $this->input->post('bank_id')."**";die;
 			$date = date('Y-m-d H:i:s');
 			$customer_id = $this->input->post('customer_id');
 			$customer_details = $this->pos_model->getCustomerByID($customer_id);
@@ -89,6 +89,7 @@ class Pos extends MY_Controller {
 			$product_discount = 0;
 			$order_discount = 0;
 			$collect_id = 0;
+			$bank_select=1;
 			$percentage = '%';
 			$i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
 			// echo $_POST['product_discount'][$r]
@@ -281,6 +282,14 @@ class Pos extends MY_Controller {
 
         			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='CC' || $this->input->post('paid_by') =='TT'){
 
+						if($this->input->post('bank_id')==0)
+						{
+							$this->session->set_flashdata('error', lang('Please Select Bank'));
+							// redirect('pos');
+							$bank_select=0;
+						}
+						else
+						{$bank_select=1;}
 				          $bankPending = array(
 				            'customer_id'  => $customer_id,
 				            'amount'       => $this->tec->formatDecimal($tCollectAmount), 
@@ -382,7 +391,7 @@ class Pos extends MY_Controller {
 		}
 
 
-		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<=$customer_credit_limit)
+		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<=$customer_credit_limit && $bank_select>0)
 		{
 			if($suspend) {
 				unset($data['status'], $data['rounding']);

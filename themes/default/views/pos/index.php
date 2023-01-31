@@ -729,7 +729,7 @@
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
                 <input type="hidden" name="cheque_no" id="cheque_no_val" value=""/>
                 <input type="hidden" name="tt_no" id="tt_no_val" value=""/>
-                <input type="hidden" name="bank_id" id="bank_id_val" value=""/>
+                <input type="hidden" name="bank_id" id="bank_id_val" value="0"/>
                 <input type="hidden" name="cc_month" id="cc_month_val" value=""/>
                 <input type="hidden" name="cc_year" id="cc_year_val" value=""/>
                 <input type="hidden" name="cc_type" id="cc_type_val" value=""/>
@@ -1136,8 +1136,9 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <?= lang("Select Bank", "bank"); ?>
+                    <?= lang("Select Bank", "bank"); ?>*
                     <?php  
+                    $barr[0]="Select Bank";
                     foreach ($banks as $key => $bank) {
                        $barr[$bank->bank_account_id] = $bank->bank_name.' ('.$bank->account_no.' )';
                     }
