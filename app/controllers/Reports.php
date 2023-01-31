@@ -2107,6 +2107,50 @@ class Reports extends MY_Controller
         $this->page_construct('reports/ac_payable', $this->data, $meta); 
     }
 
+    public function excel_payablelist($data=''){       
+        if($data) 
+        $cID = $data;
+        else
+        $cID = NULL; 
+
+        $payabl = $this->reports_model->payablelist(); 
+        $cID = $this->site->findMergeIdbycp('supplier_id',$data);
+        $total_due =0;
+        $aPay = $this->purchases_model->acPayable($cID);
+        $aPayAd = $this->purchases_model->acPayableAd($cID);
+        foreach ($aPayAd as $key => $aPayAdval)  
+        foreach ($aPay as $key => $value) {
+           $total_due = $total_due + $value->due; 
+        }  
+        if($total_due !=''){
+        $tDue = ($total_due-$aPayAdval->adv_amount);
+        } else{
+        $tDue = $aPayAdval->adv_amount;
+        }          
+        $aPay = $this->purchases_model->acPayable();   
+        
+
+        $fileName = "account_payable_" . date('Y-m-d_h_i_s') . ".xls"; 			
+		$fields = array('Supplier Name', 'Store name', 'Grand total', 'Paid', 'Balance');
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($payabl) > 0){ 
+			foreach($payabl as $key => $pyabl){ 
+				$lineData = array($pyabl['name'], $this->site->findeNameByID('stores','id',$pyabl['store_id'])->name , $this->tec->formatMoney($pyabl['gtotal']) ,$this->tec->formatMoney($pyabl['tpaid']), $this->tec->formatMoney($pyabl['tdue']) ); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+			
+		// Headers for download 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+			
+		// Render excel data 
+		echo $excelData;  
+    }
+
     public function invoiceProfit(){ 
         $this->data['page_title'] = 'Invoice Profit';        
         $bc = array(

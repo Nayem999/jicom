@@ -15,7 +15,8 @@
 
                 <div class="box-header">
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
+                    <button type="button" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
                     <?php if($this->session->userdata('group_id') == 2){
 
                         $u_id = $this->session->userdata('user_id') ;
@@ -222,4 +223,9 @@
     $(".dataTables_paginate ").css("display", "block");
     $("#fileData_filter ").css("display", "block");   
   });
+  $("#excelWindow").click(function() {
+        var data = $("#customer").val() ;
+        var url = '<?= site_url('reports/excel_payablelist/'); ?>' + '/' + data;
+        location.replace(url);
+    });
 </script>
