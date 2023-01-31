@@ -15,6 +15,9 @@ class Pos extends MY_Controller {
 		$this->load->model('sales_model');
 		$this->load->model('settings_model');
 		$this->load->model('bank_model');
+		
+		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
 
 	} 
 
@@ -85,6 +88,7 @@ class Pos extends MY_Controller {
 			$order_tax = 0;
 			$product_discount = 0;
 			$order_discount = 0;
+			$collect_id = 0;
 			$percentage = '%';
 			$i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
 			// echo $_POST['product_discount'][$r]
@@ -225,21 +229,24 @@ class Pos extends MY_Controller {
 
 			$salesCustomers = $this->sales_model->getCustomerDeu($customer_id);
 			$totalDeu = 0;
-			foreach ($salesCustomers as $key => $value) {
-				$totalDeu = $totalDeu + $value->deu;
+			if(isset($salesCustomers) && is_array($salesCustomers))
+			{
+				foreach ($salesCustomers as $key => $value) {
+					$totalDeu = $totalDeu + $value->deu;
+				}
 			}
 			if(!$eid) {
 				$status = 'due';
-				$credit_over=$totalDeu + $paid;
+				$credit_over=$totalDeu + $grand_total;
 				if ($grand_total > $paid && $paid > 0) {
 					$status = 'partial';
-					$credit_over=$totalDeu + ($paid-$grand_total);
+					$credit_over=$totalDeu + ($grand_total-$paid);
 				} elseif ($grand_total <= $paid) {
 					$status = 'paid';
 					$credit_over=0;
 				}
-				// echo $credit_over."__".$customer_credit_limit;die;
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
+				// echo $credit_over."__".$customer_credit_limit;die;
 				if($credit_over>0){
 					if($credit_over>$customer_credit_limit){
 						$this->session->set_flashdata('error', lang('Credit Over'));
@@ -375,7 +382,7 @@ class Pos extends MY_Controller {
 		}
 
 
-		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<$customer_credit_limit)
+		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<=$customer_credit_limit)
 		{
 			if($suspend) {
 				unset($data['status'], $data['rounding']);
