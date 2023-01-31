@@ -194,7 +194,7 @@ $v = "?v=1";
                                     foreach($customers as $customer){
                                         $cu[$customer->id] = $customer->name;
                                     }
-                                    echo form_dropdown('customer', $cu, set_value('Customer'), 'class="form-control select2" style="width:100%" id="customer"'); 
+                                    echo form_dropdown('customer', $cu, set_value('customer'), 'class="form-control select2" style="width:100%" id="customer"'); 
 
                                     ?>
 
@@ -243,6 +243,45 @@ $v = "?v=1";
                     <div class="clearfix"></div>
 
 
+                    <?php 
+                        if($this->input->post('customer'))
+                        {
+                            $customer_Info= $this->customers_model->getCustomerByID($this->input->post('customer'));
+                            ?>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="table-responsive" id="page_content">
+                                        <table class="table table-striped table-bordered table-hover" style="margin-bottom:5px;">
+                                            <thead>
+                                                <tr class="active">
+                                                    <td>Total Product Wise Sale For <b><?=$customer_Info->name;?></b></td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        else
+                        {
+                            ?>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="table-responsive" id="page_content">
+                                        <table class="table table-striped table-bordered table-hover" style="margin-bottom:5px;">
+                                            <thead>
+                                                <tr class="active">
+                                                    <td>Total Product Wise Sale For All Customer</td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    ?>
 
                     <div class="row">
 

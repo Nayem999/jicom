@@ -1186,12 +1186,19 @@ class Reports extends MY_Controller
     }
 
     function products() {
+        $this->load->model('customers_model'); 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $warehouse = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
         $this->data['customers'] = $this->site->getAllCustomers();  
         $this->data['products'] = $this->reports_model->getAllProducts();
         $this->data['warehouses'] = $this->site->getAllStores();
-        $this->data['page_title'] = $this->lang->line("products_report");
+
+        $this->data['store_id'] = $this->input->get('warehouse') ? $this->input->get('warehouse') : 0;
+        $this->data['product'] = $this->input->get('product') ? $this->input->get('product') : 0;
+        $this->data['start_date'] = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
+        $this->data['end_date'] = $this->input->get('end_date') ? $this->input->get('end_date') : NULL;
+        $this->data['customer'] = $this->input->get('customer') ? $this->input->get('customer') : 0;
+
         $this->data['page_title'] = $this->lang->line("products_report");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
         $meta = array('page_title' => lang('products_report'), 'bc' => $bc);
