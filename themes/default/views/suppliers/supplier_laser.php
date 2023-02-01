@@ -14,8 +14,8 @@
                         <b class="box-title">Name : <?php echo $suppliser[0]->name; ?></b><br>
                         <b class="box-title">Phone : </b><?php echo $suppliser[0]->phone; ?> 
                         <div class="padding">
-                        
-                        <button type="button" onclick="printIt()" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
+                        <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+                        <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
                         </div>
                     </div>                    
                 </div> 
@@ -149,5 +149,12 @@
     $(".dataTables_paginate ").css("display", "block");
     $("#fileData_filter ").css("display", "block"); 
   }); 
+
+    $("#excelWindow").click(function() {
+        var data = '<?=$suppliser[0]->id;?>';
+        var url = '<?= site_url('suppliers/excel_supplier_laser/'); ?>'+'/'+data;
+        location.replace(url);
+    });
+
 
 </script>

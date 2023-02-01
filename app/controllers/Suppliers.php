@@ -3,7 +3,6 @@
 
 
 class Suppliers extends MY_Controller
-
 {
 
     function __construct() {
@@ -26,7 +25,6 @@ class Suppliers extends MY_Controller
 
 
     function index()
-
     {
 
 
@@ -320,6 +318,69 @@ class Suppliers extends MY_Controller
         $bc = array(array('link' => '#', 'page' => lang('merge')), array('link' => '#', 'page' => lang('Suppliser Laser list')));
         $meta = array('page_title' => lang('Suppliser Laser List'), 'bc' => $bc);        
         $this->page_construct('suppliers/supplier_laser', $this->data, $meta);
+    }
+
+    public function excel_supplier_laser($id) { 
+    	$results = '';  
+		$suppliser = $this->purchases_model->getSuppByID($id);    
+        if($id !=''){ 
+        	$results = $this->suppliers_model->getSupplierLaserBySid($id);  
+        }  
+		$emptyvalue = '0.00';
+		$gtotal =0;
+		$pgtotal = 0;
+		$sgtotal = 0;
+		$i= 1; 
+		if($results !=''){
+			foreach ($results as $key => $part) {
+				$sort[$key] = strtotime($part['datetime']); 
+			}
+		  array_multisort($sort, SORT_ASC, $results); 
+		}
+		// Excel file name for download 
+		$fileName = "suppliser_laser_" . date('Y-m-d_h_i_s') . ".xls"; 
+		$fields = array('Name : '. $suppliser[0]->name);
+		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		$fields = array('Phone : '.$suppliser[0]->phone);
+		$excelData .= implode("\t", array_values($fields)) . "\n"; 
+		$fields = array('Sl. No', 'Date & Time', 'Type', 'Dr', 'Cr','Balance');
+		$excelData .= implode("\t", array_values($fields)) . "\n"; 
+		
+		if(count($results) > 0){ 
+			foreach($results as $key => $value){ 
+
+				if(($value['type'] == 'Opening balance') && (1>$value['total'])){ 
+					// echo '<td class="center">3*'.$emptyvalue.'</td>' ;
+				}else{
+					$dr_val=$cr_val=$value['total'];
+				}                                   
+				if(($value['type'] == 'purchases') || ($value['type'] == 'Opening balance')) {  ;
+					if(($value['type'] == 'Opening balance') && (1>$value['total'])){ 
+						// echo '<td class="center">1*'.abs($value['total']).'</td>' ;
+					}else{
+						$dr_val=$emptyvalue;
+					}					 
+					$pgtotal = $pgtotal + $value['total'];
+				}
+				if(($value['type'] =='payment') || ($value['type'] =='Advance Payment')){
+					$cr_val=$emptyvalue;
+				$sgtotal = $sgtotal + $value['total'];
+				}
+
+				$gtotal = $sgtotal - $pgtotal;
+
+				$lineData = array($i++,$this->tec->hrld($value['datetime']), $value['type'] , $dr_val, $cr_val, $gtotal); 
+				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+			} 
+
+			$lineData = array('','','' ,$sgtotal, $pgtotal, ''); 
+			$excelData .= implode("\t", array_values($lineData)) . "\n"; 
+		}else{ 
+			$excelData .= 'No records found...'. "\n"; 
+		} 
+		header("Content-Type: application/vnd.ms-excel"); 
+		header("Content-Disposition: attachment; filename=\"$fileName\""); 
+		echo $excelData;  
     }
 
 }
