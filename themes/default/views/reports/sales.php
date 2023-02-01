@@ -26,6 +26,10 @@
                         </div>
                         <?= form_close(); ?>
                     </div>
+                    <div class="table-responsive" >
+                        <div style='text-align:center'><b>Date: <?=date('d-M-Y',strtotime($start_date)).' to '.date('d-M-Y',strtotime($end_date));?></b></div>
+                        
+                    </div>
                     <div class="table-responsive" id="print_content">
                         <div class="col-xs-12">
                             <?php

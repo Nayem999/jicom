@@ -954,8 +954,8 @@ class Reports extends MY_Controller
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
-        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
 
         $this->data['sale'] = $this->reports_model->saleReport($start_date,$end_date);
         $this->data['saleItem'] = $this->reports_model->saleItemReport($start_date,$end_date); 
@@ -1034,8 +1034,8 @@ class Reports extends MY_Controller
     function get_excel_sales($data='')  {
         $data_arr=explode("_",$data);
 
-        $start_date = $data_arr[0] ? $data_arr[0] : NULL;
-        $end_date = $data_arr[1] ? $data_arr[1] : NULL;
+        $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');
+        $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d');
 
         $sale = $this->reports_model->saleReport($start_date,$end_date);
         $saleItem = $this->reports_model->saleItemReport($start_date,$end_date); 
@@ -1106,16 +1106,18 @@ class Reports extends MY_Controller
             }
         }
 
-        $fields = array('Name');
-
         $fileName = "sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+
+        $date_fields= array('Date : ',$start_date,'TO',$end_date);
+        $excelData = implode("\t", array_values($date_fields)) . "\n"; 
+
         $fields = array('Name');
         foreach ($productArr as $key => $val) 
         {
             array_push($fields,$val);
         }
         array_push($fields,"Cash Sale","Credit Sale","Cash Collection","Chq/TT Collection");
-        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($storeArr) > 0){ 
             $total_cash_sale = $total_credit_sale = $total_cash_collection = $total_bank_collection = 0;
