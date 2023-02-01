@@ -36,9 +36,9 @@ if ($modal) {
         <style type="text/css" media="all">
 
             body { color: #000; }
-            #receipt-data {margin: 195px 0px 0 0;}
+            #receipt-data {margin: 145px 0px 0 0;}
 
-            #wrapper { max-width: 660px; margin: 0 auto; padding-top: 80px; }
+            #wrapper { max-width: 660px; margin: 0 auto; padding-top: 10px; }
 
             .btn { border-radius: 0; margin-bottom: 5px; }
 
@@ -103,7 +103,7 @@ if ($modal) {
 
                 .no-print { display: none; }
 
-                #wrapper { max-width: 680px; width: 100%; min-width: 330px; margin: 0 auto; }
+                #wrapper { max-width: 680px; width: 100%; min-width: 330px; margin: 0 auto; padding-top: 0px;margin-top: 0px;  }
 
             } 
 
