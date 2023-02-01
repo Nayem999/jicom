@@ -1255,8 +1255,7 @@ class Reports extends MY_Controller
         $start_date = $data_arr[2] ? $data_arr[2] : NULL;
         $end_date = $data_arr[3] ? $data_arr[3] : NULL;
         $customer = $data_arr[4] ? $data_arr[4] : NULL;
- 
-       
+
         $this->db->select(
             $this->db->dbprefix('products').".name, ".
             $this->db->dbprefix('stores').".name as storename , ".
@@ -1274,19 +1273,21 @@ class Reports extends MY_Controller
             $this->db->dbprefix('products').".tax)/100), 0), 2)
             as profit");
         $this->db->from('sale_items');
+        $this->db->join('sales', 'sale_items.sale_id=sales.id');
         $this->db->join('products', 'sale_items.product_id=products.id', 'left' );
         $this->db->join('stores', 'stores.id=sale_items.store_id', 'left' );
-        $this->db->group_by('products.id');
-        if($product) { $this->datatables->where('products.id', $product); }
-        if($start_date) { $this->datatables->where('sale_items.date >=', $start_date.' 00:00:00'); }
-        if($end_date) { $this->datatables->where('sale_items.date <=', $end_date.' 23:59:59'); }
-        if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
-        if($customer !=NULL) { $this->datatables->where('sales.customer_id',$customer); }
+
+        if($product) { $this->db->where('products.id', $product); }
+        if($start_date) { $this->db->where('sales.date >=', $start_date.' 00:00:00'); }
+        if($end_date) { $this->db->where('sales.date <=', $end_date.' 23:59:59'); }
+        if($store_id !=NULL) { $this->db->where('sale_items.store_id',$store_id); }
+        if($customer !=NULL) { $this->db->where('sales.customer_id',$customer);  }
         if(!$this->Admin){
             $this->db->where('sale_items.store_id',$this->session->userdata('store_id'));
         }
-        
+        $this->db->group_by('products.id');
         $query_data = $this->db->get()->result();
+        // echo $this->db->last_query();die;
         $fileName = "product_report_" . date('Y-m-d_h_i_s') . ".xls"; 
         $fields = array('NAME', 'STORE NAME', 'CODE', 'SOLD', 'TAX', 'COST', 'INCOME', 'PROFIT');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
