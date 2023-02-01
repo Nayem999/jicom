@@ -295,29 +295,32 @@ class Pos extends MY_Controller {
 							// redirect('pos');
 							$bank_chk=0;
 						}
-						if($this->input->post('bank_id') != 0 &&  $this->input->post('cheque_no') != ''){ $bank_chk=1; }
+						if($this->input->post('bank_id') != 0 &&  $this->input->post('cheque_no') != '')
+						{ 
+							$bank_chk=1;
+							$bankPending = array(
+								'customer_id'  => $customer_id,
+								'amount'       => $this->tec->formatDecimal($tCollectAmount), 
+								'insert_date'  => date('Y-m-d H:i:s'),
+								'type'         => 'pending',
+								'collection_id' => $collect_id,
+								'store_id'       => 1,
+								'payment_type' =>  1,
+								'bank_id' =>  $this->input->post('bank_id'),
+								'store_id'     => $store_id,
+							  );
+							  if($this->input->post('cc_no')){
+								  $bankPending['cheque_no'] = $this->input->post('cc_no');
+							  }else if($this->input->post('cheque_no')){
+								  $bankPending['cheque_no'] = $this->input->post('cheque_no');
+							  } 
+							  else if($this->input->post('tt_no')){
+								  $bankPending['cheque_no'] = $this->input->post('tt_no');
+							  } 
+	  
+							  $this->bank_model->bankPendingTranjection($bankPending); 
+						}
 
-				          $bankPending = array(
-				            'customer_id'  => $customer_id,
-				            'amount'       => $this->tec->formatDecimal($tCollectAmount), 
-				            'insert_date'  => date('Y-m-d H:i:s'),
-				            'type'         => 'pending',
-				            'collection_id' => $collect_id,
-				            'store_id'       => 1,
-				            'payment_type' =>  1,
-				            'bank_id' =>  $this->input->post('bank_id'),
-							'store_id'     => $store_id,
-				          );
-				          if($this->input->post('cc_no')){
-				          	$bankPending['cheque_no'] = $this->input->post('cc_no');
-				          }else if($this->input->post('cheque_no')){
-				          	$bankPending['cheque_no'] = $this->input->post('cheque_no');
-				          } 
-				          else if($this->input->post('tt_no')){
-				          	$bankPending['cheque_no'] = $this->input->post('tt_no');
-				          } 
-
-			          	$this->bank_model->bankPendingTranjection($bankPending);
 			        }
     			}
         	}
