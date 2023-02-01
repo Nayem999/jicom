@@ -289,15 +289,35 @@ class Pos extends MY_Controller {
 							$bank_chk=0;
 						}
 
-						if($this->input->post('cheque_no')=='')
+						if($this->input->post('bank_id')==0)
 						{
-							$this->session->set_flashdata('error', lang('Please Write Cheque No'));
+							$this->session->set_flashdata('error', lang('Please Select Bank'));
 							// redirect('pos');
 							$bank_chk=0;
 						}
-						if($this->input->post('bank_id') != 0 &&  $this->input->post('cheque_no') != '')
+						if($this->input->post('paid_by') =='CC'){
+							if($this->input->post('cc_no')=='')
+							{
+								$this->session->set_flashdata('error', lang('Please Write Credit Card No'));
+								$bank_chk=0;
+							}
+						}else if($this->input->post('paid_by') =='Cheque'){
+							if($this->input->post('cheque_no')=='')
+							{
+								$this->session->set_flashdata('error', lang('Please Write Cheque No'));
+								$bank_chk=0;
+							}
+						} 
+						else if($this->input->post('paid_by') =='TT'){
+							if($this->input->post('tt_no')=='')
+							{
+								$this->session->set_flashdata('error', lang('Please Write TT No'));
+								$bank_chk=0;
+							}
+						} 
+
+						if($bank_chk)
 						{ 
-							$bank_chk=1;
 							$bankPending = array(
 								'customer_id'  => $customer_id,
 								'amount'       => $this->tec->formatDecimal($tCollectAmount), 
