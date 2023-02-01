@@ -89,7 +89,7 @@ class Pos extends MY_Controller {
 			$product_discount = 0;
 			$order_discount = 0;
 			$collect_id = 0;
-			$bank_select=1;
+			$bank_chk=1;
 			$percentage = '%';
 			$i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
 			// echo $_POST['product_discount'][$r]
@@ -286,10 +286,17 @@ class Pos extends MY_Controller {
 						{
 							$this->session->set_flashdata('error', lang('Please Select Bank'));
 							// redirect('pos');
-							$bank_select=0;
+							$bank_chk=0;
 						}
-						else
-						{$bank_select=1;}
+
+						if($this->input->post('cheque_no')=='')
+						{
+							$this->session->set_flashdata('error', lang('Please Write Cheque No'));
+							// redirect('pos');
+							$bank_chk=0;
+						}
+						if($this->input->post('bank_id') != 0 &&  $this->input->post('cheque_no') != ''){ $bank_chk=1; }
+
 				          $bankPending = array(
 				            'customer_id'  => $customer_id,
 				            'amount'       => $this->tec->formatDecimal($tCollectAmount), 
@@ -391,7 +398,7 @@ class Pos extends MY_Controller {
 		}
 
 
-		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<=$customer_credit_limit && $bank_select>0)
+		if ( $this->form_validation->run() == true && !empty($products) && $credit_over<=$customer_credit_limit && $bank_chk>0)
 		{
 			if($suspend) {
 				unset($data['status'], $data['rounding']);
