@@ -54,7 +54,7 @@ class Collection extends MY_Controller
         
         $this->datatables->from('today_collection');     
 
-        if($customer) { $this->datatables->where('customer_id', $customer); }
+        if($customer) { $this->datatables->where('customers.id', $customer); }
         if($start_date) { $this->datatables->where('payment_date >=', $start_date); }
         if($end_date) { $this->datatables->where('payment_date <=', $end_date); }       
         
@@ -70,9 +70,10 @@ class Collection extends MY_Controller
     function index() {    
        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;
-       $supplier = $this->input->post('Supplier') ? $this->input->post('customer') : NULL;
+       $customer = $this->input->post('customer') ? $this->input->post('customer') : NULL;
 
        $this->data['customers'] = $this->site->getAllCustomers();      
+       $this->data['customer'] = $customer;      
        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));        
        $this->data['page_title'] = 'Collection';        
         $bc = array(
