@@ -13,8 +13,8 @@
                     <b class="box-title">Name : <?php echo $customer[0]->name; ?></b><br>
                     <b class="box-title">Phone : <?php echo $customer[0]->phone; ?></b>
                     <div class="padding">
-                        
-                        <button type="button" onclick="printIt()" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button> 
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+                        <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button> 
                         </div>
                 </div>
                 <div class="box-body">  
@@ -152,5 +152,11 @@
     $(".dataTables_paginate ").css("display", "block");
     $("#fileData_filter ").css("display", "block"); 
   }); 
+
+    $("#excelWindow").click(function() {
+        var data = '<?=$customer[0]->id;?>';
+        var url = '<?= site_url('customers/excel_customer_laser/'); ?>'+'/'+data;
+        location.replace(url);
+    });
 
 </script>

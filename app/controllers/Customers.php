@@ -212,6 +212,71 @@ class Customers extends MY_Controller
         $meta = array('page_title' => lang('Customer Laser List'), 'bc' => $bc);        
         $this->page_construct('customers/customer_laser', $this->data, $meta);
 	} 
+	public function excel_customer_laser($id){
+ 
+		$customer = $this->sales_model->getCustomerByID($id);    
+        if($id !=''){ 
+        	$results = $this->customers_model->getCustomerLaserByCid($id);  
+        }  
+		$emptyvalue = 0;
+		$gtotal =0;
+		$pgtotal = 0;
+		$sgtotal = 0;
+		$i= 1; 
+		if($results !=''){
+			foreach ($results as $key => $part) {
+				$sort[$key] = strtotime($part['datetime']); 
+			} 
+		}
+		array_multisort($sort, SORT_ASC, $results);
+
+		// Excel file name for download 
+        $fileName = "customer_laser_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('Name : '. $customer[0]->name);
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $fields = array('Phone : '.$customer[0]->phone);
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        $fields = array('Sl. No', 'Date & Time', 'Type', 'Dr', 'Cr','Balance');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($results) > 0){ 
+            foreach($results as $key => $value){ 
+				if(($value['type'] == 'Opening balance') && (1>$value['total'])){ 
+					// echo '<td class="center">4*'.$emptyvalue.'</td>' ;
+				}else{
+					$dr_val=$cr_val=$this->tec->formatMoney($value['total']) ;
+				} 
+
+				if(($value['type'] =='collection') ||($value['type'] =='Advance Collection') || ($value['type'] =='Sales Return')) {  ;
+					$dr_val=$emptyvalue ;
+					$pgtotal = $pgtotal + $value['total'];
+				}
+
+				if(($value['type'] == 'sale') || ($value['type'] == 'service') || ($value['type'] =='Opening balance')||($value['type'] =='Sales Return Amount')){
+				   if(($value['type'] == 'Opening balance') && (1>$value['total'])){ 
+						// echo '<td class="center">6*'.abs($value['total']).'</td>' ;
+				   }else{
+						$cr_val=$emptyvalue;
+				   }
+				   $sgtotal = $sgtotal + $value['total'];
+				}
+
+				$gtotal = $sgtotal - $pgtotal;
+
+                $lineData = array($i++,$this->tec->hrld($value['datetime']), $value['type'] , $dr_val, $cr_val, $gtotal); 
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            } 
+
+			$lineData = array('','','' ,$sgtotal, $pgtotal, ''); 
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+        }else{ 
+            $excelData .= 'No records found...'. "\n"; 
+        } 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+        echo $excelData;  
+
+	} 
 
 }
 
