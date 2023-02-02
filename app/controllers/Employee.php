@@ -332,7 +332,7 @@ class Employee extends MY_Controller
 			$this->purchases_model->addExpense($data);			
 			redirect("employee");
 		}			
-		$this->action = 'employee/paySalary/'.$id ;		
+		$this->data['action'] = 'employee/paySalary/'.$id ;		
 		$this->data['emplyee'] = $this->employee_model->getEmplyeeByID($id);
 		$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 		//$this->page_construct('employee/paysalary', $this->data);
@@ -389,7 +389,7 @@ class Employee extends MY_Controller
 			$this->employee_model->updateSalaryExpense($dataExpense,$id);
 			redirect("employee");
 		}
-	 	$this->action = 'employee/paySalaryEtdit/'.$id;	 
+		$this->data['action'] = 'employee/paySalaryEtdit/'.$id;	 
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 		$this->load->view($this->theme . 'employee/paysalaryedit.php',$this->data);  
 	 }
