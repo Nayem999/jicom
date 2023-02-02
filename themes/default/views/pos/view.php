@@ -416,9 +416,8 @@ if ($modal) {
             if ($payments) {
 
                 echo '<table class="table table-striped table-condensed" style="margin-bottom: -1px;"><tbody>';
-
                 foreach ($payments as $payment) {
-
+                    
                     echo '<tr>';
 
                     if ($payment->paid_by == 'cash' && $payment->pos_paid) {
@@ -450,6 +449,18 @@ if ($modal) {
                         echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                         
                         echo '<td>' . lang("cheque_no") . ': ' . $payment->cheque_no . '</td>';
+                        
+                        echo '<td></td>';
+                        
+                        echo '<td style="width: 170px; text-align: right;">' . lang("amount") . ': ' . $this->tec->formatMoney($payment->amount) . '</td>';
+
+                    }
+
+                    if ($payment->paid_by == 'TT' && $payment->tt_no) {
+
+                        echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
+                        
+                        echo '<td>' . lang("tt_no") . ': ' . $payment->tt_no . '</td>';
                         
                         echo '<td></td>';
                         
