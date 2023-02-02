@@ -257,15 +257,18 @@
           <?= lang('reports'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
+            <li id="reports_daily_statement"><a href="<?= site_url('reports/daily_statement'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Daily Statement'); ?>
+              </a></li>
             <li id="reports_todayhighlight"><a href="<?= site_url('reports/todayhighlight'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Today\'s Highlights'); ?>
               </a></li>
-              <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash'); ?>
+              <!-- <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Petty Cash'); ?></a></li>
               <li id="reports_pettycashlist"><a href="<?= site_url('reports/pettycashlist'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash list'); ?>
+              <?= lang('Petty Cash list'); ?></a></li> -->
               <li id="reports_payablelist"><a href="<?= site_url('reports/payablelist'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Account Payable'); ?>
+              <?= lang('Account Payable'); ?></a></li>
               <li id="reports_receivablelist"><a href="<?= site_url('reports/receivablelist'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Acount Receivable'); ?>
               </a></li>
@@ -299,6 +302,15 @@
             <li id="reports_products_staff"><a href="<?= site_url('reports/products_staff'); ?>"><i class="fa fa-circle-o"> </i>Products list (Staff) </a></li>
             <li id="reports_products_all"><a href="<?= site_url('reports/products_all'); ?>"><i class="fa fa-circle-o"> </i>Products list (All) </a></li>
             <li id="reports_product_stock"><a href="<?= site_url('reports/product_stock'); ?>"><i class="fa fa-circle-o"> </i>Products Stock </a></li>
+
+            <li id="reports_store_product_stock"><a href="<?= site_url('reports/store_product_stock'); ?>"><i class="fa fa-circle-o"> </i>Store Stock Product </a></li>
+            <li id="reports_invoiceProfit"><a href="<?= site_url('reports/invoiceProfit'); ?>"><i class="fa fa-circle-o"> </i>Invoice Profit</a></li>
+            <li id="reports_salaryReport"><a href="<?= site_url('reports/salaryReport'); ?>"><i class="fa fa-circle-o"> </i>Salary Report</a></li>
+            <li id="reports_expensesReport"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
+            <li id="reports_creditCollectionReport"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
+            <li id="reports_aging_Report"><a href="<?= site_url('reports/aging_rpt'); ?>"><i class="fa fa-circle-o"> </i>Aging Report</a></li>
+
+
           </ul>
         </li>
 
