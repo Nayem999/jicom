@@ -104,7 +104,7 @@ data-easein="flipYIn" class="modal posModal in" style="display: block; padding-l
 
                                         <label for="amount">Amount</label>
                                        
-                                        <input type="text" required="required" class="pa form-control kb-pad amount" 
+                                        <input type="number" required="required" class="pa form-control kb-pad amount" 
                                         value="<?php if(isset($paySalary->amount)){ echo $paySalary->amount ; }else{ echo $emplyee->basic_salary ; } ?>" id="amount" name="amount">
                                         <?php  echo form_error('amount');?>
 
@@ -120,7 +120,7 @@ data-easein="flipYIn" class="modal posModal in" style="display: block; padding-l
                                 <input type="hidden" name="store_id" value="<?= $emplyee->store_id; ?>">
 
                                 <label for="commission">Commission</label>
-                                  <input type="text"  class="pa form-control kb-pad amount" value="<?php if(isset($paySalary->commission)){ echo $paySalary->commission ; } ?>" id="commission" name="commission">
+                                  <input type="number"  class="pa form-control kb-pad amount" value="<?=isset($paySalary->commission)?$paySalary->commission:0 ?>" id="commission" name="commission">
 
                             </div>
 
@@ -144,7 +144,7 @@ data-easein="flipYIn" class="modal posModal in" style="display: block; padding-l
     <div class="form-group">
 
         <label for="note">Note</label>
-         <?= form_textarea('note', set_value('note',$paySalary->note), 'class="form-control tip redactor" id="note"'); ?>
+         <?= form_textarea('note', set_value('note', isset($paySalary->note)? $paySalary->note:'' ), 'class="form-control tip redactor" id="note"'); ?>
     </div>
 
 </div>
