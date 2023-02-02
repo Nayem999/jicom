@@ -74,18 +74,18 @@
                         $proSequs = $this->site->getWhereDataByElement('pro_sequence','sales_id','pro_id',$value->sale_id,$value->product_id); 
                         //$proSequs = $this->site->getWhereDataByElement('pro_sequence','sales_id','pro_id','225','140');
                         if($proSequs){
-                            $totalSequence = count($proSequs); 
+                           /*  $totalSequence = count($proSequs); 
                             if($totalSequence >0){
                                 $seqFound = 'sequence-match'; 
                             }else{
                                 $seqFound = ''; 
-                            }
+                            } */
                         } 
 						?>
                         <tr class="row<?php echo $i; ?> <?= $seqFound; ?>" id="row<?php echo $i; ?>">
 
                             <td>
-                                <input type="hidden" value="<?= $totalSequence; ?>" name="totalSequence">
+                                <input type="hidden" value="<?// $totalSequence; ?>" name="totalSequence">
                                 <?php echo $value->product_code;?> </td>
 
                             <td><?php echo $value->product_name ;?></td>

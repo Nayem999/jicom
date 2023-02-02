@@ -122,11 +122,16 @@ class Salereturn extends MY_Controller
 		
 	function add() {
 		 
-		$sela_item_id = $this->input->post('sela_item_id');
+		/* $sela_item_id = $this->input->post('sela_item_id');
 		$ids ='';
 		  foreach($sela_item_id  as $id ){
 			$ids = $ids ."'".$id."',";
-		  }
+		  } */
+		$sela_item_id = isset($_POST['sela_item_id']) ? sizeof($_POST['sela_item_id']) : 0;
+		$ids ='';
+		for($i=0; $i< $sela_item_id ; $i++){
+			$ids = $ids ."'".$_POST['sela_item_id'][$i]."',";
+		}
 		$ids = preg_replace('~,(?!.*,)~', '', $ids);  
 		
 		if($ids==''){ 
