@@ -233,7 +233,7 @@ class Employee extends MY_Controller
                 echo json_encode(array('status' => 'failed', 'msg' => validation_errors())); die();
             }			
 			$date['submit_button'] = "Update Employee";			
-			$this->$data['action'] = "employee/edit/".$id;			
+			$this->data['action'] = "employee/edit/".$id;			
 			$this->data['emplyee'] = $this->employee_model->getEmplyeeByID($id);
 			$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
     		$this->data['page_title'] = 'Edit employee';
