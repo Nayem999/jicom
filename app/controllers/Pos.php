@@ -282,7 +282,7 @@ class Pos extends MY_Controller {
 
         			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='CC' || $this->input->post('paid_by') =='TT'){
 
-						if($this->input->post('bank_id')==0)
+						if($this->input->post('bank_id')==0 && $this->input->post('paid_by') !='CC')
 						{
 							$this->session->set_flashdata('error', lang('Please Select Bank'));
 							// redirect('pos');
