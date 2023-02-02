@@ -191,7 +191,7 @@
                   </div>
                 </div>
                 <div class="clearfix"></div>
-                <?php if((count($pay) > 0) && ($pay[0]->amount !='')){ ?>
+                <?php if(is_array($pay) && ($pay[0]->amount !='')){ ?>
                 <div class="modal-content">
                   <div class="modal-header">
                     <h4 id="myModalLabel" class="modal-title">Payment Records</h4>
@@ -210,7 +210,7 @@
                         </thead>
                         <tbody>
                           <?php 
-                            if(isset($pay) && (count($pay) > 0)){
+                            if(isset($pay) && is_array($pay)){
                             foreach($pay as $value){
                                 //print_r($value);
                                  ?>
