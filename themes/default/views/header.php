@@ -349,6 +349,7 @@
             <li id="reports_expensesReport"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
             <li id="reports_creditCollectionReport"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
             <li id="reports_aging_Report"><a href="<?= site_url('reports/aging_rpt'); ?>"><i class="fa fa-circle-o"> </i>Aging Report</a></li>
+            <li id="reports_aging_Report"><a href="<?= site_url('/reports/bank_balance'); ?>"><i class="fa fa-circle-o"> </i>Bank Balance</a></li>
           </ul>
         </li>
 
