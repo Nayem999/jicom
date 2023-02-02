@@ -105,10 +105,10 @@ function loadItems() {
             var row_no = (new Date).getTime();
             if(sQty > 0){
               
-                var SequenceIcone =  '<td id="td_' + row_no + '" ><input type="hidden" class="form-control input-qty kb-pad text-center " name="sequence[]" type="text" value="'+item_seq+'"  id="sequence_' + row_no + '" "><a href="javascript:;"><span id="sqout-'+row_no+'"></span><span onClick="sqOut(' + parseFloat(row_no) + ',' + item_id + ',' + item_qty +')" ><i class="fa fa-2x fa-plus-circle" id="addIcon"></i></span></a></td>' ; 
+                var SequenceIcone =  '<td style="display:none;" id="td_' + row_no + '" ><input type="hidden" class="form-control input-qty kb-pad text-center " name="sequence[]" type="text" value="'+item_seq+'"  id="sequence_' + row_no + '" "><a href="javascript:;"><span id="sqout-'+row_no+'"></span><span onClick="sqOut(' + parseFloat(row_no) + ',' + item_id + ',' + item_qty +')" ><i class="fa fa-2x fa-plus-circle" id="addIcon"></i></span></a></td>' ; 
             }else{
                
-                 var SequenceIcone =  '<td  id="td_' + row_no + '" ><input type="hidden" class="form-control input-qty kb-pad text-center " name="sequence[]" type="text" value="sequence_sequence"  id="sequence_' + row_no + '" "><span class=" text-center "> Sequence not found </span></td>' ;  
+                 var SequenceIcone =  '<td style="display:none;" id="td_' + row_no + '" ><input type="hidden" class="form-control input-qty kb-pad text-center " name="sequence[]" type="text" value="sequence_sequence"  id="sequence_' + row_no + '" "><span class=" text-center "> Sequence not found </span></td>' ;  
             }
 
 
@@ -117,10 +117,10 @@ function loadItems() {
             tr_html = '<td><input name="product_id[]" type="hidden" class="rid" value="' + product_id + '"><button type="button" class="btn bg-purple btn-block btn-xs edit" id="' + row_no + '" data-item="' + item_id + '"><span class="sname" id="name_' + row_no + '">' + item_name + ' (' + item_code + ')( Stock Qty '+ StockQty +')</span></button></td>';
             // <input class="rprice" name="net_price[]" type="hidden" id="price_' + row_no + '" value="' + formatDecimal(item_price) + '">
             tr_html += '<td class="text-right"><input class="realuprice" name="real_unit_price[]" type="hidden" value="' + item.row.real_unit_price + '"><input class="rdiscount" name="product_discount[]" type="hidden" id="discount_' + row_no + '" value="' + ds + '"><input name="qnty_type[]" type="hidden" value="' + item_qnty_type + '"><input name="per_type_qnty[]" type="hidden" value="' + item_per_type_qnty + '"><span class="text-right sprice" id="sprice_' + row_no + '">' + formatMoney(parseFloat(net_price) + parseFloat(pr_tax_val)) + '</span></td>';
-            tr_html += '<td><input class="form-control input-qty kb-pad text-center rquantity" name="quantity[]" type="text" value="' + formatDecimal(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onKeyup="quantityFild('+product_id+','+row_no+')"></td>';
+            tr_html += '<td ><input class="form-control input-qty kb-pad text-center rquantity" name="quantity[]" type="text" value="' + formatDecimal(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onKeyup="quantityFild('+product_id+','+row_no+')"></td>';
             tr_html += SequenceIcone;
             //class="text-right"
-            tr_html += '<td ><input class="form-control kb-pad text-center war" name="war[]" type="text" value="'+ item_war+'" data-id="' + row_no + '" data-item="' + item_id + '" id="war' + row_no + '" ></td>';
+            tr_html += '<td style="display:none;" ><input class="form-control kb-pad text-center war" name="war[]" type="text" value="'+ item_war+'" data-id="' + row_no + '" data-item="' + item_id + '" id="war' + row_no + '" ></td>';
             tr_html += '<td class="text-right"><span class="text-right ssubtotal" id="subtotal_' + row_no + '">' + formatMoney(((parseFloat(net_price) + parseFloat(pr_tax_val)) * parseFloat(item_qty))) + '</span></td>';
             tr_html += '<td class="text-center"><i class="fa fa-trash-o tip pointer posdel" id="' + row_no + '" title="Remove"></i></td>';
             newTr.html(tr_html);

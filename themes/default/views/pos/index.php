@@ -639,10 +639,10 @@
                         <th><?=lang('product')?></th>
                         <th style="width: 15%;text-align:center;"><?=lang('price')?></th>
                         <th style="width: 15%;text-align:center;"><?=lang('qty')?></th>
-                        <th style="width: 10%;text-align:center;"><?=lang('Sequence')?></th>
-                        <th style="width: 10%;text-align:center;">Warranty</th>
+                        <th style="width: 10%;text-align:center;display:none;"><?=lang('Sequence')?></th>
+                        <th style="width: 10%;text-align:center;display:none;">Warranty</th>
                         <th style="width: 15%;text-align:center;"><?=lang('subtotal')?></th>
-                        <th style="width: 10px;" class="satu"><i class="fa fa-trash-o"></i></th>
+                        <th style="width: 10%;" class="satu"><i class="fa fa-trash-o"></i></th>
                       </tr>
                     </thead>
                     <tbody>
