@@ -235,10 +235,10 @@ if ($modal) {
 
                         <th class="text-center col-xs-2">Sl. No.</th>
 
-                        <th class="text-center col-xs-6"><?=lang('description');?></th>
+                        <th class="text-center col-xs-3"><?=lang('description');?></th>
 
                        <!--  <th class="text-center col-xs-3"><?=lang('Warranty');?></th> -->
-
+                       <th class="text-center col-xs-3">Other Quantity</th>
                         <th class="text-center col-xs-2"><?=lang('quantity');?></th>
 
                          <!-- <th class="text-center col-xs-1"><?=lang('price');?></th>
@@ -280,7 +280,11 @@ if ($modal) {
                        }
                     echo '</td>';                   
 
-                  
+                    echo '<td class="text-center">';
+                     
+                    if($row->qnty_type){echo $qnty_type[$row->qnty_type]." (".$row->per_type_qnty.")";}
+
+                    echo'</td>';
 
                     echo '<td class="text-center">' . str_replace('.00','',$row->quantity) . '</td>';
 
