@@ -443,6 +443,8 @@ class Products extends MY_Controller
                 'code' => $this->input->post('code'),
 
                 'name' => $this->input->post('name'),
+                
+                'brands_id' => $this->input->post('brand'),
 
                 'category_id' => $this->input->post('category'),
 
