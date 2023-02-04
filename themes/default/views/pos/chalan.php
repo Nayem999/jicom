@@ -334,9 +334,10 @@ if ($modal) {
 
                 
                 
-                if($retunVal->pos_balance>0){ ?>
+                /* if($retunVal->pos_balance>0){ ?>
                     
-                    <?php } ?>
+                    <?php }  */
+                    ?>
                 </tfoot>
 
             </table>

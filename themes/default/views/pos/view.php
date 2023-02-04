@@ -211,7 +211,8 @@ if ($modal) {
                     //print_r($userifo);
                       
                     foreach ($userifo as $key => $value)                    
-                    echo '<strong> Sold By: </strong> '.$value->first_name.' '.$value->last_name;
+                    echo '<strong> Sold By: </strong> '.$value->first_name.' '.$value->last_name.'<br>';
+                    echo '<strong> Delivery Date: </strong> '.$this->tec->hrsd($payments[0]->delivery_date);
                     //echo $this->tec->hrld($inv->date); ?> 
                 </span>
 
@@ -396,17 +397,19 @@ if ($modal) {
 
                     </tr>
                 <?php  
-                // if($retunVal->pos_balance>0){ 
                 if(isset($retunVal->pos_balance)){ 
-                    ?>
-                    <tr>
-                        <th></th>
-                        <td colspan="1">Returns</td>
+                    if($retunVal->pos_balance>0){ 
+                        ?>
+                        <!-- <tr>
+                            <th></th>
+                            <td colspan="1">Returns</td>
 
-                        <td colspan="4" class="text-right"><?php echo $this->tec->formatMoney($retunVal->pos_balance); ?></td>
+                            <td colspan="4" class="text-right"><?php echo $this->tec->formatMoney($retunVal->pos_balance); ?></td>
 
-                    </tr>
-                    <?php } ?>
+                        </tr> -->
+                        <?php 
+                    }
+                } ?>
                 </tfoot>
 
             </table>
@@ -449,9 +452,7 @@ if ($modal) {
                         echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                         
                         echo '<td>' . lang("cheque_no") . ': ' . $payment->cheque_no . '</td>';
-                        
-                        echo '<td></td>';
-                        
+                                                
                         echo '<td style="width: 170px; text-align: right;">' . lang("amount") . ': ' . $this->tec->formatMoney($payment->amount) . '</td>';
 
                     }
@@ -461,8 +462,6 @@ if ($modal) {
                         echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                         
                         echo '<td>' . lang("tt_no") . ': ' . $payment->tt_no . '</td>';
-                        
-                        echo '<td></td>';
                         
                         echo '<td style="width: 170px; text-align: right;">' . lang("amount") . ': ' . $this->tec->formatMoney($payment->amount) . '</td>';
 
@@ -539,8 +538,8 @@ if ($modal) {
                 <table class="table table-bordered " width="240px">
                     <tbody>
                         <tr>
-                            <td class="col-xs-3">All Over Information:</td>
-                            <td class="text-right col-xs-3">Amount</td>
+                            <td class="col-xs-3"><b>Net Outstanding</b></td>
+                            <td class="text-right col-xs-3"><b>Amount</b></td>
                         </tr>
                         <tr>
                             <td class="col-xs-3">Sales</td>
