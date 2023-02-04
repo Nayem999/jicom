@@ -2401,30 +2401,19 @@ class Reports extends MY_Controller
         $excelData = implode("\t", array_values($fields)) . "\n"; 
 
         if(count($bank_data) > 0){ 
-            $total_balance=array(); $chkArr=array();
+            $total_balance=0;
             foreach($bank_data as $key=>$val){ 
                 $lineData = array(date("d-M-Y",strtotime($val->create_date)), $val->bank_name." (".$val->account_no.")" ,($val->payment_type==1)? $val->amount: 0,($val->payment_type==2)? $val->amount: 0);
                 if($val->payment_type==1)
                 {
-                    if (array_key_exists($val->bank_id, $chkArr)) {
-                        $total_balance[$val->bank_id] += $val->amount;
-                    }
-                    else{
-                        $chkArr[]=$val->bank_id;
-                        $total_balance[$val->bank_id] = $val->amount;
-                    }
+                    $total_balance+=$val->amount;
                 }
-                else
+                if($val->payment_type==2)
                 {
-                    if (array_key_exists($val->bank_id, $chkArr)) {
-                        $total_balance[$val->bank_id] -= $val->amount;
-                    }
-                    else{
-                        $chkArr[]=$val->bank_id;
-                        $total_balance[$val->bank_id] = -$val->amount;
-                    }
+                    $total_balance-=$val->amount;
                 }
-                array_push($lineData,$total_balance[$val->bank_id]);
+
+                array_push($lineData,$total_balance);
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             
             } 
