@@ -65,19 +65,19 @@
 
                                             <tr class="active">
 
-                                                <th class="col-xs-3"><?= lang('product'); ?></th>
+                                                <th class="col-xs-4"><?= lang('product'); ?></th>
 
-                                                <th class="col-xs-1"><?= lang('quantity'); ?></th>
+                                                <th class="col-xs-2"><?= lang('quantity'); ?></th>
 
-                                                <th class="col-xs-2">Expiry year</th>
+                                                <!-- <th class="col-xs-2">Expiry year</th>
 
-                                                <th class="col-xs-2">Sequence</th>
+                                                <th class="col-xs-2">Sequence</th> -->
 
                                                 <th class="col-xs-1">Generate</th>
 
-                                                <th class="col-xs-1"><?= lang('unit_cost'); ?></th>
+                                                <th class="col-xs-2"><?= lang('unit_cost'); ?></th>
 
-                                                <th class="col-xs-1"><?= lang('subtotal'); ?></th>
+                                                <th class="col-xs-2"><?= lang('subtotal'); ?></th>
 
                                                 <th style="width:20px;"><i class="fa fa-trash-o"></i></th>
 
@@ -103,7 +103,7 @@
 
                                                 <th class="col-xs-2"><span id="prqty">0</span></th>
 
-                                                <th class="col-xs-2" colspan="4"></th> 
+                                                <th class="col-xs-2" colspan="2"></th> 
 
                                                 <th class="col-xs-2 text-right"><span id="gtotal">0.00</span></th>
 

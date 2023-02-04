@@ -143,8 +143,8 @@ function loadItems(prid) {
             tr_html = '<td style="min-width:100px;"><input name="product_id[]" type="hidden" class="rid" value="' + product_id + '"><span class="sname" id="name_' + row_no + '">' + item_name + ' (' + item_code + ')</span>';
             tr_html += '<input name="getsequence[]" type="hidden" class="rid" value="'+setval+'" id="getsequence-'+row_no+'"></td>';
             tr_html += '<td style="padding:2px;"><input class="form-control input-sm kb-pad text-center rquantity" name="quantity[]" type="text" value="' + item_qty + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onClick="this.select();"></td>';
-            tr_html += '<td style="padding:2px;"><input class="form-control input-sm kb-pad text-center expiry_year" name="expiry_year[]" type="text" value="'+expiry_year+'" data-id="' + row_no + '" data-item="" id="expiry_year' + row_no + '"></td>';
-            tr_html += '<td style="padding:2px;"><input class="form-control input-sm kb-pad text-center sequence " name="sequence[]" type="text" value="'+ sequence +'" data-id="' + row_no + '" data-item="" id="sequence'+ row_no + '" onchange="sequenceFild('+row_no+');"></td>';
+            tr_html += '<td style="padding:2px; display:none;"><input class="form-control input-sm kb-pad text-center expiry_year" name="expiry_year[]" type="text" value="'+expiry_year+'" data-id="' + row_no + '" data-item="" id="expiry_year' + row_no + '"></td>';
+            tr_html += '<td style="padding:2px; display:none;"><input class="form-control input-sm kb-pad text-center sequence " name="sequence[]" type="text" value="'+ sequence +'" data-id="' + row_no + '" data-item="" id="sequence'+ row_no + '" onchange="sequenceFild('+row_no+');"></td>';
             
             tr_html += '<td class="text-center"><a href="javascript:;" id="sqto_' + row_no + '" onClick="pSequGenerat('+ parseFloat(item_qty) +','+item_id+','+row_no+');" class=""><i class="fa fa-barcode tip pointer spodel" id="barcode_'+row_no+'"><i></a></td>';
 
