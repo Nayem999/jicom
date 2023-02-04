@@ -102,6 +102,7 @@
 <script>
     $(function(){
      $("#type").change(function(){
+        document.getElementById("bankInfo").innerHTML = "";
          var supplier_id = $('#supplier').val();          
          var paymentType = this.value;         
          var url = '<?php echo base_url('supplierpayment/bankInfo') ?>'+'/'+paymentType+'/'+supplier_id;          

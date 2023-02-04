@@ -73,11 +73,14 @@ class Supplierpayment extends MY_Controller
        $todayAdAmount = $this->purchases_model->advPayAmount('adv_amount',$id,$today);
        $totalAdAmount = $this->purchases_model->advPayAmount('adv_amount',$id);
 
-       
-       foreach ($suppliers as $key => $value) {
-           $total = $total+ $value->total;
-           $deu = $deu+ $value->deu;
-           $paid = $paid+ $value->paid;
+       $total = $deu = $paid = 0;
+       if(is_array($suppliers))
+       {
+         foreach ($suppliers as $key => $value) {
+             $total = $total+ $value->total;
+             $deu = $deu+ $value->deu;
+             $paid = $paid+ $value->paid;
+         }
        }
        $tpaid = $paid + $totalAdAmount;
         
@@ -200,13 +203,17 @@ class Supplierpayment extends MY_Controller
 
           echo $returnData;
     }
+
     public function bankInfo($type,$sid){  
       $suppliers = $this->purchases_model->getSupplierByID($sid);
-      foreach ($suppliers as $key => $supplier)  
-    	$banks = $this->site->getAllBanks($supplier->store_id);	
-    	if($type=='Cheque' || 'TT'){
-    	$output= '<div class="form-group">
-	            <p>Bank information </p> 
+      $banks=array();
+      if(is_array($suppliers)){
+        foreach ($suppliers as $key => $supplier)  
+    	  $banks = $this->site->getAllBanks($supplier->store_id);	
+      }
+    	if($type=='Cheque' || $type=='TT'){
+    	  $output= '<div class="form-group">
+                  <label>Bank information</label> 
 	               <select class="form-control select2 tip" name="bank" required="required" id="type">
 						<option value="">Select</option>';
 
@@ -221,7 +228,8 @@ class Supplierpayment extends MY_Controller
                          <input type="text" name="cheque_no" class="form-control" required="required">
                              </div>'; 
                 }
-                else
+
+                if($type=='TT')
                 {
                       $output .='</select></div>
                       <div class="form-group">
@@ -229,8 +237,9 @@ class Supplierpayment extends MY_Controller
                   <input type="text" name="cheque_no" class="form-control" required="required">
                       </div>'; 
                 }	
-	    echo $output;
-        }
+	          echo $output;
+      }
+
     }
 
     //function getSupplierByStore($id){
