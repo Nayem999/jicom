@@ -949,13 +949,16 @@ $(document).ready(function(){
             $('.pcheque').slideDown();
             $('.pcc').slideUp('fast');
             $('.pcash').slideUp('fast');
-            $('#amount').val(rounded_total);
-
-            $(".amount").val(rounded_total);
-            $('#amount_val').val(rounded_total);
-            $('#total_paying').text(formatMoney(rounded_total));
-            $('#balance').text(formatMoney(rounded_total - rounded_total));
-            $('#balance_val').val(formatDecimal(rounded_total - rounded_total));
+            var amount_gv=  $('#amount').val();
+            if(amount_gv<1)
+            {
+                $('#amount').val(rounded_total);
+                $(".amount").val(rounded_total);
+                $('#amount_val').val(rounded_total);
+                $('#total_paying').text(formatMoney(rounded_total));
+                $('#balance').text(formatMoney(rounded_total - rounded_total));
+                $('#balance_val').val(formatDecimal(rounded_total - rounded_total));
+            }
 
             setTimeout(function(){ $('#cheque_no').focus(); }, 10);
             if (p_val == 'TT'){$('.ccheque').slideUp('fast'); $('.tcheque').slideDown();}

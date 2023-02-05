@@ -1064,28 +1064,6 @@
               </div>
               <div class="col-xs-6">
                 <div class="form-group">
-                  <?= lang("amount", "amount"); ?>
-                  <input name="amount[]" type="text" id="amount" 
-									class="pa form-control kb-pad amount" />
-                </div>
-              </div>
-              <div class="col-xs-6">
-                <div class="form-group">
-                  <label class="control-label" for="delivery_date"><?= lang("delivery_date"); ?></label>
-                  <input name="delivery_date[]" type="text" id="delivery_date" class="pa form-control kb-pad datepicker" />
-                </div>
-              </div>
-              <div class="col-xs-6">
-
-                <div class="form-group">
-                  <?= lang("Aging Day", "Aging Day"); ?>
-                  <input name="aging_day[]" type="text" id="aging_day" 
-									class="pa form-control" />
-                </div>
-              </div>
-              <div class="col-xs-6">
-
-                <div class="form-group">
                   <?= lang("paying_by", "paid_by"); ?>
                   <select id="paid_by" class="form-control paid_by select2" style="width:100%;">
                     <option value="cash">
@@ -1104,6 +1082,30 @@
                      
                   </select>
                 </div>
+
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <?= lang("amount", "amount"); ?>
+                  <input name="amount[]" type="text" id="amount" 
+									class="pa form-control kb-pad amount" />
+                </div>
+
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="control-label" for="delivery_date"><?= lang("delivery_date"); ?></label>
+                  <input name="delivery_date[]" type="text" id="delivery_date" class="pa form-control kb-pad datepicker" />
+                </div>
+
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <?= lang("Aging Day", "Aging Day"); ?>
+                  <input name="aging_day[]" type="text" id="aging_day" 
+									class="pa form-control" />
+                </div>
+
               </div>
             </div>
             <div class="row">
