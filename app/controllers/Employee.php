@@ -290,11 +290,23 @@ class Employee extends MY_Controller
                     'payment_type' => $this->input->post('type'),
                     'type'         => 'pay', 
                     'bank_status'  => 'Pending',
-                    'cheque_or_card_no' => $this->input->post('cheque_or_card_no'),
+                    'cheque_or_card_no' => $this->input->post('cheque_no'),
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
                 $this->site->insertQuery('bank_pending_salary', $bankPending); 
+				
+				$bankPending = array(
+					'amount'       => $this->input->post('amount'),
+					'bank_id'      => $this->input->post('bank'),
+					'insert_date'  => date('Y-m-d H:i:s'),
+					'type'         => 'pending',
+					'cheque_no'    => $this->input->post('cheque_no'),
+					'store_id'     => $this->input->post('store_id'),
+					'payment_type' =>  4,
+				);
+				
+				$this->site->insertQuery('bank_pending',$bankPending);
             } 			
  			$date = date('Y-m-d H:i:s');
 			$emplyee_name = $this->employee_model->getEmplyeeByID($id)->name;

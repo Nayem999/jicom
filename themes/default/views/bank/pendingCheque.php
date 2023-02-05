@@ -6,7 +6,17 @@
             return 'Customer Collection';
         }else if(n==2){
             return 'Supplier Payment';
-        }else{
+        }
+        else if(n==3){
+            return 'Bank Opening';
+        }
+        else if(n==4){
+            return 'Expense Payment';
+        }
+        else if(n==5){
+            return 'Salary Payment';
+        }
+        else{
             return '';
         }
     }

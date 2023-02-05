@@ -2407,7 +2407,7 @@ class Reports extends MY_Controller
                 {
                     $total_balance+=$val->amount;
                 }
-                if($val->payment_type==2)
+                if($val->payment_type==0)
                 {
                     $total_balance-=$val->amount;
                 }

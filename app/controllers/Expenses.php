@@ -132,9 +132,10 @@ class Expenses extends MY_Controller
                 'note' => $this->input->post('note', TRUE),
                 'employee_id'   => $this->input->post('employee_id')                 
             );
-            $store = $this->input->post('warehouse');
+            $store = $store_id = $this->input->post('warehouse');
             if($store==''){
                 $data['store_id'] = $this->session->userdata('store_id');
+                $store_id =  $this->session->userdata('store_id');
             }else{
                 $data['store_id'] =$this->input->post('warehouse');
             }  
@@ -171,8 +172,21 @@ class Expenses extends MY_Controller
                     'cheque_or_card_no' => $this->input->post('cheque_no'),
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
-                );
+                );                
                 $this->site->insertQuery('bank_pending_expenses', $bankPending); 
+
+                $bankPending = array(
+                    'amount'       => $this->input->post('amount'),
+                    'bank_id'      => $this->input->post('bank'),
+                    'insert_date'  => date('Y-m-d H:i:s'),
+                    'type'         => 'pending',
+                    'cheque_no'    => $this->input->post('cheque_no'),
+                    'store_id'     => $store_id,
+                    'payment_type' =>  4,
+                );
+
+                $this->site->insertQuery('bank_pending',$bankPending);
+                
             }
             $this->session->set_flashdata('message', lang("expense_added"));
             redirect('expenses');

@@ -133,6 +133,21 @@ class Bank extends MY_Controller
 		
 
 			$cid = $this->bank_model->addBank($data);
+
+			if($this->input->post('current_amount') > 0)
+			{
+				$bankPending = array(
+					'amount'       => $this->input->post('current_amount'),
+					'bank_id'      => $cid,
+					'insert_date'  => date('Y-m-d H:i:s'),
+					'type'         => 'pending',
+					'store_id'       => $store_id,
+					'payment_type' =>  3,
+				);
+	
+				$this->bank_model->bankPendingTranjection($bankPending);
+
+			}
 			 
             if($this->input->is_ajax_request()) {
 
@@ -926,7 +941,8 @@ class Bank extends MY_Controller
 			 	}		
 			
 			}
-		}else if($info->payment_type == 2){
+		}
+		else if($info->payment_type == 2 || $info->payment_type == 4 || $info->payment_type == 5){
 
 			if($this->input->post('paid_by')=='Approved'){
 
@@ -969,6 +985,34 @@ class Bank extends MY_Controller
 			 	}		
 			
 			}
+		}
+		else if($info->payment_type == 3){
+
+			if($this->input->post('paid_by') == 'Approved'){
+
+				if($amount > 0){ 
+					$bankTAmount = $bankInfo->current_amount + $this->input->post('amount');
+					$bankData = array(
+						'current_amount' => $bankTAmount,
+						);
+					$this->bank_model->editBank($bankData,$bankId);	
+
+					$data = array(
+					    'bank_account_id'   => $bankId,
+						'tran_amount'  => $this->input->post('amount'),				
+						'tran_type'    => 1,				
+						'tran_date'    => date('Y-m-d H:i:s'),
+						'pedding_cheque' =>	$info->pending_id,		
+					);
+				
+					$this->bank_model->addTranjiction($data) ;	
+				} else {				 
+					$this->session->set_flashdata('error', lang('Bank Cheque Approve error === 1'));
+		            redirect("bank/pendingCheque");
+				}
+					
+			}
+			
 		}
 
 		$this->bank_model->updateChequeByID($dataAppr,$id);	

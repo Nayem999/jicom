@@ -113,7 +113,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                        if($val->payment_type==2)
+                                                        if($val->payment_type==0)
                                                         {
                                                             echo $val->amount;
                                                             $total_balance-=$val->amount;

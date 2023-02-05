@@ -767,7 +767,7 @@ class Pos_model extends CI_Model
             }
         $this->db->select("products.* , product_store_qty.quantity as sQuantity");
         $this->db->where('products.code', $code);
-        $this->db->join('product_store_qty', 'product_store_qty.product_id = products.id');
+        $this->db->join('product_store_qty', 'product_store_qty.product_id = products.id and product_store_qty.store_id = '.$store_id);
          
         $q = $this->db->get('products');
 

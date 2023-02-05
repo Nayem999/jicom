@@ -1304,9 +1304,9 @@ class Reports_model extends CI_Model
     public function getAllBankInfo($id=null)
 	{ 
 
-        $this->db->select('bank_account.bank_account_id as bank_id, bank_account.bank_name, bank_account.account_no, bank_pending.amount  ,bank_pending.payment_type,bank_account.create_date '); 
+        $this->db->select('bank_account.bank_account_id as bank_id, bank_account.bank_name, bank_account.account_no, tranjiction.tran_amount as amount, tranjiction.tran_type as payment_type,bank_account.create_date '); 
         $this->db->from('bank_account');  
-		$this->db->join('bank_pending','bank_account.bank_account_id =bank_pending.bank_id');
+		$this->db->join('tranjiction','bank_account.bank_account_id =tranjiction.bank_account_id');
 
         if($id){ 
             $this->db->where('bank_account.bank_account_id ',$id);   
