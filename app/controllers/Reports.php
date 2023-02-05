@@ -579,9 +579,9 @@ class Reports extends MY_Controller
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
 
-        $this->data['page_title'] = $this->lang->line("daily_expenses");
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_expenses')));
-        $meta = array('page_title' => lang('daily_expenses'), 'bc' => $bc);
+        $this->data['page_title'] = $this->lang->line("Expenses Report");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Expenses Report')));
+        $meta = array('page_title' => lang('Expenses Report'), 'bc' => $bc);
         $this->page_construct('reports/expenses_rpt', $this->data, $meta);
 
     }
@@ -1331,9 +1331,9 @@ class Reports extends MY_Controller
         $this->data['warehouses'] = $this->site->getAllStores();
         $this->data['results'] = $this->reports_model->saleAndPurseCount($warehouse);  
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['page_title'] = $this->lang->line("products_report");
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
-        $meta = array('page_title' => lang('products_report'), 'bc' => $bc);
+        $this->data['page_title'] = $this->lang->line("Sold and Purchase");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sold and Purchase')));
+        $meta = array('page_title' => lang('Sold and Purchase'), 'bc' => $bc);
         $this->page_construct('reports/reports_purchses', $this->data, $meta);
     } 
 
@@ -1380,8 +1380,8 @@ class Reports extends MY_Controller
         $this->data['products'] = $this->reports_model->getAllProducts();
         $this->data['results'] = $this->reports_model->pquery($type,$pcode,$warehouse);
         // echo "<pre>".print_r($this->reports_model->pquery($type,$pcode,$warehouse));die;
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
-        $meta = array('page_title' => lang('products_report'), 'bc' => $bc);
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products Query')));
+        $meta = array('page_title' => lang('Products Query'), 'bc' => $bc);
         $this->data['warehouses'] = $this->site->getAllStores();
         $this->page_construct('reports/report_pquery', $this->data, $meta);
     }
@@ -1391,10 +1391,9 @@ class Reports extends MY_Controller
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['page_title'] = $this->lang->line("products_report");
-        $this->data['page_title'] = $this->lang->line("products_report");
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
-        $meta = array('page_title' => lang('products_report'), 'bc' => $bc);
+        $this->data['page_title'] = $this->lang->line("Products List Staff Report");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List Staff Report')));
+        $meta = array('page_title' => lang('Products List Staff Report'), 'bc' => $bc);
         $this->page_construct('reports/products_staff', $this->data, $meta);
     }
 
@@ -1413,9 +1412,9 @@ class Reports extends MY_Controller
 		 }
 		$this->data['cost'] = $cost;
 		
-		$this->data['page_title'] = $this->lang->line("products_report");
-		$bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('products_report')));
-		$meta = array('page_title' => lang('products_report'), 'bc' => $bc);
+		$this->data['page_title'] = $this->lang->line("Products List All Report");
+		$bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List All Report')));
+		$meta = array('page_title' => lang('Products List All Report'), 'bc' => $bc);
 		$this->page_construct('reports/products_all', $this->data, $meta);
 	}
  
