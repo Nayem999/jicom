@@ -41,6 +41,7 @@ if (isset($_POST['start_date'])) {
                             $chkArr = array();$chkArr2 = array();$chkArr3 = array();$chkArr4 = array();
                             $userArr = array();
                             $cashAmt=$bankAmt=$grandAmt=array();
+                            // print_r($expensesData);
                             if ($expensesData) {
                                 foreach ($expensesData as $key => $result) {
                                         $userArr[$result->user]=$result->user;
@@ -48,7 +49,7 @@ if (isset($_POST['start_date'])) {
                                         $expData[$result->user][$result->category_id] += $result->amount;
                                     }
                                     else{
-                                        $chkArr[]=$result->user.'_'.$result->category_id;
+                                        $chkArr[$result->user.'_'.$result->category_id]=$result->user.'_'.$result->category_id;
                                         $expData[$result->user][$result->category_id] = $result->amount;
                                     }
 
@@ -58,7 +59,7 @@ if (isset($_POST['start_date'])) {
                                             $cashAmt[$result->category_id] += $result->amount;
                                         }
                                         else{
-                                            $chkArr2[]=$result->category_id;
+                                            $chkArr2[$result->category_id]=$result->category_id;
                                             $cashAmt[$result->category_id] = $result->amount;
                                         }
                                     }
@@ -67,7 +68,7 @@ if (isset($_POST['start_date'])) {
                                             $bankAmt[$result->category_id] += $result->amount;
                                         }
                                         else{
-                                            $chkArr3[]=$result->category_id;
+                                            $chkArr3[$result->category_id]=$result->category_id;
                                             $bankAmt[$result->category_id] = $result->amount;
                                         }
                                     }
@@ -76,7 +77,7 @@ if (isset($_POST['start_date'])) {
                                         $grandAmt[$result->category_id] += $result->amount;
                                     }
                                     else{
-                                        $chkArr4[]=$result->category_id;
+                                        $chkArr4[$result->category_id]=$result->category_id;
                                         $grandAmt[$result->category_id] = $result->amount;
                                     }
                                 }
@@ -102,7 +103,7 @@ if (isset($_POST['start_date'])) {
                                         $total=0;
                                     ?>
                                         <tr>
-                                            <td><?= $result; ?></td>
+                                            <td><?=$result??'Others'; ?></td>
                                             <?php
                                                 foreach ($categories as $key => $val) {
                                                     

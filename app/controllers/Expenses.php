@@ -111,7 +111,6 @@ class Expenses extends MY_Controller
     function add_expense() { 
         $this->load->helper('security');        
         $this->form_validation->set_rules('amount', lang("amount"), 'required');
-        $this->form_validation->set_rules('employee_id', lang("employee_id"), 'required');
         $this->form_validation->set_rules('reference', lang("reference"), 'required');
         $this->form_validation->set_rules('category', lang("category"), 'required');        
         $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');        

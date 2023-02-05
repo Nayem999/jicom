@@ -19,9 +19,9 @@
                             </div>
                             <?php } ?> 
                             <div class="form-group">
-                            <?= lang("Expenses For*", "Expenses For*"); ?>
+                            <?= lang("Expenses For*", "Expenses For"); ?>
                                 <?php
-                                $emp[''] = lang("select")." ".lang("Employee");
+                                $emp[0] = lang("select")." ".lang("Employee");
                                 foreach($employee as $employee_val) {
                                     $emp[$employee_val->id] = $employee_val->name;
                                 }

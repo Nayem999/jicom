@@ -565,8 +565,8 @@ class Reports extends MY_Controller
             $this->db->dbprefix('expenses') . ".paid_by, " . 
             $this->db->dbprefix('employee') . ".name as user " );
         $this->db->from('expenses');
-        $this->db->join('employee', 'employee.id=expenses.employee_id');
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
+        $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
@@ -601,8 +601,8 @@ class Reports extends MY_Controller
             $this->db->dbprefix('expenses') . ".paid_by, " . 
             $this->db->dbprefix('employee') . ".name as user " );
         $this->db->from('expenses');
-        $this->db->join('employee', 'employee.id=expenses.employee_id');
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
+        $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
@@ -623,7 +623,7 @@ class Reports extends MY_Controller
                     $expData[$result->user][$result->category_id] += $result->amount;
                 }
                 else{
-                    $chkArr[]=$result->user.'_'.$result->category_id;
+                    $chkArr[$result->user][$result->category_id]=$result->user.'_'.$result->category_id;
                     $expData[$result->user][$result->category_id] = $result->amount;
                 }
 
@@ -633,7 +633,7 @@ class Reports extends MY_Controller
                         $cashAmt[$result->category_id] += $result->amount;
                     }
                     else{
-                        $chkArr2[]=$result->category_id;
+                        $chkArr2[$result->category_id]=$result->category_id;
                         $cashAmt[$result->category_id] = $result->amount;
                     }
                 }
@@ -642,7 +642,7 @@ class Reports extends MY_Controller
                         $bankAmt[$result->category_id] += $result->amount;
                     }
                     else{
-                        $chkArr3[]=$result->category_id;
+                        $chkArr3[$result->category_id]=$result->category_id;
                         $bankAmt[$result->category_id] = $result->amount;
                     }
                 }
@@ -651,7 +651,7 @@ class Reports extends MY_Controller
                     $grandAmt[$result->category_id] += $result->amount;
                 }
                 else{
-                    $chkArr4[]=$result->category_id;
+                    $chkArr4[$result->category_id]=$result->category_id;
                     $grandAmt[$result->category_id] = $result->amount;
                 }
             }
@@ -668,8 +668,9 @@ class Reports extends MY_Controller
         $cash_total = $bank_total = $grand_total = 0;
         if(count($userArr) > 0){ 
             foreach($userArr as $result){ 
-
-                $lineData = array($result);
+                if($result){ $emp_nam=$result; }else{ $emp_nam='Others'; }
+                
+                $lineData = array($emp_nam);
 
                 $total=0;
                 foreach ($categories as $key => $val) {
