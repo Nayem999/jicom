@@ -606,7 +606,7 @@
                <!--  Select coutomer  -->
               <div id="lefttop" style="margin-bottom:5px;">
                 <div class="form-group" style="margin-bottom:5px;">
-                  <div class="input-group" >
+                  <!-- <div class="input-group" > -->
                     <samp id="customerDropdown">
                     <?php 
                     $cus=array();
@@ -624,8 +624,8 @@
                       ?>
                     <?= form_dropdown('customer_id', $cus, set_value('customer_id', $Settings->default_customer), 'id="spos_customer" data-placeholder="' . lang("select") . ' ' . lang("customer") . '" required="required" class="form-control select2" style="width:100%;"'); ?>
                     </samp>
-                    <div class="input-group-addon no-print" style="padding: 2px 5px;"> <a href="#" id="add-customer" class="external" data-toggle="modal" data-target="#myModal"><i class="fa fa-2x fa-plus-circle" id="addIcon"></i></a> </div>
-                  </div>
+                    <div class="input-group-addon no-print" style="padding: 2px 5px; display:none;"> <a href="#" id="add-customer" class="external" data-toggle="modal" data-target="#myModal"><i class="fa fa-2x fa-plus-circle" id="addIcon"></i></a> </div>
+                  <!-- </div> -->
 
 
                   <div style="clear:both;"></div>
