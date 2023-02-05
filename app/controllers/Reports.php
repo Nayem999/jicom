@@ -15,6 +15,8 @@ class Reports extends MY_Controller
         $this->load->model('bank_model');
         $this->load->library('form_validation');
         $this->load->model('categories_model'); 
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
     public function cash_book(){
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL; 
@@ -2379,7 +2381,7 @@ class Reports extends MY_Controller
      
         $this->data['bank_id'] = $bank_id;        
         $this->data['page_title'] = 'Bank Balance';        
-        $bc = array(
+        /* $bc = array(
             array(
                 'link' => '#',
                 'page' => 'Bank Balance'
@@ -2388,7 +2390,9 @@ class Reports extends MY_Controller
         $meta = array(
             'page_title' => 'Bank Balance',
             'bc' => $bc
-        );    
+        ); */    
+        $bc = array(array('link' => '#', 'page' => lang('Bank Balance')), array('link' => '#', 'page' => lang('Bank Balance')));
+        $meta = array('page_title' => lang('Bank Balance'), 'bc' => $bc);
         $this->page_construct('reports/bank_balance', $this->data, $meta); 
     }
     public function excel_bank_balance($data){
@@ -2442,7 +2446,7 @@ class Reports extends MY_Controller
         $results = array(); 
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("Aging Report");
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Aging Report')));
+        $bc = array(array('link' => '#', 'page' => lang('Aging Report')), array('link' => '#', 'page' => lang('Aging Report')));
         $meta = array('page_title' => lang('Aging Report'), 'bc' => $bc);
         $this->page_construct('reports/aging_rpt', $this->data, $meta);
 

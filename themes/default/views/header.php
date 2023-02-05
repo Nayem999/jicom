@@ -333,7 +333,7 @@
               <li id="reports_sold_purchase"><a href="<?= site_url('reports/sold_purchase'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Sold & Purchase'); ?>
               </a></li>
-            <li id="reports_productQuery"><a href="<?= site_url('reports/productQuery'); ?>"><i class="fa fa-circle-o"></i>
+            <li id="reports_productquery"><a href="<?= site_url('reports/productQuery'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Product Query'); ?>
               </a></li>
             <!-- <li id="reports_sequenceReport"><a href="<?= site_url('reports/sequenceReport'); ?>"><i class="fa fa-circle-o"></i>
@@ -343,13 +343,16 @@
             <li id="reports_products_all"><a href="<?= site_url('reports/products_all'); ?>"><i class="fa fa-circle-o"> </i>Products list (All) </a></li>
             <li id="reports_product_stock"><a href="<?= site_url('reports/product_stock'); ?>"><i class="fa fa-circle-o"> </i>Products Stock </a></li>
             <li id="reports_store_product_stock"><a href="<?= site_url('reports/store_product_stock'); ?>"><i class="fa fa-circle-o"> </i>Store Stock Product </a></li>
-            <li id="reports_invoiceProfit"><a href="<?= site_url('reports/invoiceProfit'); ?>"><i class="fa fa-circle-o"> </i>Invoice Profit</a></li>
-            <li id="reports_salaryReport"><a href="<?= site_url('reports/salaryReport'); ?>"><i class="fa fa-circle-o"> </i>Salary Report</a></li>
+            <li id="reports_invoiceprofit"><a href="<?= site_url('reports/invoiceProfit'); ?>"><i class="fa fa-circle-o"> </i>Invoice Profit</a></li>
+            <li id="reports_salaryreport"><a href="<?= site_url('reports/salaryReport'); ?>"><i class="fa fa-circle-o"> </i>Salary Report</a></li>
             <!-- <li id="reports_warrentyReport"><a href="<?= site_url('reports/warrentyReport'); ?>"><i class="fa fa-circle-o"> </i>Warranty Report</a></li> -->
-            <li id="reports_expensesReport"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
-            <li id="reports_creditCollectionReport"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
-            <li id="reports_aging_Report"><a href="<?= site_url('reports/aging_rpt'); ?>"><i class="fa fa-circle-o"> </i>Aging Report</a></li>
-            <li id="reports_aging_Report"><a href="<?= site_url('/reports/bank_balance'); ?>"><i class="fa fa-circle-o"> </i>Bank Balance</a></li>
+            <li id="reports_expenses_rpt"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
+            <li id="reports_credit_collection_rpt"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
+            <li id="reports_aging_rpt"><a href="<?= site_url('reports/aging_rpt'); ?>"><i class="fa fa-circle-o"> </i>Aging Report</a></li>
+
+            <li id="reports_bank_balance"><a href="<?= site_url('reports/bank_balance'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Bank Balance'); ?>
+              </a></li>
           </ul>
         </li>
 
@@ -680,8 +683,8 @@
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu"> 
               </a></li>
-              <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash'); ?> 
+              <!-- <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Petty Cash'); ?> </a></li> -->
             <li id="reports_products_staff"><a href="<?= site_url('reports/products_staff'); ?>"><i class="fa fa-circle-o"> </i>Products list (Staff) </a></li>  
           </ul>
         </li>
