@@ -162,7 +162,7 @@ class Expenses extends MY_Controller
         if ($this->form_validation->run() == true) { 
             $expenses_id = $this->site->insertQuery('expenses',$data);
             if(($payment_type == 'cheque') || ($payment_type == 'card')){
-                $bankPending = array(
+                $bankPendingExpenses = array(
                     'expenses_id' => $expenses_id,
                     'expens_category_id'  => $this->input->post('category'),
                     'bank_id'      => $this->input->post('bank'),
@@ -173,7 +173,7 @@ class Expenses extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );                
-                $this->site->insertQuery('bank_pending_expenses', $bankPending); 
+                $this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
 
                 $bankPending = array(
                     'amount'       => $this->input->post('amount'),
@@ -239,9 +239,10 @@ class Expenses extends MY_Controller
                 'c_id'  => $this->input->post('category'),                
                 'note' => $this->input->post('note', TRUE)                
             );
-            $store = $this->input->post('warehouse');
+            $store = $store_id = $this->input->post('warehouse');
             if($store==''){
                  $data['store_id'] = $this->session->userdata('store_id');
+                 $store_id= $this->session->userdata('store_id');
             }else{
                  $data['store_id'] =$this->input->post('warehouse');
             }            
@@ -277,10 +278,11 @@ class Expenses extends MY_Controller
                         $this->site->deleteQuery('tranjiction',array('id' => $pending->transactions_id)); 
                     }
                     $this->site->deleteQuery('bank_pending_expenses',array('expenses_id' => $id)); 
+                    $this->site->deleteQuery('bank_pending',array('cheque_no' =>$pending->cheque_no)); 
                     $this->session->set_flashdata('message','Salary amount delete successfully'); 
                 } 
 
-                $bankPending = array(
+                $bankPendingExpenses = array(
                     'expenses_id' => $id,
                     'expens_category_id'=> $this->input->post('category'),
                     'bank_id'      => $this->input->post('bank'),
@@ -291,7 +293,19 @@ class Expenses extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_expenses', $bankPending); 
+                $this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
+
+                $bankPending = array(
+                    'amount'       => $this->input->post('amount'),
+                    'bank_id'      => $this->input->post('bank'),
+                    'insert_date'  => date('Y-m-d H:i:s'),
+                    'type'         => 'pending',
+                    'cheque_no'    => $this->input->post('cheque_no'),
+                    'store_id'     => $store_id,
+                    'payment_type' =>  4,
+                );
+
+                $this->site->insertQuery('bank_pending',$bankPending);
             }
             $this->session->set_flashdata('message', lang("expense_updated"));            
             redirect("expenses/");

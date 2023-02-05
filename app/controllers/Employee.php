@@ -283,7 +283,7 @@ class Employee extends MY_Controller
 			
 			$emp_pay_id = $this->employee_model->paySalary($data);
 			if(($payment_type == 'cheque') || ($payment_type == 'card')){
-                $bankPending = array(
+                $bankPendingSalary = array(
                     'paysalary_id' => $emp_pay_id,
                     'employee_id'  => $id,
                     'bank_id'      => $this->input->post('bank'),
@@ -294,7 +294,7 @@ class Employee extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_salary', $bankPending); 
+                $this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
 				
 				$bankPending = array(
 					'amount'       => $this->input->post('amount'),
@@ -378,7 +378,13 @@ class Employee extends MY_Controller
 			);			
 			$this->employee_model->paySalaryUpdate($data,$id);
 			if(($payment_type == 'cheque') || ($payment_type == 'card')){
-                $bankPending = array(
+				$pending = $this->site->whereRow('bank_pending_salary', 'pending_salary', $emp_pay_id); 
+				if($pending)
+				{
+					$this->site->deleteQuery('bank_pending_salary',array('pending_salary' => $id)); 
+                    $this->site->deleteQuery('bank_pending',array('cheque_no' =>$pending->cheque_no)); 
+				}   
+                $bankPendingSalary = array(
                     'paysalary_id' => $emp_pay_id,
                     'employee_id'  => $id,
                     'bank_id'      => $this->input->post('bank'),
@@ -389,7 +395,19 @@ class Employee extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_salary', $bankPending); 
+                $this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
+
+				$bankPending = array(
+					'amount'       => $this->input->post('amount'),
+					'bank_id'      => $this->input->post('bank'),
+					'insert_date'  => date('Y-m-d H:i:s'),
+					'type'         => 'pending',
+					'cheque_no'    => $this->input->post('cheque_no'),
+					'store_id'     => $this->input->post('store_id'),
+					'payment_type' =>  4,
+				);
+				
+				$this->site->insertQuery('bank_pending',$bankPending);
             }
 			$emplyee_name = $this->employee_model->getEmplyeeByID($this->data['paySalary']->emp_id)->name;
 			$emplyee_name = strtolower(trim($emplyee_name));
