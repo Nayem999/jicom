@@ -14,6 +14,9 @@ class SmsCorner extends MY_Controller
         $this->load->model('purchases_model');
         $this->load->model('bank_model');
         $this->load->library('form_validation');
+        
+		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
     public function cash_book(){
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL; 

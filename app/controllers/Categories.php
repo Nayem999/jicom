@@ -13,6 +13,8 @@ class Categories extends MY_Controller
 
         $this->load->library('form_validation');
         $this->load->model('categories_model');
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
 
     function index() {

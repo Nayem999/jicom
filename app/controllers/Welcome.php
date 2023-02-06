@@ -14,6 +14,7 @@ class Welcome extends MY_Controller
             $this->welcome_model->userGroups();
             $this->db->update('settings', array('version' => '4.0'), array('setting_id' => 1));
         }
+
     }
 
     function index() {

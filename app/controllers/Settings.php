@@ -7,6 +7,9 @@ class Settings extends MY_Controller {
         $this->load->library('form_validation');
         $this->load->library('encryption');
         $this->load->model('settings_model');
+        
+		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
 
     function index() { 

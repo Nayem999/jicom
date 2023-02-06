@@ -26,6 +26,9 @@ class Supplierpayment extends MY_Controller
 
         $this->allowed_types = 'gif|jpg|png|pdf|doc|docx|xls|xlsx|zip';
         
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+        $this->session->unset_userdata($ses_unset);
+        
     }
     function getSupplierByStore($id){
       return $id;

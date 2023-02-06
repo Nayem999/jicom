@@ -24,6 +24,9 @@ class Salereturn extends MY_Controller
 		$this->load->model('categories_model');
 
 		$this->load->model('sales_model');
+		
+		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
 
     }
 

@@ -15,6 +15,9 @@ class Merge extends MY_Controller
         $this->load->model('purchases_model');
         $this->load->model('pos_model');
         $this->load->library('form_validation');
+        
+		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
 
     public function mergelist() { 

@@ -16,6 +16,8 @@ class Collection extends MY_Controller
         $this->load->model('bank_model');
         $this->load->model('purchases_model');
         $this->load->model('marge_model');
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+        $this->session->unset_userdata($ses_unset);
         
     }
     
