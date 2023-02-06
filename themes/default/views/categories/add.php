@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <?= lang('Parent Category', 'category'); ?>
                                     <?php
-                                    $cat[''] = lang("select")." ".lang("category");
+                                    $cat[0] = lang("select")." ".lang("category");
                                     foreach($categories as $category) {
                                          if($category->parent_id==0){
                                             $cat[$category->id] = $category->name;

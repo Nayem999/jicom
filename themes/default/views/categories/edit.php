@@ -28,7 +28,7 @@
                                     <?= lang('Parent Category', 'category'); ?>
                                     <?php
                                     $cat = array();
-                                    $cat[''] = lang("select")." ".lang("category");
+                                    $cat[0] = lang("select")." ".lang("category");
                                     foreach($categories as $category) {
                                         if($category->parent_id==0){
                                             $cat[$category->id] = $category->name;
@@ -40,7 +40,7 @@
 
 
                                     ?>
-                                    <?= form_dropdown('category', $cat, $category->id, 'class="form-control select2 tip" id="category"'); ?>
+                                    <?= form_dropdown('category', $cat, $category->parent_id, 'class="form-control select2 tip" id="category"'); ?>
                                 </div>
                                 <div class="form-group">
                                     <?= lang('image', 'image'); ?>
