@@ -353,6 +353,8 @@ class Pos extends MY_Controller {
 			{
 				$aging_status=0;
 			}
+
+			if($this->input->post('delivery_date')){$delivery_date=date('Y-m-d',strtotime($this->input->post('delivery_date')) );}else{$delivery_date=date('Y-m-d');}
         	
 			$data = array(
 				'date' => $date,
@@ -380,6 +382,7 @@ class Pos extends MY_Controller {
 				'collection_id' => $collect_id ? $collect_id : 0,
 				'aging_day' => $this->input->post('aging_day'),
 				'aging_status' =>$aging_status,
+				'delivery_date' =>$delivery_date,
 				);
 			if($suspend) {
 				$data['hold_ref'] = $this->input->post('hold_ref');
@@ -387,7 +390,7 @@ class Pos extends MY_Controller {
 
 			if (!$suspend && $paid) {
 				$amount = $this->tec->formatDecimal($paid > $grand_total ? ($paid - $this->input->post('balance_amount')) : $paid);
-				if($this->input->post('delivery_date')){$delivery_date=date('Y-m-d',strtotime($this->input->post('delivery_date')) );}else{$delivery_date=date('Y-m-d');}
+
 
 				$payment = array(
 					'date' => $incDate,
@@ -412,6 +415,7 @@ class Pos extends MY_Controller {
 					'delivery_date' => $delivery_date,
 					);
 				$data['paid'] = $amount;
+
 
 			} else {
 				$payment = array();

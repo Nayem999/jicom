@@ -212,8 +212,8 @@ if ($modal) {
                       
                     foreach ($userifo as $key => $value)                    
                     echo '<strong> Sold By: </strong> '.$value->first_name.' '.$value->last_name.'<br>';
-                    echo '<strong> Delivery Date: </strong> '.$this->tec->hrsd($payments[0]->delivery_date);
-                    //echo $this->tec->hrld($inv->date); ?> 
+                    echo isset($inv->delivery_date)? '<strong> Delivery Date: </strong> '.$this->tec->hrsd($inv->delivery_date):'';
+                ?> 
                 </span>
 
 
