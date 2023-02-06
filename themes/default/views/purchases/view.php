@@ -35,7 +35,7 @@
             <?= $Settings->site_name == 'SimplePOS' ? 'Simple<b>POS</b>' : '<img src="'.$assets.'/images/icon.png" alt="'.$Settings->site_name.'" />'; ?>
           </h1> -->
           <div class="inv-logo"> 
-            <img src="<?= base_url('themes/default/assets/images/chalan.png') ?>" alt="<?=$Settings->site_name ?>" /> 
+            <img src="<?= base_url('themes/default/assets/images/chalan.png') ?>" height="200px;" alt="<?=$Settings->site_name ?>" /> 
           </div>  
           <div class="box box-primary">
             <div class="box-header">
@@ -94,10 +94,10 @@
                           <thead>
                             <tr class="active">
                               <th><?= lang('product'); ?></th>
-                              <th><?= lang('Sequence'); ?></th>
+                              <!-- <th><?= lang('Sequence'); ?></th> -->
                               <th class="col-xs-2"><?= lang('quantity'); ?></th>
                               <th class="col-xs-2"><?= lang('Store Name'); ?></th>
-                              <th class="col-xs-2"><?= lang('Warranty'); ?></th>
+                              <!-- <th class="col-xs-2"><?= lang('Warranty'); ?></th> -->
                               <th class="col-xs-2"><?= lang('unit_cost'); ?></th>
                               <th class="col-xs-2"><?= lang('subtotal'); ?></th>
                             </tr>
@@ -118,8 +118,8 @@
 
                               echo '<td>'.$item->product_name.' ('.$item->product_code.')</td>';
                               $whereArra = array('purchases_id' => $item->purchase_id, 'pro_id'=>$item->product_id);
-                              $sequenceA = $this->site->getWhereDataByElement('pro_sequence','purchases_id', 'pro_id',$item->purchase_id,$item->product_id); 
-                              echo '<td>';
+                              // $sequenceA = $this->site->getWhereDataByElement('pro_sequence','purchases_id', 'pro_id',$item->purchase_id,$item->product_id); 
+                              /* echo '<td>';
                               if($sequenceA != FALSE){ 
                                      foreach ($sequenceA as $key => $seque) { 
                                       if($seque->pro_id == $item->product_id ){
@@ -129,14 +129,14 @@
                                    }  
                                }
 
-                              echo '</td>';
+                              echo '</td>'; */
 
                               echo '<td class="text-center">'.str_replace('.00','',$item->quantity).'</td>';
 
                               echo '<td class="text-center">'. $this->site->findeNameByID('stores','id',$item->store_id)->name.'</td>';
                               $sequences = $this->site->getWhereDataByElement('pro_sequence','pro_id','purchases_id',$item->product_id,$item->purchase_id);   
 
-                              echo '<td class="text-right">'; 
+                             /*  echo '<td class="text-right">'; 
                               $expiry_year =  $item->expiry_year;
                               if($expiry_year=='0.00'){
                                 echo "Not warranty";
@@ -148,7 +148,7 @@
                               }
 
                               echo '</td>';
-
+ */
                               echo '<td class="text-right">'.$item->cost.'</td>';
 
                               echo '<td class="text-right">'.$item->quantity*$item->cost.'</td>';
@@ -163,24 +163,24 @@
                           </tbody>
                           <thead>
                             <tr class="active">
-                              <th class="col-xs-2" colspan="5"></th> 
+                              <th class="col-xs-2" colspan="3"></th> 
                               <th style="text-align:right"><?= lang('Quantity'); ?>
                                 </th>
                               <th class="col-xs-2 text-right" style="text-align:right"><?php echo $ProQty; ?></th>
                             </tr>
                             <tr class="active">
-                              <th class="col-xs-2" colspan="5"></th>
+                              <th class="col-xs-2" colspan="3"></th>
                               <th style="text-align:right"><?= lang('total'); ?>
                                 </th>
                               <th class="col-xs-2 text-right" style="text-align:right"><?= number_format($purchase->total,2);?></th>
                             </tr>
                             <tr class="active">
-                              <th class="col-xs-2" colspan="5"></th>
+                              <th class="col-xs-2" colspan="3"></th>
                               <th style="text-align:right">Paid Amount</strong></th>
                               <th class="col-xs-2 text-right" style="text-align:right"> <?php echo number_format($paid_amount,2) ; ?></th>
                             </tr>
                             <tr class="active">
-                              <th class="col-xs-2" colspan="5"></th>
+                              <th class="col-xs-2" colspan="3"></th>
                               <th style="text-align:right">Due Amount</strong></th>
                               <th class="col-xs-2 text-right" style="text-align:right"><?php echo number_format($due_amount,2) ; ?></th>
                             </tr>
