@@ -110,18 +110,35 @@ class Expenses extends MY_Controller
     
     function add_expense() { 
         $this->load->helper('security');        
-        $this->form_validation->set_rules('amount', lang("amount"), 'required');
+        // $this->form_validation->set_rules('amount', lang("amount"), 'required');
         $this->form_validation->set_rules('reference', lang("reference"), 'required');
-        $this->form_validation->set_rules('category', lang("category"), 'required');        
-        $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');        
-        if ($this->form_validation->run() == true) {     
+        // $this->form_validation->set_rules('category', lang("category"), 'required');        
+        $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');      
+        $i = isset($_POST['amount']) ? sizeof($_POST['amount']) : 0;
+        // echo $_POST['amount'][$r];
+        $exp_amount=$exp_cat=0;
+        for ($r = 0; $r < $i; $r++) {
+            $this->form_validation->set_rules("amount[$r]", lang("amount"), 'required');
+            $this->form_validation->set_rules("category[$r]", lang("category"), 'required');   
+
+            $exp_amount += $_POST['amount'][$r];
+            $exp_cat += $_POST['category'][$r];
+        }
+
+        if ($this->form_validation->run() == true && $exp_amount>0 && $exp_cat>0) {    
+
             $payment_type = $this->input->post('type');       
             if ($this->Admin) {                
                 $date = trim($this->input->post('date'));                
             } else {                
                 $date = date('Y-m-d H:i:s');                
-            }            
-            $data = array(                
+            }     
+            $paid_by = $this->input->post('type');
+            $reference = $this->input->post('reference');
+            $created_by = $this->session->userdata('user_id');
+            $note = $this->input->post('note', TRUE);
+            $employee_id = $this->input->post('employee_id');
+            /* $data = array(                
                 'date' => $date,   
                 'paid_by' => $this->input->post('type'),             
                 'reference' => $this->input->post('reference'),                
@@ -130,13 +147,12 @@ class Expenses extends MY_Controller
                 'c_id'  => $this->input->post('category'),                
                 'note' => $this->input->post('note', TRUE),
                 'employee_id'   => $this->input->post('employee_id')                 
-            );
-            $store = $store_id = $this->input->post('warehouse');
+            ); */
+            $store = $this->input->post('warehouse');
             if($store==''){
-                $data['store_id'] = $this->session->userdata('store_id');
-                $store_id =  $this->session->userdata('store_id');
+                $store_id = $this->session->userdata('store_id');
             }else{
-                $data['store_id'] =$this->input->post('warehouse');
+                $store_id =$this->input->post('warehouse');
             }  
             if ($_FILES['userfile']['size'] > 0) {                
                 $this->load->library('upload');                
@@ -152,43 +168,64 @@ class Expenses extends MY_Controller
                     redirect($_SERVER["HTTP_REFERER"]);                    
                 }                
                 $photo = $this->upload->file_name;                
-                $data['attachment'] = $photo;                
-            }            
+                $attachment = $photo;                
+            } 
+            else{$attachment ='';}           
         } elseif ($this->input->post('add_expense')) {            
             $this->session->set_flashdata('error', validation_errors());            
             redirect($_SERVER["HTTP_REFERER"]);            
         }
         if ($this->form_validation->run() == true) { 
-            $expenses_id = $this->site->insertQuery('expenses',$data);
-            if(($payment_type == 'cheque') || ($payment_type == 'card')){
-                $bankPendingExpenses = array(
-                    'expenses_id' => $expenses_id,
-                    'expens_category_id'  => $this->input->post('category'),
-                    'bank_id'      => $this->input->post('bank'),
-                    'payment_type' => $this->input->post('type'),
-                    'type'         => 'pay', 
-                    'bank_status'  => 'Pending',
-                    'cheque_or_card_no' => $this->input->post('cheque_no'),
-                    'amount'       => $this->input->post('amount'),
-                    'created_by'   => $this->session->userdata('user_id') 
-                );                
-                $this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
+            for ($r = 0; $r < $i; $r++) {
 
-                $bankPending = array(
-                    'amount'       => $this->input->post('amount'),
-                    'bank_id'      => $this->input->post('bank'),
-                    'insert_date'  => date('Y-m-d H:i:s'),
-                    'type'         => 'pending',
-                    'cheque_no'    => $this->input->post('cheque_no'),
-                    'store_id'     => $store_id,
-                    'payment_type' =>  4,
-                );
+                if($_POST['amount'][$r]>0 && $_POST['category'][$r]>0){
 
-                $this->site->insertQuery('bank_pending',$bankPending);
-                
+                    $data = array(                
+                        'date' => $date,   
+                        'paid_by' => $paid_by,             
+                        'reference' => $reference,                
+                        'amount' => $_POST['amount'][$r],                
+                        'created_by' => $created_by,
+                        'c_id'  => $_POST['category'][$r],                
+                        'note' => $note,
+                        'employee_id'   =>$employee_id,                 
+                        'attachment'   =>$attachment                 
+                    );
+                    $expenses_id = $this->site->insertQuery('expenses',$data);
+                    if(($payment_type == 'cheque') || ($payment_type == 'card')){
+                        $bankPendingExpenses = array(
+                            'expenses_id' => $expenses_id,
+                            'expens_category_id'  => $_POST['category'][$r],
+                            'bank_id'      => $this->input->post('bank'),
+                            'payment_type' => $this->input->post('type'),
+                            'type'         => 'pay', 
+                            'bank_status'  => 'Pending',
+                            'cheque_or_card_no' => $this->input->post('cheque_no'),
+                            'amount'       => $_POST['amount'][$r],
+                            'created_by'   => $this->session->userdata('user_id') 
+                        );                
+                        $pending_expenses=$this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
+        
+                        $bankPending = array(
+                            'amount'       => $_POST['amount'][$r],
+                            'bank_id'      => $this->input->post('bank'),
+                            'insert_date'  => date('Y-m-d H:i:s'),
+                            'type'         => 'pending',
+                            'cheque_no'    => $this->input->post('cheque_no'),
+                            'store_id'     => $store_id,
+                            'payment_type' =>  4,
+                            'other_exp_id' =>  $pending_expenses,
+                        );
+        
+                        $this->site->insertQuery('bank_pending',$bankPending);
+                        
+                    }
+
+                }
             }
             $this->session->set_flashdata('message', lang("expense_added"));
             redirect('expenses');
+
         } else {  
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['page_title'] = lang('add_expense');
@@ -292,7 +329,7 @@ class Expenses extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
+                $pending_expenses=$this->site->insertQuery('bank_pending_expenses', $bankPendingExpenses); 
 
                 $bankPending = array(
                     'amount'       => $this->input->post('amount'),
@@ -302,6 +339,7 @@ class Expenses extends MY_Controller
                     'cheque_no'    => $this->input->post('cheque_no'),
                     'store_id'     => $store_id,
                     'payment_type' =>  4,
+                    'other_exp_id' =>  $pending_expenses,
                 );
 
                 $this->site->insertQuery('bank_pending',$bankPending);
@@ -580,5 +618,55 @@ class Expenses extends MY_Controller
          
         // Render excel data 
         echo $excelData;        
+    }
+
+    public function bankInfo($type){   
+        //$suppliers = $this->purchases_model->getSupplierByID($sid);
+        
+        $banks = $this->site->wheres_rows('bank_account',null); 
+      
+        if($type == 'cheque' || $type == 'TT'){
+          $output= '<div class="col-md-6"><div class="form-group">
+                  <label>Bank information </label> 
+                   <select class="form-control select2 tip" name="bank" required="required" id="type">
+              <option value="">Select Bank</option>';
+  
+              foreach ($banks as $key => $bank) {
+                $output .='<option value="'.$bank->bank_account_id.'">'.$bank->bank_name .' ('.$bank->account_name.' ) ( '.$bank->account_no.')</option>';
+              }
+          if($type == 'cheque')  {
+            $output .='</select></div></div>
+            <div class="col-md-6"><div class="form-group">
+                    <label>Cheque No </label>
+                <input type="text" name="cheque_no" class="form-control" required="required">
+                    </div></div>'; 
+          }else{
+              $output .='</select></div>
+              <div class="col-md-6"><div class="form-group">
+              <label>TT No </label>
+          <input type="text" name="cheque_no" class="form-control" required="required">
+              </div></div>'; 
+          }  
+          echo $output;
+        }else if($type == 'card'){
+  
+          $output= '<div class="form-group">
+                <p>Bank information </p> 
+                   <select class="form-control select2 tip" name="bank" required="required" id="type">
+              <option value="">Select Bank</option>';
+  
+              foreach ($banks as $key => $bank) {
+                $output .='<option value="'.$bank->bank_account_id.'">'.$bank->bank_name .' ('.$bank->account_name.' ) ( '.$bank->account_no.')</option>';
+              }
+                          
+          $output .='</select></div>
+                  <div class="form-group">
+                  <label>Card No </label>
+              <input type="text" name="cheque_no" class="form-control" required="required">
+                  </div>'; 
+          echo $output;
+        } 
+        
+           
     }
 }

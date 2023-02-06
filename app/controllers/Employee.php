@@ -294,7 +294,7 @@ class Employee extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
+                $pending_expenses=$this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
 				
 				$bankPending = array(
 					'amount'       => $this->input->post('amount'),
@@ -304,6 +304,7 @@ class Employee extends MY_Controller
 					'cheque_no'    => $this->input->post('cheque_no'),
 					'store_id'     => $this->input->post('store_id'),
 					'payment_type' =>  4,
+					'other_exp_id' =>  $pending_expenses,
 				);
 				
 				$this->site->insertQuery('bank_pending',$bankPending);
@@ -395,7 +396,7 @@ class Employee extends MY_Controller
                     'amount'       => $this->input->post('amount'),
                     'created_by'   => $this->session->userdata('user_id') 
                 );
-                $this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
+                $pending_expenses= $this->site->insertQuery('bank_pending_salary', $bankPendingSalary); 
 
 				$bankPending = array(
 					'amount'       => $this->input->post('amount'),
@@ -405,6 +406,7 @@ class Employee extends MY_Controller
 					'cheque_no'    => $this->input->post('cheque_no'),
 					'store_id'     => $this->input->post('store_id'),
 					'payment_type' =>  4,
+					'other_exp_id' =>  $pending_expenses,
 				);
 				
 				$this->site->insertQuery('bank_pending',$bankPending);
