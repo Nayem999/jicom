@@ -21,7 +21,7 @@
                                     <?= lang('name', 'name'); ?>
                                     <?= form_input('name', set_value('name'), 'class="form-control tip" id="name"  required="required"'); ?>
                                 </div> 
-                                <div class="form-group">
+                                <div class="form-group" style="display:none;">
                                     <?= lang('image', 'image'); ?>
                                     <input type="file" name="userfile" id="image">
                                 </div>

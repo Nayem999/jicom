@@ -766,7 +766,7 @@
             <div id="item-list">
               <div class="items"> <?php echo $products; ?> </div>
             </div>
-            <div class="product-nav">
+            <!-- <div class="product-nav">
               <div class="btn-group btn-group-justified">
                 <div class="btn-group">
                   <button style="z-index:10002;" class="btn btn-warning pos-tip btn-flat" type="button" id="previous"><i class="fa fa-chevron-left"></i></button>
@@ -780,8 +780,9 @@
                   <button style="z-index:10004;" class="btn btn-warning pos-tip btn-flat" type="button" id="next"><i class="fa fa-chevron-right"></i></button>
                 </div>
               </div>
-            </div>
-          </div></td>
+            </div> -->
+          </div>
+        </td>
       </tr>
     </table>
   </div>

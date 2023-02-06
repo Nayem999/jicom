@@ -42,7 +42,7 @@
                                     ?>
                                     <?= form_dropdown('category', $cat, $category->parent_id, 'class="form-control select2 tip" id="category"'); ?>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="display:none;">
                                     <?= lang('image', 'image'); ?>
                                     <input type="file" name="userfile" id="image">
                                 </div>
