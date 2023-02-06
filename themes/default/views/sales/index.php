@@ -2,6 +2,11 @@
 
 $v = "?v=1";
 
+    if($this->input->post('warehouse')){
+
+        $v .= "&warehouse=".$this->input->post('warehouse');
+
+    } 
     if($this->input->post('customer')){
 
         $v .= "&customer=".$this->input->post('customer');
