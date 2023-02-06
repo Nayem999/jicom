@@ -68,7 +68,7 @@ class Pos extends MY_Controller {
 			$product = "product";
 			$unit_cost = "unit_cost";
 			$tax_rate = "tax_rate";
-// echo $this->input->post('bank_id')."**";die;
+			// echo $this->input->post('bank_id')."**";die;
 			$date = date('Y-m-d H:i:s');
 			$customer_id = $this->input->post('customer_id');
 			$customer_details = $this->pos_model->getCustomerByID($customer_id);
@@ -236,6 +236,7 @@ class Pos extends MY_Controller {
 					$totalDeu = $totalDeu + $value->deu;
 				}
 			}
+			$incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
 			if(!$eid) {
 				$status = 'due';
 				$credit_over=$totalDeu + $grand_total;
@@ -268,7 +269,7 @@ class Pos extends MY_Controller {
 					$tCollectAmount = $this->input->post('amount');
 				}
 
-			$incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
+			// $incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
  
 			$payPaymentdata = array(
                         'payment_date' => $incDate,
@@ -374,7 +375,6 @@ class Pos extends MY_Controller {
 				'total_quantity' => $this->input->post('total_quantity'),
 				'rounding' => $rounding,
 				'paid' => $paid,
-				'status' => $status,
 				'paid_by' => $this->input->post('paid_by'),
 				'created_by' => $this->session->userdata('user_id'),
 				'store_id' => $store_id,
@@ -384,6 +384,9 @@ class Pos extends MY_Controller {
 				'aging_status' =>$aging_status,
 				'delivery_date' =>$delivery_date,
 				);
+			if(!$eid) {
+				$data['status'] = $status;
+			}
 			if($suspend) {
 				$data['hold_ref'] = $this->input->post('hold_ref');
 			}
@@ -409,13 +412,18 @@ class Pos extends MY_Controller {
 					'created_by' => $this->session->userdata('user_id'),
 					'note' => $this->input->post('payment_note'),
 					'pos_paid' => $this->tec->formatDecimal($this->input->post('amount')),
-					'pos_balance' => $this->tec->formatDecimal($this->input->post('balance_amount')),
 					'collect_id'  => $collect_id,
 					'store_id' => $store_id,
 					'delivery_date' => $delivery_date,
 					);
+					if(!$eid) {
+						$payment['pos_balance'] = $this->tec->formatDecimal($this->input->post('balance_amount'));
+					}
+					else
+					{
+						$payment['pos_balance'] = $this->tec->formatDecimal($grand_total-$this->input->post('amount'));
+					}
 				$data['paid'] = $amount;
-
 
 			} else {
 				$payment = array();
