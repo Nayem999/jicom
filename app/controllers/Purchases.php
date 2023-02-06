@@ -21,7 +21,8 @@ class Purchases extends MY_Controller
         $this->allowed_types = 'gif|jpg|png|pdf|doc|docx|xls|xlsx|zip';
 
         $incSequence = null;
-        
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+		$this->session->unset_userdata($ses_unset);
     }
     
     public function today() { 
@@ -70,7 +71,8 @@ class Purchases extends MY_Controller
         
         $this->datatables->select($this->db->dbprefix('purchases') . ".id as id, " . 
                       
-            $this->db->dbprefix('purchases') . ".date as date , reference,  " .  
+            $this->db->dbprefix('purchases') . ".date as date , reference,  supplier_id," .  
+            $this->db->dbprefix('stores') . ".name as sname , " .  
             $this->db->dbprefix('suppliers') . ".name as cname , total, paid , deu , note, attachment", FALSE);
         
         $this->datatables->join('suppliers', 'suppliers.id=purchases.supplier_id');
@@ -93,19 +95,17 @@ class Purchases extends MY_Controller
            $this->datatables->add_column("Actions", "
         <div class='text-center'>
           <div class='btn-group'>".$actdata."</div></div>", "id , supplier_id , cname ");
-        
+
         if ($today != NULL) {
             
-            $this->datatables->like('date', $today);
-            
+            $this->datatables->like('date', $today);            
         }
 
         if(!$this->Admin){
            $this->datatables->where('purchases.store_id',$this->session->userdata('store_id'));
         }
         
-        //$this->datatables->unset_column('id')->unset_column('supplier_id');
-        $this->datatables->unset_column('supplier_id');
+        $this->datatables->unset_column('id')->unset_column('supplier_id');
         
         echo $this->datatables->generate();
         
