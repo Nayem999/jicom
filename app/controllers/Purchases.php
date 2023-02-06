@@ -378,7 +378,7 @@ class Purchases extends MY_Controller
                // $sequence = array_combine($pid,$sqno);
 
                 $this->purchases_model->deleteSequence($id,$item_id);
-                $this->purchases_model->AddSequence($id,$item_id,$sqno);
+                // $this->purchases_model->AddSequence($id,$item_id,$sqno);
                 
                 if ($item_id && $item_qty && $unit_cost) {
                     

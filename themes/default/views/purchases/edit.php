@@ -36,17 +36,17 @@
                                         <thead>
                                            <tr class="active">
 
-                                                <th class="col-xs-3"><?= lang('product'); ?></th>
+                                                <th class="col-xs-4"><?= lang('product'); ?></th>
 
                                                 <th class="col-xs-1"><?= lang('quantity'); ?></th>
 
-                                                <th class="col-xs-2">Expiry year</th>
+                                                <!-- <th class="col-xs-2">Expiry year</th> -->
 
-                                                <th class="col-xs-2">Sequence</th>
+                                                <!-- <th class="col-xs-2">Sequence</th> -->
 
                                                 <th class="col-xs-1">Generate</th>
 
-                                                <th class="col-xs-1"><?= lang('unit_cost'); ?></th>
+                                                <th class="col-xs-2"><?= lang('unit_cost'); ?></th>
 
                                                 <th class="col-xs-1"><?= lang('subtotal'); ?></th>
 
@@ -59,19 +59,21 @@
                                         <tfoot>
                                             <tr class="active">
 
-                                                <th><?= lang('total'); ?></th>
+                                                <th class="col-xs-4 text-center"><?= lang('total'); ?></th>
 
-                                                <th class="col-xs-2"><span id="prqty">0</span></th>
+                                                <th class="col-xs-1 text-center"><span id="prqty" class=" text-center">0</span></th>
+
+                                                <!-- <th class="col-xs-2"></th> -->
+
+                                                <!-- <th class="col-xs-1"></th> -->
+
+                                                <th class="col-xs-1"></th>
 
                                                 <th class="col-xs-2"></th>
 
-                                                <th class="col-xs-1"></th>
+                                                <th class="col-xs-1 text-right text-center"><span id="gtotal">0.00</span></th>
 
-                                                <th class="col-xs-1"></th>
-
-                                                <th class="col-xs-2 text-right"><span id="gtotal">0.00</span></th>
-
-                                                <th style="width:25px;"></th>
+                                                <th style="width:20px;"></th>
 
                                             </tr>
                                         </tfoot>

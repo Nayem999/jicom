@@ -341,6 +341,7 @@ class Purchases_model extends CI_Model
             foreach ($items as $item) {
 
                 $item['purchase_id'] = $id;
+                $item['store_id'] = $store_id;
 
                 $this->storeProQtyUpdate($item['product_id'],$item['quantity'],$store_id);
 
