@@ -164,7 +164,7 @@ class Sales extends MY_Controller {
         $this->data['customer'] = $this->pos_model->getCustomerByID($inv->customer_id); 
         $this->data['inv'] = $inv;
         $this->data['sid'] = $sale_id;
-        $this->data['noprint'] = $noprint;
+        $this->data['noprint'] = '';
         $this->data['modal'] = false;  
         $this->data['page_title'] = lang("Invoice Log");
         $this->load->view($this->theme.'sales/view', $this->data);

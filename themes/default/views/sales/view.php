@@ -121,7 +121,7 @@ if ($modal) {
 
     <div class="no-print">
 
-        <?php if ($message) { ?>
+        <?php if (isset($message)) { ?>
 
             <div class="alert alert-success">
 
@@ -176,13 +176,13 @@ if ($modal) {
 
                         <th class="text-center col-xs-1">Sl. No.</th>
 
-                        <th class="text-center col-xs-3"><?=lang('description');?></th>
+                        <th class="text-center col-xs-5"><?=lang('description');?></th>
 
-                        <th class="text-center col-xs-3"><?=lang('Warranty');?></th>
+                        <!-- <th class="text-center col-xs-3"><?=lang('Warranty');?></th> -->
 
                         <th class="text-center col-xs-1"><?=lang('quantity');?></th>
 
-                        <th class="text-center col-xs-1"><?=lang('price');?></th>
+                        <th class="text-center col-xs-2"><?=lang('price');?></th>
 
                         <th class="text-center col-xs-2"><?=lang('subtotal');?></th>
 
@@ -197,17 +197,17 @@ if ($modal) {
                 $tax_summary = array();
                 $warranty_year='';  
                 foreach ($rows as $row) {
-                    $sequence = $this->site->getWhereDataByElement('pro_sequence','pro_id','sales_id',$row->product_id,$row->sale_id); 
+                    // $sequence = $this->site->getWhereDataByElement('pro_sequence','pro_id','sales_id',$row->product_id,$row->sale_id); 
                     $i++;  
                     echo '<tr>
                         <td  style="text-align: center;">'.$i.'</td>
                         <td class="text-left">' .  $row->product_name;
-                        echo '<br> S/N : ';
-                            foreach ($sequence as $key => $seque) {
+                        // echo '<br> S/N : ';
+                            /* foreach ($sequence as $key => $seque) {
                             echo $seque->sequence.', ';
-                        }
+                        } */
                     echo '</td>';    
-                    echo '<td class="text-center">';
+                    /* echo '<td class="text-center">';
                      
                         if($row->warranty_year){ 
                             echo $row->warranty_year;
@@ -215,7 +215,7 @@ if ($modal) {
                         }else{
                             echo 'No warranty';
                         }
-                    echo'</td>';
+                    echo'</td>'; */
 
                     echo '<td class="text-center">' . str_replace('.00','',$row->quantity) . '</td>';
 
@@ -246,7 +246,7 @@ if ($modal) {
                 <tr>
 
                     <td> </td>
-                    <td colspan="4"><strong><?= lang("total"); ?></strong></td>
+                    <td colspan="3"><strong><?= lang("total"); ?></strong></td>
                     <td colspan="1" class="text-right"><strong><?= $this->tec->formatMoney($inv->total + $inv->product_tax+$inv->product_discount); ?></strong></td>
 
                 </tr>
@@ -257,7 +257,7 @@ if ($modal) {
 
                     echo '<tr>
                         <td> </td>
-                        <td colspan="4">' . lang("order_tax") . '</th>
+                        <td colspan="3">' . lang("order_tax") . '</th>
                         <th colspan="1" class="text-right">' . $this->tec->formatMoney($inv->order_tax) . ' ('.$inv->order_tax_id.')</td>
                         </tr>';
 
@@ -267,7 +267,7 @@ if ($modal) {
 
                     echo '<tr>
                         <td></td>
-                        <td colspan="4">' . lang("order_discount") . '</td>
+                        <td colspan="3">' . lang("order_discount") . '</td>
                         <td colspan="1" class="text-right">' . $this->tec->formatMoney($inv->total_discount) . '</td></tr>';
 
                 }
@@ -290,7 +290,7 @@ if ($modal) {
                     <tr>
                         <td></td>
 
-                        <td colspan="4"><?= lang("grand_total"); ?></td>
+                        <td colspan="3"><?= lang("grand_total"); ?></td>
 
                         <td colspan="1" class="text-right"><?= $this->tec->formatMoney($inv->grand_total + $rounding); ?></td>
 
@@ -306,7 +306,7 @@ if ($modal) {
 
                     <tr>
                         <td></td>
-                        <td colspan="4"><?= lang("grand_total"); ?></td>
+                        <td colspan="3"><?= lang("grand_total"); ?></td>
 
                         <td colspan="1" class="text-right"><?= $this->tec->formatMoney($inv->grand_total); ?></td>
 
@@ -319,7 +319,7 @@ if ($modal) {
                     <tr>
                         <td></td>
 
-                        <td colspan="4"><?= lang("paid_amount"); ?></td>
+                        <td colspan="3"><?= lang("paid_amount"); ?></td>
 
                         <td colspan="1" class="text-right"><?= $this->tec->formatMoney($inv->paid); ?></td>
 
@@ -327,7 +327,7 @@ if ($modal) {
 
                     <tr>
                         <td></td>
-                        <td colspan="4">Due Amount</td>
+                        <td colspan="3">Due Amount</td>
                         <?php $currentDue = $inv->grand_total - $inv->paid; ?>
 
                         <td colspan="1" class="text-right"><?= $this->tec->formatMoney($inv->grand_total - $inv->paid); ?></td>
@@ -340,26 +340,28 @@ if ($modal) {
                         <td></td>
                         <td colspan="1">In Words</td>
 
-                        <td colspan="4" class="text-right"><div id="word-of-amount"></div></td>
+                        <td colspan="3" class="text-right"><div id="word-of-amount"></div></td>
 
                     </tr>
-                <?php  
-                if($retunVal->pos_balance>0){ ?>
-                    <tr>
-                        <th></th>
-                        <td colspan="1">Returns</td>
+                <?php 
+                if(isset($retunVal->pos_balance)){ 
+                    if($retunVal->pos_balance>0){ ?>
+                        <tr>
+                            <th></th>
+                            <td colspan="1">Returns</td>
 
-                        <td colspan="4" class="text-right"><?php echo $this->tec->formatMoney($retunVal->pos_balance); ?></td>
+                            <td colspan="3" class="text-right"><?php echo $this->tec->formatMoney($retunVal->pos_balance); ?></td>
 
-                    </tr>
-                    <?php } ?>
+                        </tr>
+                        <?php }
+                    } ?>
                 </tfoot>
 
             </table>
 
             <?php
 
-            if ($payments) {
+            if (isset($payments)) {
 
                 echo '<table class="table table-striped table-condensed" style="margin-bottom: -1px;"><tbody>';
 
@@ -444,8 +446,10 @@ if ($modal) {
            
             $totalSalDue = $this->sales_model->salesDeuByCustomer($inv->customer_id);
              
-            if($cID[0]->customer_id !=''){
-               $tAdAmount =  $mergeval;             
+            if(isset($cID[0]->customer_id))
+            {   if($cID[0]->customer_id !=''){
+                    $tAdAmount =  $mergeval;   
+                }          
             }else{
                $tAdAmount = $totalSalDue - $totalAdAmount; 
                //$tAdAmount = ($totalSalDue - $totalAdAmount) -$inv->grand_total+$inv->paid;
@@ -504,7 +508,7 @@ if ($modal) {
 
     <hr>
 
-    <?php if ($message) { ?>
+    <?php if (isset($message)) { ?>
 
     <div class="alert alert-success">
 

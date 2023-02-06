@@ -1226,8 +1226,8 @@ class Pos_model extends CI_Model
                         }
                     }
                 $seq = trim($seq,',');
-                $row->seq =  $seq ;     
-                $row->sequence =  $SequenceRow ;  
+                // $row->seq =  $seq ;     
+                // $row->sequence =  $SequenceRow ;  
                 $data[] = $row;
 
             }
