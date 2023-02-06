@@ -265,11 +265,11 @@ if($chartData) {
 
                     </a>
 
-                    <a class="btn btn-app" href="<?= site_url('gift_cards'); ?>">
+                    <!-- <a class="btn btn-app" href="<?= site_url('gift_cards'); ?>">
 
                         <i class="fa fa-credit-card"></i> <?= lang('gift_cards'); ?>
 
-                    </a>
+                    </a> -->
 
                     <a class="btn btn-app" href="<?= site_url('customers'); ?>">
 
