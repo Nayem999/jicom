@@ -88,7 +88,7 @@ class Sales extends MY_Controller {
          
             $actdata .= "<a href='javascript:;' onClick='noteEdit($1)' title='Edit Note' class='tip btn btn-primary btn-xs'><i class='fa fa-edit'></i></a>";
          
-            $actdata .= "<a href='" . site_url('pos/?edit=$1') . "' title='".lang("edit_invoice")."' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
+            $actdata .= "<a style='display:none;' href='" . site_url('pos/?edit=$1') . "' title='".lang("edit_invoice")."' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
          
             $actdata .= "<a href='" . site_url('sales/delete/$1') . "' onClick=\"return confirm('". lang('alert_x_sale') ."')\" title='".lang("delete_sale")."' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
 
