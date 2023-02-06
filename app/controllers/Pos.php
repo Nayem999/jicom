@@ -255,6 +255,22 @@ class Pos extends MY_Controller {
 					}
 				}
 			}
+			else
+			{
+				$credit_over=$totalDeu + $grand_total;
+				if ($grand_total > $paid && $paid > 0) {
+					$credit_over=$totalDeu + ($grand_total-$paid);
+				} elseif ($grand_total <= $paid) {
+					$credit_over=0;
+				}
+				if($customer_credit_limit==null){ $customer_credit_limit=0; }
+				// echo $credit_over."__".$customer_credit_limit;die;
+				if($credit_over>0){
+					if($credit_over>$customer_credit_limit){
+						$this->session->set_flashdata('error', lang('Credit Over'));
+					}
+				}
+			}
 			if(!$this->Admin){
         		$store_id = $this->session->userdata('store_id') ;
         	}else{

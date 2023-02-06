@@ -1031,6 +1031,7 @@ class Pos_model extends CI_Model
 
         if($this->db->update('sales', $data, array('id' => $id)) && $this->db->delete('sale_items', array('sale_id' => $id))) {
             $data['type'] = 'edit';
+            $data['sale_id'] = $id;
             $data['date'] = date('Y-m-d h:i:s');
             $this->db->insert('sales_log', $data);
             $sale_log_id = $this->db->insert_id(); 
@@ -1174,7 +1175,7 @@ class Pos_model extends CI_Model
         }
 
         $q = $this->db->get_where('sale_items', array('sale_id' => $sale_id));
-
+        // echo $this->db->last_query();die;
         if($q->num_rows() > 0) {
 
             foreach (($q->result()) as $row) {
