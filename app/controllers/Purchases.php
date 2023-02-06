@@ -66,7 +66,7 @@ class Purchases extends MY_Controller
         
     }
     
-    function get_purchases($today = NULL) { 
+    function today_get_purchases($today = NULL) { 
         $this->load->library('datatables');
         
         $this->datatables->select($this->db->dbprefix('purchases') . ".id as id, " . 
@@ -106,6 +106,51 @@ class Purchases extends MY_Controller
         }
         
         $this->datatables->unset_column('id')->unset_column('supplier_id');
+        
+        echo $this->datatables->generate();
+        
+    }
+
+    function get_purchases($today = NULL) { 
+        $this->load->library('datatables');
+        
+        $this->datatables->select($this->db->dbprefix('purchases') . ".id as id, " . 
+                      
+            $this->db->dbprefix('purchases') . ".date as date , reference,  supplier_id," .  
+
+            $this->db->dbprefix('suppliers') . ".name as cname , total, paid , deu , note, attachment", FALSE);
+        
+        $this->datatables->join('suppliers', 'suppliers.id=purchases.supplier_id');
+        $this->datatables->join('stores', 'stores.id=purchases.store_id'); 
+        
+        $this->datatables->from('purchases');
+        
+        $this->datatables->group_by('purchases.id');
+
+        if($data = $this->session->userdata('group_id')==1){
+            $actdata = "<a onclick=\"window.open('" . site_url('purchases/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Purchase' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> ";
+            $actdata .= "<a href='" . site_url('purchases/edit/$1') . "' title='" . lang("edit_purchase") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>"; 
+
+            $actdata .= " <a href='" . site_url('suppliers/purchases/$2') . "'   title='List of ($3)'  class='tip btn btn-warning btn-xs'><i class='fa fa-user'></i>";
+            $actdata .= "<a href='" . site_url('purchases/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_purchase') . "')\" title='" . lang("delete_purchase") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+          }else {
+          $actdata = "<a onclick=\"window.open('" . site_url('purchases/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Purchase' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> ";
+
+          }
+           $this->datatables->add_column("Actions", "
+        <div class='text-center'>
+          <div class='btn-group'>".$actdata."</div></div>", "id , supplier_id , cname ");
+
+        if ($today != NULL) {
+            
+            $this->datatables->like('date', $today);            
+        }
+
+        if(!$this->Admin){
+           $this->datatables->where('purchases.store_id',$this->session->userdata('store_id'));
+        }
+        
+        $this->datatables->unset_column('supplier_id');
         
         echo $this->datatables->generate();
         

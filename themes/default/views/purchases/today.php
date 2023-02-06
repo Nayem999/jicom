@@ -45,7 +45,7 @@
 
             'bProcessing': true, 'bServerSide': true,
 
-            'sAjaxSource': '<?= site_url('purchases/get_purchases/'.$today) ?>',
+            'sAjaxSource': '<?= site_url('purchases/today_get_purchases/'.$today) ?>',
 
             'fnServerData': function (sSource, aoData, fnCallback) {
 
@@ -61,7 +61,8 @@
 
             },
 
-            "aoColumns": [{"mRender":hrld}, null,  null, null,{"mRender":currencyFormat}, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
+            "aoColumns": [null, null,  null, null,{"mRender":currencyFormat}, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
+            // "aoColumns": [{"mRender":hrld}, null,  null, null,{"mRender":currencyFormat}, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
 
         });
 

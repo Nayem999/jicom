@@ -60,7 +60,8 @@
 
             },
 
-            "aoColumns": [null,{"mRender":hrld}, null, null,{"mRender":currencyFormat}, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
+            "aoColumns": [null,null, null, null,null, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
+            // "aoColumns": [null,{"mRender":hrld}, null, null,{"mRender":currencyFormat}, null, null,  null, {"mRender":attach, "bSortable":false, "bSearchable": false},{"bSortable":false, "bSearchable": false}]
 
         });
 

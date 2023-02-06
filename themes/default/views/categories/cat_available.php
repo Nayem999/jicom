@@ -44,7 +44,7 @@
                                         <td><img width="32px" src="<?php echo base_url('/uploads/thumbs/').'/'.$category->image; ?>"></td>
                                         <td><?php echo $category->code; ?></td>
                                         <td><?php echo $category->name; ?></td>
-                                        <td><?php if($subcats->name) echo $subcats->name; else echo '-' ; ?></td>
+                                        <td><?php if($category->parent_id) echo $subcats->name; else echo '-' ; ?></td>
                                         <td><?php echo $category->qty; ?></td>
                                         <td style="text-align: center;"><a target="_black" href="<?php echo base_url('categories/').'/productListByCatId/'.$category->id ?>"  class="tip btn btn-primary btn-xs" title="" data-original-title="Product List"> <i class="fa fa-list"></i>
 

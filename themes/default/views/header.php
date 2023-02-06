@@ -206,7 +206,7 @@
           <?= lang('Product purchases'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
-            <li id="purchases_index"><a href="<?= site_url('purchases/today'); ?>"><i class="fa fa-circle-o"></i>
+            <li id="purchases_today"><a href="<?= site_url('purchases/today'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Today\'s Purchases'); ?>
               </a></li>
             <li id="purchases_index"><a href="<?= site_url('purchases'); ?>"><i class="fa fa-circle-o"></i>
