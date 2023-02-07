@@ -106,7 +106,7 @@
                                     <td><?php echo $result['qty']; ?></td>                                    
                                     <td><?php echo $result['customer_name']; ?></td>
                                     <td><?php echo $result['total']; ?></td>
-                                    <td><?php echo $result['cost_price']; ?></td> 
+                                    <td><?php echo number_format($result['cost_price'],2,'.',''); ?></td> 
                                     <td><?php echo ($result['total']-$result['cost_price']); ?></td>
                                      <?php
                                         $actdata = "<a href='#' onClick=\"MyWindow=window.open('" . site_url('pos/view/'.$result['id'].'/1') . "', 'MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,resizable=yes,width=350,height=600'); return false;\" title='".lang("view_invoice")."' class='tip btn btn-primary btn-xs'><i class='fa fa-list'></i></a>";

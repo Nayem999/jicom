@@ -67,6 +67,7 @@ if (isset($_POST['start_date'])) {
                                         <th style="width: 40px;"><?php echo $this->lang->line("status"); ?></th>
 
                                         <th class="col-xs-1"><?php echo 'Cheque Status'; ?></th>
+                                        <th class="col-xs-1"><?php echo 'Aging Day'; ?></th>
 
                                         <th style="width:205px; text-align:center;"><?php echo $this->lang->line("actions"); ?></th>
 
@@ -106,6 +107,7 @@ if (isset($_POST['start_date'])) {
                                                 <td><?= $result->grand_total-$result->paid; ?></td>
                                                 <td><?= $result->status; ?></td>
                                                 <td><?= $result->type; ?></td>
+                                                <td><?= $day_diff.'/'.$result->aging_day; ?></td>
                                                 <td><button class="btn" type="checkbox" name="tickervalda" onclick="tickerval(<?=$result->invoice?>)" >Change Status</button ></td>
                                             </tr>
                                     <?php

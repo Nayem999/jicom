@@ -59,6 +59,23 @@
                                             $credit_sale[$result->store_id] = $result->grand_total;
                                         }
                                     }
+                                    else if($result->status=='partial'){
+                                        if (in_array($result->store_id, $chkArr3)) {
+                                            $credit_sale[$result->store_id] += $result->grand_total - $result->paid;
+                                        } else {
+                                            $chkArr3[]=$result->store_id;
+                                            $credit_sale[$result->store_id] = $result->grand_total - $result->paid;
+                                        }
+
+                                        if($result->paid_by=='cash'){
+                                            if (in_array($result->store_id, $chkArr2)) {
+                                                $cash_sale[$result->store_id] += $result->paid;
+                                            } else {
+                                                $chkArr2[]=$result->store_id;
+                                                $cash_sale[$result->store_id] = $result->paid;
+                                            }
+                                        }
+                                    }
                                     else
                                     {
                                         if($result->paid_by=='cash'){

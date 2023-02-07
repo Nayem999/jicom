@@ -1078,6 +1078,23 @@ class Reports extends MY_Controller
                         $credit_sale[$result->store_id] = $result->grand_total;
                     }
                 }
+                else if($result->status=='partial'){
+                    if (in_array($result->store_id, $chkArr3)) {
+                        $credit_sale[$result->store_id] += $result->grand_total - $result->paid;
+                    } else {
+                        $chkArr3[]=$result->store_id;
+                        $credit_sale[$result->store_id] = $result->grand_total - $result->paid;
+                    }
+
+                    if($result->paid_by=='cash'){
+                        if (in_array($result->store_id, $chkArr2)) {
+                            $cash_sale[$result->store_id] += $result->paid;
+                        } else {
+                            $chkArr2[]=$result->store_id;
+                            $cash_sale[$result->store_id] = $result->paid;
+                        }
+                    }
+                }
                 else
                 {
                     if($result->paid_by=='cash'){
@@ -2228,7 +2245,7 @@ class Reports extends MY_Controller
 		if(count($query_data) > 0){ 
 			foreach($query_data as $key => $result){ 
                 $storeName = $this->site->getDataByElement('stores','id',$result['store_id']);
-				$lineData = array($result['date'], $storeName[0]->name, $result['id'], $result['qty'], $result['customer_name'], $result['total'], $result['cost_price'], $result['total']-$result['cost_price']); 
+				$lineData = array($result['date'], $storeName[0]->name, $result['id'], $result['qty'], $result['customer_name'], $result['total'], number_format($result['cost_price'],2,'.',''), $result['total']-$result['cost_price']); 
 				$excelData .= implode("\t", array_values($lineData)) . "\n"; 
 			} 
 		}else{ 
@@ -2468,14 +2485,18 @@ class Reports extends MY_Controller
         $agingRpt = $this->reports_model->agingReport($start_date,$end_date);
 
         $fileName = "aging_report_" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('DATE', 'INV NO', 'CUSTOMER','STORE NAME','C.Phone','TOTAL','TAX','DISCOUNT','GRAND TOTAL','PAID','P.BY','BALANCE','STATUS','CHEQUE STATUS');
+        $fields = array('DATE', 'INV NO', 'CUSTOMER','STORE NAME','C.Phone','TOTAL','TAX','DISCOUNT','GRAND TOTAL','PAID','P.BY','BALANCE','STATUS','CHEQUE STATUS','AGING DAY');
 
         $excelData = implode("\t", array_values($fields)) . "\n"; 
 
         if(count($agingRpt) > 0){ 
             foreach($agingRpt as $result){ 
+                $date1=date_create(date('Y-m-d',strtotime($result->date)));
+                $date2=date_create(date('Y-m-d'));
+                $diff=date_diff($date1,$date2);
+                $day_diff=$diff->format("%d");
 
-                $lineData = array(date('d-M-Y',strtotime($result->date)), $result->invoice, $result->customer_name ,$result->storename, $result->phone,$result->total, $result->total_tax, $result->total_discount, $result->grand_total, $result->paid, $result->paid_by, $result->grand_total-$result->paid , $result->status, $result->type);
+                $lineData = array(date('d-M-Y',strtotime($result->date)), $result->invoice, $result->customer_name ,$result->storename, $result->phone,$result->total, $result->total_tax, $result->total_discount, $result->grand_total, $result->paid, $result->paid_by, $result->grand_total-$result->paid , $result->status, $result->type, ' '.$day_diff.'/'.$result->aging_day );
                                                                                                                   
 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
