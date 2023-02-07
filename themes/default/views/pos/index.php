@@ -2,10 +2,19 @@
 <!DOCTYPE html>
 <style>
 
-.bootstrap-datetimepicker-widget.dropdown-menu {
-  /* background: green !important; */
-  color: green !important;
-}
+  .bootstrap-datetimepicker-widget.dropdown-menu {
+    /* background: green !important; */
+    color: green !important;
+  }
+
+  .datepicker table tr td.active:active, 
+  .datepicker table tr td.active.highlighted:active, 
+  .datepicker table tr td.active.active, 
+  .datepicker table tr td.active.highlighted.active {
+    background-color: green;
+    color: white !important;
+  }
+
 
 </style>
 
