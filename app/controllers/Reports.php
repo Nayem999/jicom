@@ -48,19 +48,21 @@ class Reports extends MY_Controller
     public function daily_statement(){
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
         $results = array(); 
-        $this->data['todaySale'] = $this->reports_model->todaySale($start_date,$end_date);
-        $this->data['todayCollection'] = $this->reports_model->todayCollection($start_date,$end_date); 
-        $this->data['expenses'] = $this->reports_model->expenses($start_date,$end_date); 
-        $this->data['bankPays'] =  $this->reports_model->bankPays($start_date,$end_date);  
-        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
-        $this->data['bankWithdrow'] = $this->reports_model->banksWithdrow($start_date,$end_date);
-        $this->data['payment'] = $this->reports_model->supplierPayment($start_date,$end_date);  
-        $this->data['loanPay'] = $this->reports_model->loanPays($start_date,$end_date);
-        $this->data['loanCollect'] = $this->reports_model->loanCollect($start_date,$end_date); 
-        $this->data['donations'] = $this->reports_model->donationsPay($start_date,$end_date);
+        $this->data['todaySale'] = $this->reports_model->todaySale($start_date,$end_date,$store_id);
+        $this->data['todayCollection'] = $this->reports_model->todayCollection($start_date,$end_date,$store_id); 
+        $this->data['expenses'] = $this->reports_model->expenses($start_date,$end_date,$store_id); 
+        $this->data['bankPays'] =  $this->reports_model->bankPays($start_date,$end_date,$store_id);  
+        $this->data['bankCash'] = $this->reports_model->totalBankCash2(null, $start_date,$end_date,$store_id);  
+        $this->data['bankWithdrow'] = $this->reports_model->banksWithdrow($start_date,$end_date,$store_id);
+        $this->data['payment'] = $this->reports_model->supplierPayment($start_date,$end_date,$store_id);  
+        $this->data['loanPay'] = $this->reports_model->loanPays($start_date,$end_date,$store_id);
+        $this->data['loanCollect'] = $this->reports_model->loanCollect($start_date,$end_date,$store_id); 
+        $this->data['donations'] = $this->reports_model->donationsPay($start_date,$end_date,$store_id);
         $this->data['results'] = $results; 
         $this->data['date_range'] = $start_date;
+        $this->data['stores'] = $this->site->getAllStores();
         $bc = array(array('link' => '#', 'page' => lang('daily_Statement')), array('link' => '#', 'page' => lang('Daily_Report')));
         $meta = array('page_title' => lang('Daily_Statement'), 'bc' => $bc);
         $this->page_construct('reports/daily_statement', $this->data, $meta); 
@@ -72,18 +74,19 @@ class Reports extends MY_Controller
 
         $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
         $end_date = $data_arr[1] ? $data_arr[1] : NULL;  
+        $store_id = $data_arr[2] ? $data_arr[2] : 0;  
         $results = array(); 
-        $todaySale = $this->reports_model->todaySale($start_date,$end_date);
-        $todayCollection = $this->reports_model->todayCollection($start_date,$end_date); 
-        $expenses = $this->reports_model->expenses($start_date,$end_date); 
-        $bankPays =  $this->reports_model->bankPays($start_date,$end_date);  
-        $bankWithdrow = $this->reports_model->banksWithdrow($start_date,$end_date);
-        $payment = $this->reports_model->supplierPayment($start_date,$end_date);  
-        $loanPay = $this->reports_model->loanPays($start_date,$end_date);
-        $loanCollect = $this->reports_model->loanCollect($start_date,$end_date); 
-        $donations = $this->reports_model->donationsPay($start_date,$end_date);
+        $todaySale = $this->reports_model->todaySale($start_date,$end_date,$store_id);
+        $todayCollection = $this->reports_model->todayCollection($start_date,$end_date,$store_id); 
+        $expenses = $this->reports_model->expenses($start_date,$end_date,$store_id); 
+        $bankPays =  $this->reports_model->bankPays($start_date,$end_date,$store_id);  
+        $bankWithdrow = $this->reports_model->banksWithdrow($start_date,$end_date,$store_id);
+        $payment = $this->reports_model->supplierPayment($start_date,$end_date,$store_id);  
+        $loanPay = $this->reports_model->loanPays($start_date,$end_date,$store_id);
+        $loanCollect = $this->reports_model->loanCollect($start_date,$end_date,$store_id); 
+        $donations = $this->reports_model->donationsPay($start_date,$end_date,$store_id);
 
-        $bankCash = $this->reports_model->totalBankCash2(null, $start_date,$end_date);  
+        $bankCash = $this->reports_model->totalBankCash2(null, $start_date,$end_date,$store_id);  
 
         $this->data['results'] = $results; 
         $this->data['date_range'] = $start_date;
