@@ -458,13 +458,16 @@ class Reports extends MY_Controller
     function daily_sales()  {
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
-        $this->data['dailySale'] = $this->reports_model->dailySaleReport($start_date,$end_date);
-        $this->data['dailySaleItem'] = $this->reports_model->dailySaleItemReport($start_date,$end_date); 
+        $this->data['dailySale'] = $this->reports_model->dailySaleReport($start_date,$end_date,$store_id);
+        $this->data['dailySaleItem'] = $this->reports_model->dailySaleItemReport($start_date,$end_date,$store_id); 
 
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
+        $this->data['store_id'] = $store_id;
         $results = array(); 
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("daily_sales");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
@@ -479,9 +482,10 @@ class Reports extends MY_Controller
 
         $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
         $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+        $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
-        $dailySale= $this->reports_model->dailySaleReport($start_date,$end_date);
-        $dailySaleItem = $this->reports_model->dailySaleItemReport($start_date,$end_date); 
+        $dailySale= $this->reports_model->dailySaleReport($start_date,$end_date,$store_id);
+        $dailySaleItem = $this->reports_model->dailySaleItemReport($start_date,$end_date,$store_id); 
 
         $salesItemQnty = array();
         $productArr = array();
@@ -564,6 +568,7 @@ class Reports extends MY_Controller
     function expenses_rpt()  {
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
         $this->data['categories'] = $this->categories_model->getAllCategories();
         $this->db->select(
@@ -576,6 +581,7 @@ class Reports extends MY_Controller
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
+        if($store_id) { $this->db->where('expenses.store_id >=', $store_id); }
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){
@@ -587,6 +593,7 @@ class Reports extends MY_Controller
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
 
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("Expenses Report");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Expenses Report')));
         $meta = array('page_title' => lang('Expenses Report'), 'bc' => $bc);
@@ -600,6 +607,7 @@ class Reports extends MY_Controller
 
         $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
         $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
+        $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
         $categories = $this->categories_model->getAllCategories();
         $this->db->select(
@@ -612,6 +620,7 @@ class Reports extends MY_Controller
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
+        if($store_id) { $this->db->where('expenses.store_id >=', $store_id); }
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){

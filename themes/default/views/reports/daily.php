@@ -18,6 +18,18 @@ if (isset($_POST['start_date'])) {
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    $wr[0] = lang("select") . " " . lang("Store");
+                                    foreach ($stores as $store) {
+                                        $wr[$store->id] = $store->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
                                     <label class="control-label" for="start_date"><?= lang("start_date"); ?></label>
                                     <?= form_input('start_date', set_value('start_date'), 'class="form-control datepicker" id="start_date"'); ?>
                                 </div>
@@ -184,7 +196,7 @@ if (isset($_POST['start_date'])) {
         $("#fileData_filter ").css("display", "block");
     });
     $("#excelWindow").click(function() {
-        var data = $("#start_date").val() + '_' + $("#end_date").val();
+        var data = $("#start_date").val() + '_' + $("#end_date").val() + '_' + $("#store_id").val();
         var url = '<?= site_url('reports/excel_daily_sales/'); ?>' + '/' + data;
         location.replace(url);
     });

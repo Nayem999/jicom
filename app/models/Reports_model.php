@@ -1148,7 +1148,7 @@ class Reports_model extends CI_Model
         return $query->result(); 
 	}*/
 	
-    public function dailySaleReport($start_date=NULL,$end_date=NULL){
+    public function dailySaleReport($start_date=NULL,$end_date=NULL,$store_id=0){
         $this->db->select('sales.id as sale_id, sales.paid_by, sales.status, sales.grand_total, sales.paid, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount, bank_account.bank_name as bank_name '); 
         $this->db->from('sales');  
         // $this->db->join('customers','customers.id=sales.customer_id');
@@ -1167,11 +1167,12 @@ class Reports_model extends CI_Model
 		else{
             $this->db->like('sales.date', date('Y-m-d'));
         }  
+        if($store_id){$this->db->where('sales.store_id', $store_id);  }
         $query = $this->db->get();
         return $query->result(); 
     }
 
-    public function dailySaleItemReport($start_date=NULL,$end_date=NULL){
+    public function dailySaleItemReport($start_date=NULL,$end_date=NULL,$store_id=0){
         $this->db->select('sales.id as sale_id, products.name as product_name, products.id as product_id, sale_items.quantity, sale_items.subtotal '); 
         $this->db->from('sales');  
         $this->db->join('sale_items','sale_items.sale_id=sales.id');
@@ -1188,6 +1189,7 @@ class Reports_model extends CI_Model
 		else{
             $this->db->like('sales.date', date('Y-m-d'));
         }  
+        if($store_id){$this->db->where('sales.store_id', $store_id);  }
         $query = $this->db->get();
         return $query->result(); 
     }

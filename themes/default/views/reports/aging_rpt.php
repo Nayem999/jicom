@@ -173,7 +173,7 @@ if (isset($_POST['start_date'])) {
         $("#fileData_filter ").css("display", "block");
     });
     $("#excelWindow").click(function() {
-        var data = $("#start_date").val() + '_' + $("#end_date").val()+ '_' + $("#store_id").val();
+        var data = $("#start_date").val() + '_' + $("#end_date").val() + '_' + $("#store_id").val();
         var url = '<?= site_url('reports/excel_aging_rpt/'); ?>' + '/' + data;
         location.replace(url);
     });
