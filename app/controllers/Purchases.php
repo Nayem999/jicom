@@ -26,7 +26,8 @@ class Purchases extends MY_Controller
     }
     
     public function today() { 
-        
+
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = 'Today Purchases';
         
         $bc = array(
@@ -47,7 +48,7 @@ class Purchases extends MY_Controller
     function index() { 
         
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = lang('purchases');
         
         $bc = array(
@@ -66,7 +67,11 @@ class Purchases extends MY_Controller
         
     }
     
-    function today_get_purchases($today = NULL) { 
+    function today_get_purchases() { 
+
+        $today = date('Y-m-d');       
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;       
+
         $this->load->library('datatables');
         
         $this->datatables->select($this->db->dbprefix('purchases') . ".id as id, " . 
@@ -104,6 +109,10 @@ class Purchases extends MY_Controller
         if(!$this->Admin){
            $this->datatables->where('purchases.store_id',$this->session->userdata('store_id'));
         }
+        else
+        {
+           if($store_id){ $this->datatables->where('purchases.store_id',$store_id);}
+        }
         
         $this->datatables->unset_column('id')->unset_column('supplier_id');
         
@@ -111,7 +120,8 @@ class Purchases extends MY_Controller
         
     }
 
-    function get_purchases($today = NULL) { 
+    function get_purchases() { 
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;   
         $this->load->library('datatables');
         
         $this->datatables->select($this->db->dbprefix('purchases') . ".id as id, " . 
@@ -141,13 +151,16 @@ class Purchases extends MY_Controller
         <div class='text-center'>
           <div class='btn-group'>".$actdata."</div></div>", "id , supplier_id , cname ");
 
-        if ($today != NULL) {
+        // if ($today != NULL) {
             
-            $this->datatables->like('date', $today);            
-        }
+        //     $this->datatables->like('date', $today);            
+        // }
 
         if(!$this->Admin){
            $this->datatables->where('purchases.store_id',$this->session->userdata('store_id'));
+        }
+        else{
+            if($store_id){$this->datatables->where('purchases.store_id',$store_id);}
         }
         
         $this->datatables->unset_column('supplier_id');

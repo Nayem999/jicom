@@ -27,9 +27,6 @@
 
                 </div>
 
-
-
-
                 <div class="panel panel-warning">
 
                     <div class="panel-body">
@@ -62,12 +59,6 @@
                         <?= form_close(); ?>
 
                     </div>
-
-
-
-
-
-
 
                     <div class="box-body">
                         <div class="table-responsive">
