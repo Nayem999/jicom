@@ -33,6 +33,8 @@ class Expenses extends MY_Controller
     	$start_date = $this->input->post('start_date') ? $this->input->post('start_date')." 00:00:00" : NULL;
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date')." 23:59:59" : NULL;
         $category = $this->input->post('category') ? $this->input->post('category') : NULL;
+
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['expenbyfilter'] = $this->purchases_model->getEexpenByFilter($start_date,$end_date,$category);
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['page_title'] = lang('expenses');        
@@ -46,6 +48,7 @@ class Expenses extends MY_Controller
           
     function get_expenses($user_id = NULL) {
     	$category = $this->input->get('category') ? $this->input->get('category') : NULL;
+    	$store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
     	$start_date = $this->input->get('start_date') ? $this->input->get('start_date')." 00:00:00" : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date')." 23:59:59" : NULL;        
         $detail_link = anchor('expenses/expense_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('expense_note'), 'data-toggle="modal" data-target="#myModal2"');        
@@ -68,12 +71,17 @@ class Expenses extends MY_Controller
         $this->datatables->join('users', 'users.id=expenses.created_by', 'left');
         $this->datatables->join('expens_category', 'expens_category.cat_id=expenses.c_id', 'left'); 
         $this->datatables->group_by('expenses.id');
+
         if($category) { $this->datatables->where('c_id', $category); }
         if($start_date) { $this->datatables->where('date >=', $start_date); }
         if($end_date) { $this->datatables->where('date <=', $end_date); } 
-        if($this->session->userdata('store_id') !=0){
-            $this->datatables->where('expenses.store_id', $this->session->userdata('store_id'));
-        } 
+        if(!$this->Admin){
+            if($this->session->userdata('store_id') !=0){ $this->db->where('expenses.store_id', $this->session->userdata('store_id'));}
+        }
+        else
+        {
+           if($store_id){ $this->datatables->where('expenses.store_id', $store_id);}
+        }
         $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
         	<a onclick=\"window.open('" . site_url('expenses/expense_note/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='" . lang('expense_note') . "' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> 
         	<a href='" . site_url('expenses/edit_expense/$1') . "' title='" . lang("edit_expense") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
@@ -578,6 +586,7 @@ class Expenses extends MY_Controller
     	$category = $data_arr[0] ? $data_arr[0] : NULL;
     	$start_date = $data_arr[1] ? $data_arr[1]." 00:00:00" : NULL;
         $end_date = $data_arr[2] ? $data_arr[2]." 23:59:59" : NULL;        
+        $store_id = $data_arr[3] ? $data_arr[3] : 0;        
 
         $this->db->select(
         $this->db->dbprefix('expenses') . ".id as id, date, reference, amount,".
@@ -592,9 +601,13 @@ class Expenses extends MY_Controller
         if($category) { $this->db->where('c_id', $category); }
         if($start_date) { $this->db->where('date >=', $start_date); }
         if($end_date) { $this->db->where('date <=', $end_date); } 
-        if($this->session->userdata('store_id') !=0){
-            $this->db->where('expenses.store_id', $this->session->userdata('store_id'));
+        if(!$this->Admin){
+            if($this->session->userdata('store_id') !=0){ $this->db->where('expenses.store_id', $this->session->userdata('store_id'));}
         } 
+        else
+        {
+            if($store_id){$this->db->where('expenses.store_id',$store_id);}
+        }
         
         $query = $this->db->get()->result();
         // Excel file name for download 

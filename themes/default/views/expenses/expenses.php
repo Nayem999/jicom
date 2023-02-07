@@ -1,5 +1,6 @@
 <?php
  $catID = $startDate = $endDate = '';
+ $store_id=0;
  $v = "?v=1";
 
     if($this->input->post('start_date')){
@@ -17,9 +18,15 @@
 
     if ($this->input->post('category')) {
 
-    $v .= "&category=" . $this->input->post('category');
+        $v .= "&category=" . $this->input->post('category');
+        $catID = $this->input->post('category');
 
-    $catID = $this->input->post('category');
+    }
+
+    if ($this->input->post('store_id')) {
+
+        $v .= "&store_id=" . $this->input->post('store_id');
+        $store_id = $this->input->post('store_id');
 
     }
     
@@ -66,6 +73,19 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    $wr[0] = lang("select") . " " . lang("Store");
+                                    foreach ($stores as $store) {
+                                        $wr[$store->id] = $store->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $wr, $store_id, 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
                                     <?= lang('category', 'category'); ?>
                                     <?php
                                     $cat[''] = lang("select")." ".lang("category");
@@ -98,6 +118,7 @@
                                 </div>
 
                             </div>
+
 
                             <div class="col-sm-12">
 
@@ -192,7 +213,7 @@
   });  
 
   $("#excelWindow").click(function () {    
-        var data=$("#category").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val();    
+        var data=$("#category").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val()+'_'+$("#store_id").val();    
         var url='<?=site_url('expenses/excel_expenses/');?>'+'/'+data;
         location.replace(url)
   });  
