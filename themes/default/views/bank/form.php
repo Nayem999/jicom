@@ -62,8 +62,8 @@
 						<div class="form-group">
 
 							<label class="control-label" for="current_amount">Current Amount</label>
-
-							<?= form_input('current_amount', set_value('current_amount' , isset($bank)?$bank->current_amount:0), 'class="form-control input-sm" id="current_amount"');?>
+							<?php isset($bank)? $disabled='disabled':$disabled='';?>
+							<?= form_input('current_amount', set_value('current_amount' , isset($bank)?$bank->current_amount:0), "class='form-control input-sm' id='current_amount' $disabled");?>
 
 						</div>
 

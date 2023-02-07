@@ -124,7 +124,7 @@ class Bank extends MY_Controller
 
 				'account_no'		 => $this->input->post('account_no'),
 				
-				'current_amount'     => 0 ,
+				'current_amount'     => $this->input->post('current_amount') ,
 				
 				'create_date'		=> date('Y-m-d'),
 
@@ -137,7 +137,7 @@ class Bank extends MY_Controller
 
 			if($this->input->post('current_amount') > 0)
 			{
-				$bankPending = array(
+				/* $bankPending = array(
 					'amount'       => $this->input->post('current_amount'),
 					'bank_id'      => $cid,
 					'insert_date'  => date('Y-m-d H:i:s'),
@@ -146,7 +146,15 @@ class Bank extends MY_Controller
 					'payment_type' =>  3,
 				);
 	
-				$this->bank_model->bankPendingTranjection($bankPending);
+				$this->bank_model->bankPendingTranjection($bankPending); */
+				$dataTransaction = array(
+					'bank_account_id'   => $cid,
+					'tran_amount'  => $this->input->post('current_amount'),			
+					'tran_type'    => 1,				
+					'tran_date'    => date('Y-m-d H:i:s'),	
+				);
+			
+				$this->site->insertQuery('tranjiction',$dataTransaction) ;
 
 			}
 			 
