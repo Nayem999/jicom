@@ -172,6 +172,7 @@ $lang['gift_card']                          = "Gift Card";
 $lang['value']                              = "Value";
 $lang['discount_title']                     = "Discount (5 or 5%)";
 $lang['tax_title']                          = "Tax (5 or 5%)";
+$lang['vat_title']                          = "Vat (5 or 5%)";
 $lang['net_price']                          = "Net Price";
 $lang['product_tax']                        = "Product Tax";
 $lang['unit_price']                         = "Unit Price";

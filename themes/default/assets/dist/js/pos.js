@@ -310,7 +310,7 @@ $(document).ready(function(){
         $('#proModal').modal({backdrop:'static'});
     });
 
-    $(document).on('change', '#nPrice, #nDiscount', function () {
+    $(document).on('keyup', '#nPrice, #nDiscount', function () {
         var item_id = $('#item_id').val();
         var unit_price = parseFloat($('#nPrice').val());
         var net_price = unit_price;

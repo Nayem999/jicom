@@ -913,7 +913,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
         <h4 class="modal-title" id="tsModalLabel">
-          <?= lang('tax_title'); ?>
+          <?= lang('vat_title'); ?>
         </h4>
       </div>
       <div class="modal-body">
