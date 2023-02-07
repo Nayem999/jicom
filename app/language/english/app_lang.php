@@ -174,6 +174,7 @@ $lang['discount_title']                     = "Discount (5 or 5%)";
 $lang['tax_title']                          = "Tax (5 or 5%)";
 $lang['vat_title']                          = "Vat (5 or 5%)";
 $lang['net_price']                          = "Net Price";
+$lang['net_unit_price']                     = "Net Unit Price";
 $lang['product_tax']                        = "Product Tax";
 $lang['unit_price']                         = "Unit Price";
 $lang['new_price']                          = "New Price";

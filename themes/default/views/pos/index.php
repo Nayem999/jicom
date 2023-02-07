@@ -951,7 +951,7 @@
       <div class="modal-body">
         <table class="table table-bordered table-striped">
           <tr>
-            <th style="width:25%;"><?= lang('net_price'); ?></th>
+            <th style="width:25%;"><?= lang('net_unit_price'); ?></th>
             <th style="width:25%;"><span id="net_price"></span></th>
             <th style="width:25%;"><?= lang('product_tax'); ?></th>
             <th style="width:25%;"><span id="pro_tax"></span> <span id="pro_tax_method"></span></th>
