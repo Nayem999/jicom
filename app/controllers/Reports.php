@@ -513,7 +513,7 @@ class Reports extends MY_Controller
                                 if (array_key_exists($key, $total_item_qnty)) {
                                     $total_item_qnty[$key] += $salesItemQnty[$result->sale_id][$key];
                                 } else {
-                                    $total_item_qnty[$key] = 0;
+                                    $total_item_qnty[$key] = $salesItemQnty[$result->sale_id][$key];
                                 }
                             } else {
                                 if (array_key_exists($key, $total_item_qnty)) {
@@ -535,10 +535,15 @@ class Reports extends MY_Controller
                     if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
                         array_push($lineData,'');
                     }else{array_push($lineData,'');}  
-                    if ($result->paid_by == "CC") {
-                        array_push($lineData,$result->payment_amount);
-                        $total_cc += $result->payment_amount;
-                    }else{array_push($lineData,0);} 
+                    if ($result->status == "due") {
+                        array_push($lineData,$result->grand_total);
+                        $total_cc += $result->grand_total;
+                    }else if ($result->status == "partial"){
+                        array_push($lineData,$result->grand_total - $result->paid);
+                        $total_cc += $result->grand_total - $result->paid;
+                    } 
+                    else{array_push($lineData,0);} 
+
 
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
 

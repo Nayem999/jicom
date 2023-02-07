@@ -52,23 +52,23 @@ if (isset($_POST['start_date'])) {
                             <table class="table table-bordered">
                                 <tbody>
                                     <tr>
-                                        <th> SL</th>
-                                        <th> Inv. No</th>
-                                        <th> Customer</th>
+                                        <th class="text-center"> SL</th>
+                                        <th class="text-center"> Inv. No</th>
+                                        <th class="text-center"> Customer</th>
                                         <?php
                                           foreach ($productArr as $key => $val) 
                                           {
                                               ?>
-                                                  <th>
+                                                  <th class="text-center">
                                                     <?php echo $val ?>
                                                   </th> 
                                               <?php
                                           }
                                         ?>
-                                        <th> Cash </th>
-                                        <th> CHEQ/TT</th>
-                                        <th> Bank</th>
-                                        <th> Credit</th>
+                                        <th class="text-center"> Cash </th>
+                                        <th class="text-center"> CHEQ/TT</th>
+                                        <th class="text-center"> Bank</th>
+                                        <th class="text-center"> Credit</th>
                                     </tr>
                                     <?php
                                     $total_qnty = 0;
@@ -92,7 +92,7 @@ if (isset($_POST['start_date'])) {
                                                     if (array_key_exists($key, $total_item_qnty)) {
                                                       $total_item_qnty[$key] += $salesItemQnty[$result->sale_id][$key];
                                                     } else {
-                                                      $total_item_qnty[$key] = 0;
+                                                      $total_item_qnty[$key] = $salesItemQnty[$result->sale_id][$key];;
                                                     }
                                                   } else {
                                                     if (array_key_exists($key, $total_item_qnty)) {
@@ -114,10 +114,13 @@ if (isset($_POST['start_date'])) {
                                                 <td><?php if ($result->paid_by == "Cheque" || $result->paid_by == "TT") {
                                                         echo $result->bank_name;
                                                     } ?></td>
-                                                <td><?php if ($result->paid_by == "CC") {
-                                                        echo $result->payment_amount;
-                                                        $total_cc += $result->payment_amount;
-                                                    } ?></td>
+                                                <td><?php if ($result->status == "due") {
+                                                        echo $result->grand_total;
+                                                        $total_cc += $result->grand_total;
+                                                    }else if ($result->status == "partial"){
+                                                        echo $result->grand_total - $result->paid;
+                                                        $total_cc += $result->grand_total - $result->paid;
+                                                    }  ?></td>
 
                                             </tr>
                                     <?php
@@ -129,16 +132,16 @@ if (isset($_POST['start_date'])) {
                                     <tr>
                                         <th> </th>
                                         <th></th>
-                                        <th> Grand Total</th>
+                                        <th class="text-center"> Grand Total</th>
                                         <?php
                                             foreach ($productArr as $key => $val) {
-                                            ?><th><?php echo $total_item_qnty[$key];?></th> <?php
+                                            ?><th class="text-center"><?php echo $total_item_qnty[$key];?></th> <?php
                                             }
                                         ?>
-                                        <th> <?php echo $total_cash ;?>  </th>
-                                        <th> <?php echo $total_cheque ;?> </th>
-                                        <th> </th>
-                                        <th> <?php echo $total_cc ;?> </th>
+                                        <th class="text-center"> <?php echo $total_cash ;?>  </th>
+                                        <th class="text-center"> <?php echo $total_cheque ;?> </th>
+                                        <th class="text-center"> </th>
+                                        <th class="text-center"> <?php echo $total_cc ;?> </th>
                                     </tr>
                                 </tfoot>
                             </table>

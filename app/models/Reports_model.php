@@ -1149,7 +1149,7 @@ class Reports_model extends CI_Model
 	}*/
 	
     public function dailySaleReport($start_date=NULL,$end_date=NULL){
-        $this->db->select('sales.id as sale_id, sales.paid_by, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount, bank_account.bank_name as bank_name '); 
+        $this->db->select('sales.id as sale_id, sales.paid_by, sales.status, sales.grand_total, sales.paid, sales.customer_name, sales.customer_id, sales.collection_id,  today_collection.payment_amount, bank_account.bank_name as bank_name '); 
         $this->db->from('sales');  
         // $this->db->join('customers','customers.id=sales.customer_id');
         $this->db->join('today_collection','today_collection.today_collect_id=sales.collection_id','left');  
