@@ -18,6 +18,10 @@ $v = "?v=1";
 
         $v .= "&end_date=".$this->input->post('end_date');
     }
+    if($this->input->post('store_id')) {
+
+        $v .= "&store_id=".$this->input->post('store_id');
+    }
     
 ?>
 <script>
@@ -85,7 +89,8 @@ $v = "?v=1";
 
                 <div class="box-header">
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button>
+                    <button type="button" style="width:120px; float:right;display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="printWindow">Print report</button>
+                    <button type="button" style="width:120px; float:right;" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</button>
                     <?php if($this->session->userdata('group_id') == 2){
 
                         $u_id = $this->session->userdata('user_id') ;
@@ -103,7 +108,21 @@ $v = "?v=1";
 
                         <div class="row">
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
+
+                                <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    $wr[0] = lang("select") . " " . lang("Store");
+                                    foreach ($stores as $store) {
+                                        $wr[$store->id] = $store->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-3">
 
                                 <div class="form-group">
 
@@ -125,7 +144,7 @@ $v = "?v=1";
 
                             </div>
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
 
                                 <div class="form-group">
 
@@ -137,7 +156,7 @@ $v = "?v=1";
 
                             </div>
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
 
                                 <div class="form-group">
 
@@ -242,5 +261,10 @@ $v = "?v=1";
     $(".dataTables_length, .dataTables_filter ").css("display", "block");
     $(".dataTables_paginate ").css("display", "block");
     $("#fileData_filter ").css("display", "block");  
+  });  
+  $("#excelWindow").click(function () {    
+        var data=$("#customer").val()+'_'+$("#start_date").val()+'_'+$("#end_date").val()+'_'+$("#store_id").val();    
+        var url='<?=site_url('collection/excel_collectionlist/');?>'+'/'+data;
+        location.replace(url)
   });  
 </script>  

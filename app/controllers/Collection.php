@@ -22,6 +22,7 @@ class Collection extends MY_Controller
     }
     
     public function collectionlist($today=NULL) {    
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
         $customer = $this->input->get('customer') ? $this->input->get('customer') : NULL;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date').' 00:00:00' : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date').' 23:59:59' : NULL;
@@ -42,7 +43,10 @@ class Collection extends MY_Controller
         $this->datatables->join('payments', 'payments.collect_id=today_collection.today_collect_id');     
         $this->datatables->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	
         if(!$this->Admin){
-          $this->datatables->where('today_collection.store_id',$this->session->userdata('store_id'));
+          $this->db->where('today_collection.store_id',$this->session->userdata('store_id'));
+        }
+        else{
+          if($store_id) { $this->db->where('stores.id', $store_id); }
         }
         $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
                 
@@ -69,11 +73,69 @@ class Collection extends MY_Controller
         
     } 
 
+    public function excel_collectionlist($data='') {  
+      $data_arr=explode("_",$data);  
+
+        $customer = $data_arr[0] ? $data_arr[0] : NULL;
+        $start_date = $data_arr[1] ? $data_arr[1].' 00:00:00' : NULL;
+        $end_date = $data_arr[2] ? $data_arr[2].' 23:59:59' : NULL;
+        $store_id = $data_arr[3] ? $data_arr[3] : 0;
+
+        $this->db->select($this->db->dbprefix('today_collection') . ".today_collect_id as id, " . 
+        $this->db->dbprefix('customers') . ".name as name, ". 
+        $this->db->dbprefix('stores') . ".name as storename, ".
+        $this->db->dbprefix('today_collection') . ".payment_date as payment_date," . 
+        $this->db->dbprefix('today_collection') . ".payment_amount, " .  
+        $this->db->dbprefix('today_collection') . ".payment_note, " .  
+        $this->db->dbprefix('payments') . ".paid_by , " .  
+        $this->db->dbprefix('bank_pending') . ".type , " .  
+        $this->db->dbprefix('today_collection') . ".payment_status");
+        $this->db->join('customers', 'customers.id=today_collection.customer_id');
+        $this->db->join('stores', 'customers.store_id=stores.id'); 
+        $this->db->join('payments', 'payments.collect_id=today_collection.today_collect_id');     
+        $this->db->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	
+        if(!$this->Admin){
+          $this->db->where('today_collection.store_id',$this->session->userdata('store_id'));
+        }
+        else{
+          if($store_id) { $this->db->where('stores.id', $store_id); }
+        }
+        
+        $this->db->from('today_collection'); 
+        if($customer) { $this->db->where('customers.id', $customer); }
+        if($start_date) { $this->db->where('payment_date >=', $start_date); }
+        if($end_date) { $this->db->where('payment_date <=', $end_date); }       
+        $query_data=$this->db->get()->result_array();
+
+        $fileName = "collection_list_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
+        $fields = array('Customar name', 'Store name', 'Date and Time', 'Amount', 'Note', 'Paid By', 'Cheque Status', 'Status');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        
+        if(count($query_data) > 0){ 
+          foreach($query_data as $key => $result){ 
+            $lineData = array($result['name'], $result['storename'], $result['payment_date'], $result['payment_amount'], $result['payment_note'], $result['paid_by'], $result['type'], $result['payment_status']); 
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+          } 
+        }else{ 
+          $excelData .= 'No records found...'. "\n"; 
+        } 
+          
+        // Headers for download 
+        header("Content-Type: application/vnd.ms-excel"); 
+        header("Content-Disposition: attachment; filename=\"$fileName\""); 
+          
+        // Render excel data 
+        echo $excelData;  
+             
+        
+    } 
+
     function index() {    
        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;
        $customer = $this->input->post('customer') ? $this->input->post('customer') : NULL;
 
+       $this->data['stores'] = $this->site->getAllStores();
        $this->data['customers'] = $this->site->getAllCustomers();      
        $this->data['customer'] = $customer;      
        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));        
