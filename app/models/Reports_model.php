@@ -1257,7 +1257,7 @@ class Reports_model extends CI_Model
         return $query->result(); 
     }
 
-    public function creditCollectionReport($start_date=NULL,$end_date=NULL){
+    public function creditCollectionReport($start_date=NULL,$end_date=NULL,$store_id=0){
 
 		$this->db->select('collection_id');
 		$this->db->from('sales');
@@ -1282,7 +1282,7 @@ class Reports_model extends CI_Model
 		else{
             $this->db->like('payments.date', date('Y-m-d'));
         }  
-
+        if($store_id){$this->db->where('today_collection.store_id', $store_id); }
 		$this->db->where("`today_collect_id` NOT IN ($where_clause)", NULL, FALSE);
 
         $query = $this->db->get();
@@ -1318,7 +1318,7 @@ class Reports_model extends CI_Model
         return $query->result(); 
 	}
 
-    public function agingReport($start_date=NULL,$end_date=NULL){
+    public function agingReport($start_date=NULL,$end_date=NULL,$store_id=0){
 
         $this->db->select('sales.id as invoice, sales.date, sales.paid_by, sales.customer_name, customers.phone, sales.total,  stores.name as storename, sales.total_tax, sales.total_discount, sales.grand_total, sales.paid, sales.paid_by, sales.status, sales.aging_day, bank_pending.type '); 
         $this->db->from('sales');  
@@ -1342,6 +1342,9 @@ class Reports_model extends CI_Model
 		else{
             $this->db->like('sales.date', date('Y-m-d'));
         }  
+
+        if($store_id){$this->db->where('stores.id', $store_id); }
+
         $query = $this->db->get();
         return $query->result(); 
     }

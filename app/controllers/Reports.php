@@ -768,12 +768,14 @@ class Reports extends MY_Controller
     function credit_collection_rpt()  {
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
-        $this->data['creditCollection'] = $this->reports_model->creditCollectionReport($start_date,$end_date); 
+        $this->data['creditCollection'] = $this->reports_model->creditCollectionReport($start_date,$end_date,$store_id); 
 
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
-
+        $this->data['store_id'] = $store_id;
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("credit_collection");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('credit_collection')));
         $meta = array('page_title' => lang('credit_collection'), 'bc' => $bc);
@@ -787,8 +789,9 @@ class Reports extends MY_Controller
 
         $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
         $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
+        $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
-        $creditCollection = $this->reports_model->creditCollectionReport($start_date,$end_date); 
+        $creditCollection = $this->reports_model->creditCollectionReport($start_date,$end_date,$store_id); 
 
 
         $fileName = "credit_collection_report" . date('Y-m-d_h_i_s') . ".xls"; 
@@ -2461,12 +2464,15 @@ class Reports extends MY_Controller
     function aging_rpt()  {
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
-        $this->data['agingRpt'] = $this->reports_model->agingReport($start_date,$end_date);
+        $this->data['agingRpt'] = $this->reports_model->agingReport($start_date,$end_date,$store_id);
 
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
+        $this->data['store_id'] = $store_id;
         $results = array(); 
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("Aging Report");
         $bc = array(array('link' => '#', 'page' => lang('Aging Report')), array('link' => '#', 'page' => lang('Aging Report')));
@@ -2481,8 +2487,9 @@ class Reports extends MY_Controller
 
         $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
         $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+        $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
-        $agingRpt = $this->reports_model->agingReport($start_date,$end_date);
+        $agingRpt = $this->reports_model->agingReport($start_date,$end_date,$store_id);
 
         $fileName = "aging_report_" . date('Y-m-d_h_i_s') . ".xls"; 
         $fields = array('DATE', 'INV NO', 'CUSTOMER','STORE NAME','C.Phone','TOTAL','TAX','DISCOUNT','GRAND TOTAL','PAID','P.BY','BALANCE','STATUS','CHEQUE STATUS','AGING DAY');
