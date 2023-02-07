@@ -1970,9 +1970,9 @@ class Reports extends MY_Controller
     }
 
     public function product_stock() { 
-    if(!$this->Admin) {        
-        $this->session->set_flashdata('error', lang('access_denied'));            
-        redirect('pos');            
+        if(!$this->Admin) {        
+            $this->session->set_flashdata('error', lang('access_denied'));            
+            redirect('pos');            
         }     
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
@@ -2235,6 +2235,7 @@ class Reports extends MY_Controller
     }
 
     public function invoiceProfit(){ 
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;
         $this->data['page_title'] = 'Invoice Profit';        
         $bc = array(
             array(
@@ -2246,13 +2247,14 @@ class Reports extends MY_Controller
             'page_title' => 'Invoice Profit',
             'bc' => $bc
         ); 
-        $this->data['results'] = $this->reports_model->invoiceProfit();
+        $this->data['results'] = $this->reports_model->invoiceProfit($store_id);
+        $this->data['stores'] = $this->site->getAllStores();
         $this->page_construct('reports/invoiceFrofit', $this->data, $meta);  
     }
     
-    public function excel_invoiceProfit(){ 
+    public function excel_invoiceProfit($data=0){ 
 
-        $query_data = $this->reports_model->invoiceProfit();
+        $query_data = $this->reports_model->invoiceProfit($data);
         $fileName = "invoice_profit_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
 		$fields = array('Date', 'Store Name', 'Inv NO', 'Quentity', 'Customer Name', 'Grand Total', 'Cost Price', 'Profit');
 		$excelData = implode("\t", array_values($fields)) . "\n"; 

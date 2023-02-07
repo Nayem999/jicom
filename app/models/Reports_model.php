@@ -712,13 +712,15 @@ class Reports_model extends CI_Model
     	return $query->result();
     }
 
-    public function invoiceProfit(){ 
-    	$store_id = $this->session->userdata('store_id');
+    public function invoiceProfit($store_id=0){ 
+    	$store_id_per = $this->session->userdata('store_id');
     	if(!$this->Admin){
-    		$query = $this->db->query("SELECT PR.id,PR.date,PR.customer_name,PR.total,PR.store_id,( SELECT COALESCE(sum(sa.quantity*sa.cost), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as cost_price,( SELECT COALESCE(sum(sa.quantity), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as qty FROM tec_sales PR WHERE PR.store_id=$store_id group by PR.id");
+    		$query = $this->db->query("SELECT PR.id,PR.date,PR.customer_name,PR.total,PR.store_id,( SELECT COALESCE(sum(sa.quantity*sa.cost), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as cost_price,( SELECT COALESCE(sum(sa.quantity), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as qty FROM tec_sales PR WHERE PR.store_id=$store_id_per group by PR.id");
 
     	}else{
-    		$query = $this->db->query("SELECT PR.id,PR.date,PR.customer_name,PR.total,PR.store_id,( SELECT COALESCE(sum(sa.quantity*sa.cost), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as cost_price,( SELECT COALESCE(sum(sa.quantity), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as qty FROM tec_sales PR group by PR.id");
+            if($store_id){$filterStore=" WHERE PR.store_id=$store_id ";}else{$filterStore='';}
+
+    		$query = $this->db->query("SELECT PR.id,PR.date,PR.customer_name,PR.total,PR.store_id,( SELECT COALESCE(sum(sa.quantity*sa.cost), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as cost_price,( SELECT COALESCE(sum(sa.quantity), 0) FROM tec_sale_items sa WHERE sa.sale_id=PR.id ) as qty FROM tec_sales PR $filterStore group by PR.id");
     	}
     	
         $query->result_array();  

@@ -64,7 +64,28 @@
                 <div class="box-header">
 
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <a href="<?= site_url('reports/excel_invoiceProfit'); ?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a> 
+                    <!-- <a href="<?= site_url('reports/excel_invoiceProfit'); ?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a>  -->
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button>
+
+                    <?= form_open(""); ?>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    $wr[0] = lang("select") . " " . lang("Store");
+                                    foreach ($stores as $store) {
+                                        $wr[$store->id] = $store->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
+                            </div>
+                        </div>
+                    <?= form_close(); ?>
 
                 </div>
                 <?php if($this->session->userdata('group_id') == 2){
@@ -133,4 +154,11 @@
     </div>
 
 </section> 
+<script>
+    $("#excelWindow").click(function() {
+        var data = $("#store_id").val();
+        var url = '<?= site_url('reports/excel_invoiceProfit/'); ?>' + '/' + data;
+        location.replace(url);
+    });
+</script>
 
