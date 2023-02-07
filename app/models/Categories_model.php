@@ -127,7 +127,7 @@ class Categories_model extends CI_Model
        $results = $q->result();     
         return $results ; 
     }
-    public function getCategories() {
+    public function getCategories($store_id=0) {
 
         $this->db->select(
             $this->db->dbprefix('categories').'.id,'.
@@ -135,11 +135,13 @@ class Categories_model extends CI_Model
             $this->db->dbprefix('categories').'.image,'.
             $this->db->dbprefix('categories').'.name,'.
             $this->db->dbprefix('categories').'.parent_id,SUM('. 
-            $this->db->dbprefix('products').'.quantity) as qty');       
+            $this->db->dbprefix('product_store_qty').'.quantity) as qty');       
         $this->db->from('categories');
         $this->db->join('products', 'products.category_id=categories.id');  
+        $this->db->join('product_store_qty', 'products.id=product_store_qty.product_id');  
         $this->db->group_by('categories.id');
-        $this->db->where('quantity !=','0.00');
+        $this->db->where('product_store_qty.quantity !=','0.00');
+        if($store_id){ $this->db->where('product_store_qty.store_id',$store_id);}
         $query=$this->db->get();
         return $query->result(); 
     }

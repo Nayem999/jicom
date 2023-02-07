@@ -30,14 +30,21 @@ class Categories extends MY_Controller
     function available_cat() {
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-        $cats = $this->categories_model->getCategories();
+        if(!$this->Admin){
+            $store_id = $this->session->userdata('store_id');
+        } else {
+            $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;       
+        }
+
+        /* $cats = $this->categories_model->getCategories();
         foreach($cats as $ct){
             $cat_id = $ct->id;
-        }
-        $this->data['allcategories'] = $this->categories_model->getCategories();
-        $this->data['subcategories'] = $this->site->getCategoryByID($cat_id); 
+        } */
+        $this->data['allcategories'] = $this->categories_model->getCategories($store_id);
+        // $this->data['subcategories'] = $this->site->getCategoryByID($cat_id); 
 
         $this->data['categories'] = $this->site->getAllCategories();
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = lang('categories'); 
         $this->data['likeTv'] = $this->categories_model->likeAsValue(); 
         $bc = array(array('link' => '#', 'page' => lang('Available Categories')));
