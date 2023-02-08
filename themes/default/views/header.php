@@ -548,6 +548,19 @@
               </a></li>
           </ul>
         </li>
+
+        <li class="treeview mm_mf_brands"> <a href="#"> <i class="fa fa-folder"></i> <span>
+          <?= lang('Brands'); ?>
+          </span> <i class="fa fa-angle-left pull-right"></i> </a>
+          <ul class="treeview-menu">
+            <li id="mf_brands_index"><a href="<?= site_url('mf_brands'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('List_Brands'); ?>
+              </a></li> 
+            <li id="mf_brands_add"><a href="<?= site_url('mf_brands/add'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('Add_Brands'); ?>
+              </a></li> 
+          </ul>
+        </li>
       
         <?php 
       } 

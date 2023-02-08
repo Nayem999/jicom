@@ -511,3 +511,4 @@ $lang['code_already_exist']                 = "Code already exists";
 $lang['category_code']                      = "Category Code";
 $lang['icon']                               = "Icon";
 $lang['raw_material_category']              = "Raw Material Category";
+$lang['raw_material_brand']                 = "Raw Material Brand";
