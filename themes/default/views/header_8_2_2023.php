@@ -108,7 +108,7 @@
     <ul class="sidebar-menu"> 
       <li class="mm_welcome"><a href="<?= site_url(); ?>"><i class="fa fa-dashboard"></i> <span><?= lang('dashboard'); ?></span></a></li>
       <li class="divider"></li>
-      <li style="background: #2e742c;" ><a href=""><span><b><?= lang('OUT LATE'); ?></b></span></a></li>
+      <li ><a href=""><span><b><?= lang('OUT LATE'); ?></b></span></a></li>
       <li class="divider"></li>
       <li class="mm_pos"><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i> <span><?= lang('pos'); ?></span></a></li>
       <?php 
@@ -525,27 +525,6 @@
             
               <li id="settings_backups"><a href="<?= site_url('settings/backups'); ?>"><i class="fa fa-circle-o"></i> <?= lang('backups'); ?></a></li>  
             
-          </ul>
-        </li>
-
-
-        <li class="divider2"></li>
-        <li style="background: #2e742c;" ><a href="" ><span class="border border-success"><b ><?= lang('MANUFACTURE'); ?></b></span></a></li>
-        <li class="divider2"></li>
-
-        <li class="treeview mm_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
-          <?= lang('raw_material_category'); ?>
-          </span> <i class="fa fa-angle-left pull-right"></i> </a>
-          <ul class="treeview-menu">
-            <li id="mf_categories_index"><a href="<?= site_url('mf_categories'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('list_categories'); ?>
-              </a></li>
-            <li id="mf_categories_add"><a href="<?= site_url('mf_categories/add'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('add_category'); ?>
-              </a></li>
-            <li id="mf_categories_import"><a href="<?= site_url('mf_categories/import'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('import_categories'); ?>
-              </a></li>
           </ul>
         </li>
       

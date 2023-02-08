@@ -176,9 +176,31 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getAllMfCategories()
+    {
+        $this->db->order_by('code');
+        $q = $this->db->get('mf_categories');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
     public function getCategoryByID($id)
     {
         $q = $this->db->get_where('categories', array('id' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getMfCategoryByID($id)
+    {
+        $q = $this->db->get_where('mf_categories', array('id' => $id), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }

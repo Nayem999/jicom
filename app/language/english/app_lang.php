@@ -510,3 +510,4 @@ $lang['check_product_code']                 = "Please check product code";
 $lang['code_already_exist']                 = "Code already exists";
 $lang['category_code']                      = "Category Code";
 $lang['icon']                               = "Icon";
+$lang['raw_material_category']              = "Raw Material Category";
