@@ -679,12 +679,26 @@ class Reports extends MY_Controller
         }
 
         $fileName = "expenses_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+
+        $fields = array('Expenses Report');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name, 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+        else
+        {
+            $fields = array( 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+
         $fields = array('Name');
         foreach ($categories as $key => $val) {
             array_push($fields,$val->name);            
         }
         array_push($fields,'Total');
-        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         $cash_total = $bank_total = $grand_total = 0;
         if(count($userArr) > 0){ 
             foreach($userArr as $result){ 
@@ -1456,14 +1470,15 @@ class Reports extends MY_Controller
 		$this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;
 		$this->data['products'] = $this->reports_model->getAllProducts();
-		$this->data['quantity'] = $this->reports_model->getAllquantity();
-		$costs = $this->reports_model->getAllcost();
+		// $this->data['quantity'] = $this->reports_model->getAllquantity();
+		$this->data['quantity'] = $this->reports_model->getAllquantityByStore($store_id);
+		$costs = $this->reports_model->getAllcost($store_id);
 		$cost = 0;
 		foreach($costs as $costs_value){
 			if($costs_value->quantity >0 ){
 			 $cost += $costs_value->cost * $costs_value->quantity ;
 			}
-		 }
+		}
 		$this->data['cost'] = $cost;
         $this->data['stores'] = $this->site->getAllStores();
 		$this->data['page_title'] = $this->lang->line("Products List All Report");
@@ -1511,9 +1526,18 @@ class Reports extends MY_Controller
         $this->db->where('products.quantity >', 0);
         if($store_id){$this->db->where('product_store_qty.store_id',$store_id);}
         $query_data = $this->db->get()->result();
-        $fileName = "products_report_staff_" . date('Y-m-d_h_i_s') . ".xls"; 			
-        $fields = array('NAME', 'CATEGORY', 'CODE', 'SALE PRICE');
+        $fileName = "products_report_staff_" . date('Y-m-d_h_i_s') . ".xls"; 
+        
+        $fields = array('Products List Staff Report');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'SALE PRICE');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($query_data) > 0){ 
             // Output each row of the data 
@@ -1556,6 +1580,16 @@ class Reports extends MY_Controller
     }
 
 	function get_excel_products_all($store_id=0) {
+        if($store_id){ $store_id=$store_id; }else{ $store_id=null; }
+        $this->data['quantity'] = $this->reports_model->getAllquantityByStore($store_id);
+		$costs = $this->reports_model->getAllcost($store_id);
+		$cost = 0;
+		foreach($costs as $costs_value){
+			if($costs_value->quantity >0 ){
+			 $cost += $costs_value->cost * $costs_value->quantity ;
+			}
+		}
+
         $this->db->select(
             $this->db->dbprefix('products').".id as pid,".
             $this->db->dbprefix('products').".name as pname ,".
@@ -1571,9 +1605,23 @@ class Reports extends MY_Controller
         if($store_id){$this->db->where('product_store_qty.store_id',$store_id);}
 
         $query_data = $this->db->get()->result();
-        $fileName = "products_report_all_" . date('Y-m-d_h_i_s') . ".xls"; 			
-        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY', 'COST', 'SALE PRICE');
+        $fileName = "products_report_all_" . date('Y-m-d_h_i_s') . ".xls"; 
+
+        $fields = array('Products List All Report');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $fields = array('Total Quantity',$quantity);
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        $fields = array('Total Cost',$cost);
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+       
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY', 'COST', 'SALE PRICE');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($query_data) > 0){ 
             // Output each row of the data 
@@ -1592,6 +1640,17 @@ class Reports extends MY_Controller
     }
 
 	function get_excel_products_stock() {
+        
+        $quantity = $this->reports_model->getAllquantity();        
+        $costs = $this->reports_model->getAllcost();
+        $cost = 0;
+        foreach($costs as $costs_value){
+            if($costs_value->quantity >0 ){
+                $cost += $costs_value->cost * $costs_value->quantity ;
+            }
+         }
+
+
         $this->db->select(
             $this->db->dbprefix('products').".id as pid,".
             $this->db->dbprefix('products').".name as pname ,".
@@ -1602,9 +1661,19 @@ class Reports extends MY_Controller
         $this->db->group_by('products.id');;
             
         $query_data = $this->db->get()->result();
-        $fileName = "products_stock_report_" . date('Y-m-d_h_i_s') . ".xls"; 			
-        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY');
+        $fileName = "products_stock_report_" . date('Y-m-d_h_i_s') . ".xls"; 		
+        
+        $fields = array('Products stock Report');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+   
+        $fields = array('Total Quantity',$quantity);
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+   
+        $fields = array('Total Cost', $cost);
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+   
+        $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($query_data) > 0){ 
             // Output each row of the data 
@@ -2048,7 +2117,7 @@ class Reports extends MY_Controller
     }
 
     public function get_store_product_stock() {
-        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
+        $store_id = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
 
         $this->load->library('datatables');
         $this->datatables->select($this->db->dbprefix('product_store_qty').".id as pid,
@@ -2064,7 +2133,7 @@ class Reports extends MY_Controller
 
         $this->datatables->group_by('product_store_qty.id');
         $this->datatables->where('products.quantity !=', '0.00');
-        if($warehouse) { $this->datatables->where('store_id', $warehouse); }   
+        if($store_id) { $this->datatables->where('store_id', $store_id); }   
         if(!$this->Admin) {
             $this->datatables->where('store_id', $this->session->userdata('store_id'));
            }
@@ -2074,7 +2143,7 @@ class Reports extends MY_Controller
     }
 
     public function get_excel_products_stock_store($data='') {
-        $warehouse = $data ? $data : NULL;
+        $store_id = $data ? $data : NULL;
         $this->db->select(
             $this->db->dbprefix('product_store_qty').".id as pid,
             ".$this->db->dbprefix('products').".name as pname ,
@@ -2086,7 +2155,7 @@ class Reports extends MY_Controller
         $this->db->join('products', 'products.id=product_store_qty.product_id'); 
         $this->db->group_by('product_store_qty.id');
         $this->db->where('products.quantity !=', '0.00');
-        if($warehouse) { $this->db->where('store_id', $warehouse); }   
+        if($store_id) { $this->db->where('store_id', $store_id); }   
         if(!$this->Admin) {
             $this->db->where('store_id', $this->session->userdata('store_id'));
            }
@@ -2097,8 +2166,18 @@ class Reports extends MY_Controller
         $query = $this->db->get()->result();
         // Excel file name for download 
         $fileName = "products_stock_store_" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('PRODUCT NAME', 'CODE', 'STORE', 'QUANTITY');
+
+        $fields = array('Store stock Products');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+
+
+        $fields = array('PRODUCT NAME', 'CODE', 'STORE', 'QUANTITY');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($query) > 0){ 
             foreach($query as $row){ 
@@ -2276,12 +2355,20 @@ class Reports extends MY_Controller
         $this->page_construct('reports/invoiceFrofit', $this->data, $meta);  
     }
     
-    public function excel_invoiceProfit($data=0){ 
+    public function excel_invoiceProfit($store_id=0){ 
 
-        $query_data = $this->reports_model->invoiceProfit($data);
-        $fileName = "invoice_profit_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
+        $query_data = $this->reports_model->invoiceProfit($store_id);
+        $fileName = "invoice_profit_data_" . date('Y-m-d_h_i_s') . ".xls"; 		
+        $fields = array('Invoice Profit Report');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+
 		$fields = array('Date', 'Store Name', 'Inv NO', 'Quentity', 'Customer Name', 'Grand Total', 'Cost Price', 'Profit');
-		$excelData = implode("\t", array_values($fields)) . "\n"; 
+		$excelData .= implode("\t", array_values($fields)) . "\n"; 
 		
 		if(count($query_data) > 0){ 
 			foreach($query_data as $key => $result){ 

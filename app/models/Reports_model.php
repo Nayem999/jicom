@@ -39,7 +39,7 @@ class Reports_model extends CI_Model
  public function getAllquantityByStore($warehouse=NULL) {  
 
 		$this->db->select('sum(quantity) as total');
-		if($warehouse !=NULL){
+		if($warehouse !=NULL && $warehouse !=0){
 		 	$this->db->where('store_id',$warehouse); 
 		 }
 		 $q = $this->db->get('product_store_qty');
@@ -53,9 +53,14 @@ class Reports_model extends CI_Model
 		return FALSE;
 	}
 	
- public function getAllcost()
+    public function getAllcost($store_id=0)
 	{  
-	 $q = $this->db->get('products');
+        if($store_id)
+        {
+            $this->db->join('product_store_qty','product_store_qty.product_id=products.id');
+            $this->db->where('product_store_qty.store_id',$store_id);
+        }
+	    $q = $this->db->get('products');
 		if($q->num_rows() > 0) {
 			foreach (($q->result()) as $row) {
 				$data[] = $row;

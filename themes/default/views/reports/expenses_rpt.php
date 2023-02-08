@@ -31,13 +31,13 @@ if (isset($_POST['start_date'])) {
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label" for="start_date"><?= lang("start_date"); ?></label>
-                                    <?= form_input('start_date', set_value('start_date'), 'class="form-control datepicker" id="start_date"'); ?>
+                                    <?= form_input('start_date', $start_date, 'class="form-control datepicker" id="start_date"'); ?>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label" for="end_date"><?= lang("end_date"); ?></label>
-                                    <?= form_input('end_date', set_value('end_date'), 'class="form-control datepicker" id="end_date"'); ?>
+                                    <?= form_input('end_date', $end_date, 'class="form-control datepicker" id="end_date"'); ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
