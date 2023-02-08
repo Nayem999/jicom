@@ -807,9 +807,21 @@ class Reports extends MY_Controller
 
 
         $fileName = "credit_collection_report" . date('Y-m-d_h_i_s') . ".xls"; 
-        $fields = array('SL','Date','V. No','Customer','Cash','Chq/TT','Bank');
-
+        $fields = array('Credit Collection Report');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name, 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+        else
+        {
+            $fields = array( 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+        $fields = array('SL','Date','V. No','Customer','Cash','Chq/TT','Bank');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
+
         $i=1;$total_cash=$total_bank=0;
         if(count($creditCollection) > 0){ 
             foreach($creditCollection as $key=>$row){ 
@@ -2488,8 +2500,8 @@ class Reports extends MY_Controller
     }
 
     function aging_rpt()  {
-        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
-        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
         $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
         $this->data['agingRpt'] = $this->reports_model->agingReport($start_date,$end_date,$store_id);
@@ -2511,16 +2523,29 @@ class Reports extends MY_Controller
 
         $data_arr=explode("_",$data);
 
-        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
-        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+        $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
+        $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
         $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
         $agingRpt = $this->reports_model->agingReport($start_date,$end_date,$store_id);
 
+
         $fileName = "aging_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+        $fields = array('Aging Report');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name, 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+        else
+        {
+            $fields = array( 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
         $fields = array('DATE', 'INV NO', 'CUSTOMER','STORE NAME','C.Phone','TOTAL','TAX','DISCOUNT','GRAND TOTAL','PAID','P.BY','BALANCE','STATUS','CHEQUE STATUS','AGING DAY');
 
-        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
 
         if(count($agingRpt) > 0){ 
             foreach($agingRpt as $result){ 

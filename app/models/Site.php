@@ -99,8 +99,9 @@ class Site extends CI_Model
         return FALSE;
     }
 
-    public function getAllStores()
+    public function getAllStores($id=0)
     {
+        if($id){ $this->db->where('id',$id);}
         $q = $this->db->get('stores');
         if($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
