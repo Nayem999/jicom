@@ -459,8 +459,8 @@ class Reports extends MY_Controller
     }
 
     function daily_sales()  {
-        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;  
-        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;  
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
         $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
         $this->data['dailySale'] = $this->reports_model->dailySaleReport($start_date,$end_date,$store_id);
@@ -483,8 +483,8 @@ class Reports extends MY_Controller
 
         $data_arr=explode("_",$data);
 
-        $start_date = $data_arr[0] ? $data_arr[0] : NULL;  
-        $end_date = $data_arr[1] ? $data_arr[1] : NULL; 
+        $start_date = $data_arr[0] ? $data_arr[0] : date('Y-m-d');  
+        $end_date = $data_arr[1] ? $data_arr[1] : date('Y-m-d'); 
         $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
         $dailySale= $this->reports_model->dailySaleReport($start_date,$end_date,$store_id);
@@ -500,12 +500,26 @@ class Reports extends MY_Controller
         }
 
         $fileName = "daily_sales_report_" . date('Y-m-d_h_i_s') . ".xls"; 
+
+        $fields = array('Daily Sales');
+        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($store_id){
+            $store_info = $this->site->getAllStores($store_id);
+            $fields = array('Store Name', $store_info[0]->name, 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+        else
+        {
+            $fields = array( 'Start Date', $start_date, 'End Date', $end_date);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+
         $fields = array('SL', 'Inv. No', 'Customer');
         foreach ($productArr as $key => $val) {
             array_push($fields,$val);            
         }
         array_push($fields,'Cash', 'CHEQ/TT', 'Bank', 'Credit');
-        $excelData = implode("\t", array_values($fields)) . "\n"; 
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         $total_qnty = $total_cash = $total_cheque =  $total_cc = 0;
         $i = 1;
         $total_item_qnty = array();
@@ -555,6 +569,14 @@ class Reports extends MY_Controller
                 $excelData .= implode("\t", array_values($lineData)) . "\n"; 
 
             } 
+        
+            $lineData = array('', '', 'Grand Total');
+            foreach ($productArr as $key => $val) {
+                array_push($lineData,$total_item_qnty[$key]);            
+            }
+            array_push($lineData,$total_cash, $total_cheque, '', $total_cc);
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
         }else{ 
             $excelData .= 'No records found...'. "\n"; 
         } 
@@ -1419,8 +1441,17 @@ class Reports extends MY_Controller
             
         $query_data = $this->reports_model->saleAndPurseCount($warehouse); 
         $fileName = "sold_purchase_report_" . date('Y-m-d_h_i_s') . ".xls";  
-        $fields = array('NAME', 'CODE', 'SOLD', 'PURCHASES');
+
+        $fields = array('Sold and Purchase');
         $excelData = implode("\t", array_values($fields)) . "\n"; 
+        if($warehouse){
+            $store_info = $this->site->getAllStores($warehouse);
+            $fields = array('Store Name', $store_info[0]->name);
+            $excelData .= implode("\t", array_values($fields)) . "\n"; 
+        }
+ 
+        $fields = array('NAME', 'CODE', 'SOLD', 'PURCHASES');
+        $excelData .= implode("\t", array_values($fields)) . "\n"; 
         
         if(count($query_data) > 0){ 
             foreach($query_data as $row){ 
