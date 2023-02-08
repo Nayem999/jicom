@@ -149,6 +149,14 @@ class Expenses extends MY_Controller
             $created_by = $this->session->userdata('user_id');
             $note = $this->input->post('note', TRUE);
             $employee_id = $this->input->post('employee_id');
+            if($this->input->post('warehouse'))
+            {
+                $store_id=$this->input->post('warehouse');
+            }
+            else
+            {
+                $store_id=$this->session->userdata('store_id');
+            }
             /* $data = array(                
                 'date' => $date,   
                 'paid_by' => $this->input->post('type'),             
@@ -199,6 +207,7 @@ class Expenses extends MY_Controller
                         'created_by' => $created_by,
                         'c_id'  => $_POST['category'][$r],                
                         'note' => $note,
+                        'store_id'   =>$store_id,                 
                         'employee_id'   =>$employee_id,                 
                         'attachment'   =>$attachment                 
                     );

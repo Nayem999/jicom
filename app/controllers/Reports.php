@@ -584,7 +584,7 @@ class Reports extends MY_Controller
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
-        if($store_id) { $this->db->where('expenses.store_id >=', $store_id); }
+        if($store_id) { $this->db->where('expenses.store_id', $store_id); }
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){
@@ -623,7 +623,7 @@ class Reports extends MY_Controller
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->join('employee', 'employee.id=expenses.employee_id','left');
         $this->db->group_by('expenses.id');
-        if($store_id) { $this->db->where('expenses.store_id >=', $store_id); }
+        if($store_id) { $this->db->where('expenses.store_id', $store_id); }
         if($start_date) { $this->db->where('expenses.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->db->where('expenses.date <=', $end_date.' 23:59:59'); } 
         if($this->session->userdata('store_id') !=0){
