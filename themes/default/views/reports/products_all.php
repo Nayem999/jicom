@@ -1,6 +1,13 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed'); ?>
 
+<?php
+    $v = "?v=1";
+    if ($this->input->post('store_id')) {
+        $v .= "&store_id=" . $this->input->post('store_id');
+        $store_id = $this->input->post('store_id');
+    }
 
+?>
 
 <script type="text/javascript">
 
@@ -32,7 +39,7 @@
 
             'bProcessing': true, 'bServerSide': true,
 
-            'sAjaxSource': '<?= site_url('reports/get_products_all/') ?>',
+            'sAjaxSource': '<?= site_url('reports/get_products_all/'.$v) ?>',
 
             'fnServerData': function (sSource, aoData, fnCallback) {
 
@@ -85,8 +92,27 @@
                 <div class="box-header">
 
                     <h3 class="box-title"><?= lang('list_results'); ?></h3>
-                    <a href="<?= site_url('reports/get_excel_products_all'); ?>" style="width:120px; float:right" class="btn btn-default btn-sm toggle_form pull-right" id="excelWindow">Download Report</a> <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
+                    <button type="button" style="width:120px; float:right" class="btn btn-default btn-sm pull-right" id="excelWindow">Download Report</button> <button type="button" onclick="printIt()" style="width:120px; float:right; display:none;" class="btn btn-default btn-sm toggle_form pull-right" id="daily_sales">Print report</button>
 
+                    <?= form_open(""); ?>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    $wr[0] = lang("select") . " " . lang("Store");
+                                    foreach ($stores as $store) {
+                                        $wr[$store->id] = $store->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
+                            </div>
+                        </div>
+                    <?= form_close(); ?>
                 </div>
 
                 <div class="box-body">
@@ -209,5 +235,11 @@
     // window.print();            
             
   });
+
+    $("#excelWindow").click(function() {
+        var data = $("#store_id").val();
+        var url = '<?= site_url('reports/get_excel_products_all/'); ?>' + '/' + data;
+        location.replace(url);
+    });
 
 </script>

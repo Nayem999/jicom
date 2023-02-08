@@ -1428,10 +1428,11 @@ class Reports extends MY_Controller
     }
 
     function products_staff() {
-
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
         $this->data['products'] = $this->reports_model->getAllProducts();
+        $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("Products List Staff Report");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List Staff Report')));
         $meta = array('page_title' => lang('Products List Staff Report'), 'bc' => $bc);
@@ -1441,7 +1442,7 @@ class Reports extends MY_Controller
     function products_all() {
 	
 		$this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;
 		$this->data['products'] = $this->reports_model->getAllProducts();
 		$this->data['quantity'] = $this->reports_model->getAllquantity();
 		$costs = $this->reports_model->getAllcost();
@@ -1452,7 +1453,7 @@ class Reports extends MY_Controller
 			}
 		 }
 		$this->data['cost'] = $cost;
-		
+        $this->data['stores'] = $this->site->getAllStores();
 		$this->data['page_title'] = $this->lang->line("Products List All Report");
 		$bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List All Report')));
 		$meta = array('page_title' => lang('Products List All Report'), 'bc' => $bc);
@@ -1461,14 +1462,15 @@ class Reports extends MY_Controller
  
 	function get_products_staff() {
          $this->load->library('datatables');
-
+         $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
          $this->datatables->select($this->db->dbprefix('products').".id as pid,
 		  ".$this->db->dbprefix('products').".name as pname ,
 		  ".$this->db->dbprefix('categories').".name as cname, 
 		  ".$this->db->dbprefix('products').".code as code, 
-		   price ", FALSE);
+		  ".$this->db->dbprefix('products').".price ", FALSE);
 
-         $this->datatables->join('categories', 'categories.id=products.category_id')
+         $this->datatables->join('categories', 'categories.id=products.category_id');
+         $this->datatables->join('product_store_qty ', 'product_store_qty.product_id=products.id')
 
          ->from('products')
 
@@ -1477,23 +1479,25 @@ class Reports extends MY_Controller
          $this->datatables->unset_column('pid');
 		
 		 $this->datatables->where('products.quantity >', 0);
+         if($store_id){$this->datatables->where('product_store_qty.store_id',$store_id);}
 
          echo $this->datatables->generate();
 
     }
 
-	function get_excel_products_staff() {
+	function get_excel_products_staff($store_id=0) {
         $this->db->select(
             $this->db->dbprefix('products').".id as pid,".
             $this->db->dbprefix('products').".name as pname ,".
             $this->db->dbprefix('categories').".name as cname,".
-            $this->db->dbprefix('products').".code as code, 
-		   price ");
+            $this->db->dbprefix('products').".code as code,".
+            $this->db->dbprefix('products').".price ");
         $this->db->from('products');
         $this->db->join('categories', 'categories.id=products.category_id');
+        $this->db->join('product_store_qty ', 'product_store_qty.product_id=products.id');
         $this->db->group_by('products.id');;
         $this->db->where('products.quantity >', 0);
-            
+        if($store_id){$this->db->where('product_store_qty.store_id',$store_id);}
         $query_data = $this->db->get()->result();
         $fileName = "products_report_staff_" . date('Y-m-d_h_i_s') . ".xls"; 			
         $fields = array('NAME', 'CATEGORY', 'CODE', 'SALE PRICE');
@@ -1517,35 +1521,43 @@ class Reports extends MY_Controller
     }
 	
 	function get_products_all() {
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
          $this->load->library('datatables');
 
          $this->datatables->select($this->db->dbprefix('products').".id as pid,
 		  ".$this->db->dbprefix('products').".name as pname ,
 		  ".$this->db->dbprefix('categories').".name as cname, 
-		  ".$this->db->dbprefix('products').".code as code, 
-		    quantity, cost, price  ", FALSE);
+		  ".$this->db->dbprefix('products').".code as code, sum(
+          ".$this->db->dbprefix('product_store_qty').".quantity) as quantity,
+          ".$this->db->dbprefix('products').".cost as cost,
+          ".$this->db->dbprefix('products').".price  ", FALSE);
 
-         $this->datatables->join('categories', 'categories.id=products.category_id')
+         $this->datatables->join('categories', 'categories.id=products.category_id');
+         $this->datatables->join('product_store_qty ', 'product_store_qty.product_id=products.id');
+        $this->datatables->from('products')
 
-         ->from('products')
-
-         ->group_by('products.id');
-		
+         ->group_by('products.id,products.name,categories.name,products.code,products.cost,products.price');
+         if($store_id){$this->datatables->where('product_store_qty.store_id',$store_id);}
          $this->datatables->unset_column('pid');
 		
          echo $this->datatables->generate();
     }
 
-	function get_excel_products_all() {
+	function get_excel_products_all($store_id=0) {
         $this->db->select(
             $this->db->dbprefix('products').".id as pid,".
             $this->db->dbprefix('products').".name as pname ,".
-            $this->db->dbprefix('categories').".name as cname, ".
-            $this->db->dbprefix('products').".code as code, quantity, cost, price");
+            $this->db->dbprefix('categories').".name as cname, "
+            .$this->db->dbprefix('products').".code as code, sum("
+            .$this->db->dbprefix('product_store_qty').".quantity) as quantity,"
+            .$this->db->dbprefix('products').".cost as cost,"
+            .$this->db->dbprefix('products').".price");
         $this->db->from('products');
         $this->db->join('categories', 'categories.id=products.category_id');
-        $this->db->group_by('products.id');;
-            
+        $this->db->join('product_store_qty ', 'product_store_qty.product_id=products.id');
+        $this->db->group_by('products.id');
+        if($store_id){$this->db->where('product_store_qty.store_id',$store_id);}
+
         $query_data = $this->db->get()->result();
         $fileName = "products_report_all_" . date('Y-m-d_h_i_s') . ".xls"; 			
         $fields = array('NAME', 'CATEGORY', 'CODE', 'QUANTITY', 'COST', 'SALE PRICE');
