@@ -574,6 +574,19 @@
               </a></li>
           </ul>
         </li>
+
+        <li class="treeview mm_mf_material"> <a href="#"> <i class="fa fa-barcode"></i> <span>
+          <?= lang('raw_material'); ?>
+          </span> <i class="fa fa-angle-left pull-right"></i> </a>
+          <ul class="treeview-menu">
+            <li id="mf_material_index"><a href="<?= site_url('mf_material'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('list_material'); ?>
+              </a></li>
+            <li id="mf_material_add"><a href="<?= site_url('mf_material/add'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('add_material'); ?>
+              </a></li>
+          </ul>
+        </li>
       
         <?php 
       } 
