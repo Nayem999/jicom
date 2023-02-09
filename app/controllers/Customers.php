@@ -36,7 +36,7 @@ class Customers extends MY_Controller
     		<div class='btn-group'>    		
     		<a href='" . site_url('customers/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a> 
     		<a href='" . site_url('customers/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a></div></div>", "cid");
-    	$this->datatables->unset_column('cid');
+    	// $this->datatables->unset_column('cid');
     	if(!$this->Admin){
     		$this->datatables->where('store_id',$this->session->userdata('store_id'));
     	}

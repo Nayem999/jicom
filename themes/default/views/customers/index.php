@@ -26,7 +26,7 @@
 
             },
 
-            "aoColumns": [null, null, null, null, null,null,{"bSortable":false, "bSearchable": false}]
+            "aoColumns": [null, null,null, null, null, null,null,{"bSortable":false, "bSearchable": false}]
 
         });
 
@@ -61,6 +61,7 @@
 
                         <tr>
 
+                            <th>ID</th>
                             <th>Name</th>
 
                             <th><?php echo $this->lang->line("phone"); ?></th>
