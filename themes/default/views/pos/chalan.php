@@ -203,7 +203,9 @@ if ($modal) {
                 <p>
                     <strong> Challan No:</strong>  <?= $inv->id; ?><br>
                 <?= '<strong> Buyer Name: </strong> '. $result->name;  ?> <br>
-                <?= '<strong> Address: </strong> '.$result->cf1; ?><br> 
+                
+                <?php if($result->cf1){ echo '<strong> Address: </strong> '.$result->cf1.'<br>'; }?>
+                <?php if($result->cf2){ echo '<strong> Address: </strong> '.$result->cf2.'<br>'; }?>
                 <?= '<strong> Phone: </strong> '.$result->phone; ?><br>  
                 </p>
                 </span>
@@ -212,15 +214,14 @@ if ($modal) {
                     $datetime = explode(" ",$inv->date);
                     echo '<strong>Date: </strong>'.$this->tec->hrsd($datetime[0]).'<br>';
                     echo '<strong>Time: </strong>'.$this->tec->hrst($datetime[1]).'<br>'; 
+                    echo '<strong> Store Name: </strong> '.$store_info[0]->name.'<br>'; 
                     //$userifo = $this->tec->getUser($this->session->userdata('user_id'));
                     $userifo = $this->tec->getUser($inv->created_by);
                     //print_r($payments);
                       
                     foreach ($userifo as $key => $value)  {                  
                     echo '<strong>Sold By: </strong>'.$value->first_name.' '.$value->last_name; }
-                    if($payments[0]->delivery_date){
-                        echo '<br><strong>Delivery Date: </strong>'.$this->tec->hrsd($payments[0]->delivery_date).'<br>'; 
-                    }
+                    echo isset($inv->delivery_date)? '<br><strong> Delivery Date: </strong> '.$this->tec->hrsd($inv->delivery_date):'';
                     //echo $this->tec->hrld($inv->date); ?> 
                 </span>
 
@@ -238,7 +239,7 @@ if ($modal) {
                         <th class="text-center col-xs-3"><?=lang('description');?></th>
 
                        <!--  <th class="text-center col-xs-3"><?=lang('Warranty');?></th> -->
-                       <th class="text-center col-xs-3">Other Quantity</th>
+                       <th class="text-center col-xs-3">Specification</th>
                         <th class="text-center col-xs-2"><?=lang('quantity');?></th>
 
                          <!-- <th class="text-center col-xs-1"><?=lang('price');?></th>
