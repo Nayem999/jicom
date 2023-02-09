@@ -512,3 +512,6 @@ $lang['category_code']                      = "Category Code";
 $lang['icon']                               = "Icon";
 $lang['raw_material_category']              = "Raw Material Category";
 $lang['raw_material_brand']                 = "Raw Material Brand";
+$lang['raw_material_supplier']              = "Raw Material Supplier";
+$lang['address']                            = "Address";
+$lang['descriptions']                       = "Descriptions";

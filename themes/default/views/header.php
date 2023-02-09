@@ -533,7 +533,7 @@
         <li style="background: #2e742c;" ><a href="" ><span class="border border-success"><b ><?= lang('MANUFACTURE'); ?></b></span></a></li>
         <li class="divider2"></li>
 
-        <li class="treeview mm_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
+        <li class="treeview mm_mf_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
           <?= lang('raw_material_category'); ?>
           </span> <i class="fa fa-angle-left pull-right"></i> </a>
           <ul class="treeview-menu">
@@ -559,6 +559,19 @@
             <li id="mf_brands_add"><a href="<?= site_url('mf_brands/add'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('Add_Brands'); ?>
               </a></li> 
+          </ul>
+        </li>
+
+        <li class="treeview mm_mf_suppliers"> <a href="#"> <i class="fa fa-users"></i> <span>
+          <?= lang('raw_material_supplier'); ?>
+          </span> <i class="fa fa-angle-left pull-right"></i> </a>
+          <ul class="treeview-menu">
+            <li id="mf_suppliers_index"><a href="<?= site_url('mf_suppliers'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('list_supplier'); ?>
+              </a></li>
+            <li id="mf_suppliers_add"><a href="<?= site_url('mf_suppliers/add'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('add_supplier'); ?>
+              </a></li>
           </ul>
         </li>
       
