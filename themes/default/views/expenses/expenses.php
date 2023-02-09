@@ -35,7 +35,7 @@
 <script>
     $(document).ready(function () {
         function attach(x) {
-            if(x !== null) {
+            if(x) {
                 return '<a href="<?=base_url();?>uploads/'+x+'" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-chain"></i></a>';
             }
             return '';

@@ -36,7 +36,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <?= lang("reference", "reference"); ?>
-                                    <?= form_input('reference', (isset($_POST['reference']) ? $_POST['reference'] : ''), 'class="form-control tip" id="reference" required="required"'); ?>
+                                    <?= form_input('reference', (isset($_POST['reference']) ? $_POST['reference'] : ''), 'class="form-control tip" id="reference" '); ?>
                                 </div> 
                             </div>
                             <div class="col-md-6">
@@ -78,6 +78,7 @@
                             </div>
                             <div class="col-md-1">
                                 <a href='#' data-toggle='modal' data-target="#myModal"><i onclick="onClickAdd()" class="fa fa-2x fa-plus-circle" style="margin-top:25px" ></i></a> 
+ 
                             </div>
                         </div>
 

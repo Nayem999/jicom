@@ -122,7 +122,7 @@ class Expenses extends MY_Controller
     function add_expense() { 
         $this->load->helper('security');        
         // $this->form_validation->set_rules('amount', lang("amount"), 'required');
-        $this->form_validation->set_rules('reference', lang("reference"), 'required');
+        // $this->form_validation->set_rules('reference', lang("reference"), 'required');
         // $this->form_validation->set_rules('category', lang("category"), 'required');        
         $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');      
         $i = isset($_POST['amount']) ? sizeof($_POST['amount']) : 0;
@@ -277,7 +277,7 @@ class Expenses extends MY_Controller
         if ($this->input->get('id')) {            
             $id = $this->input->get('id');            
         } 
-        $this->form_validation->set_rules('reference', lang("reference"), 'required');        
+        // $this->form_validation->set_rules('reference', lang("reference"), 'required');        
         $this->form_validation->set_rules('amount', lang("amount"), 'required');        
         $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');        
         if ($this->form_validation->run() == true) { 
