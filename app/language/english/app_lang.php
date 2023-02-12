@@ -207,6 +207,7 @@ $lang['month']                              = "Month";
 $lang['year']                               = "Year";
 $lang['cvv2']                               = "CVV2";
 $lang['cheque_no']                          = "Cheque No";
+$lang['cheque_date']                        = "Cheque Date";
 $lang['tt_no']                              = "TT No";
 $lang['clear']                              = "Clear";
 $lang['cf1']                                = "Custom Field 1";

@@ -248,7 +248,7 @@ class Pos extends MY_Controller {
 					$credit_over=0;
 				}
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
-				// echo $credit_over."__".$customer_credit_limit;die;
+				// echo $status."__".$credit_over."__".$customer_credit_limit."_".$this->input->post('cheque_date');die;
 				if($credit_over>0){
 					if($credit_over>$customer_credit_limit){
 						$this->session->set_flashdata('error', lang('Credit Over'));
@@ -264,7 +264,7 @@ class Pos extends MY_Controller {
 					$credit_over=0;
 				}
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
-				// echo $credit_over."__".$customer_credit_limit;die;
+				// echo $credit_over."__".$customer_credit_limit."_".$this->input->post('cheque_date');die;
 				if($credit_over>0){
 					if($credit_over>$customer_credit_limit){
 						$this->session->set_flashdata('error', lang('Credit Over'));
@@ -296,42 +296,40 @@ class Pos extends MY_Controller {
                         );
 				if(($eid ==NULL) && ($tCollectAmount !=0)){
         			$collect_id = $this->sales_model->payPayment($payPaymentdata);
+					// || $this->input->post('paid_by') =='CC'
+        			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='TT'){
 
-        			if($this->input->post('paid_by') =='Cheque' || $this->input->post('paid_by') =='CC' || $this->input->post('paid_by') =='TT'){
-
-						if($this->input->post('bank_id')==0 && $this->input->post('paid_by') !='CC')
-						{
-							$this->session->set_flashdata('error', lang('Please Select Bank'));
-							// redirect('pos');
-							$bank_chk=0;
-						}
-
+						// && $this->input->post('paid_by') !='CC'
 						if($this->input->post('bank_id')==0)
 						{
 							$this->session->set_flashdata('error', lang('Please Select Bank'));
 							// redirect('pos');
 							$bank_chk=0;
 						}
-						if($this->input->post('paid_by') =='CC'){
-							if($this->input->post('cc_no')=='')
-							{
-								$this->session->set_flashdata('error', lang('Please Write Credit Card No'));
-								$bank_chk=0;
-							}
-						}else if($this->input->post('paid_by') =='Cheque'){
+
+						if($this->input->post('paid_by') =='Cheque' && $bank_chk==1){
 							if($this->input->post('cheque_no')=='')
 							{
 								$this->session->set_flashdata('error', lang('Please Write Cheque No'));
 								$bank_chk=0;
 							}
 						} 
-						else if($this->input->post('paid_by') =='TT'){
+						else if($this->input->post('paid_by') =='TT' && $bank_chk==1){
 							if($this->input->post('tt_no')=='')
 							{
 								$this->session->set_flashdata('error', lang('Please Write TT No'));
 								$bank_chk=0;
 							}
 						} 
+						/* else if($this->input->post('paid_by') =='CC'){
+							if($this->input->post('cc_no')=='')
+							{
+								$this->session->set_flashdata('error', lang('Please Write Credit Card No'));
+								$bank_chk=0;
+							}
+						} */
+
+						if($this->input->post('cheque_date')){ $cheque_date=date('Y-m-d',strtotime($this->input->post('cheque_date')) ); }else{$cheque_date='';}
 
 						if($bank_chk)
 						{ 
@@ -341,10 +339,10 @@ class Pos extends MY_Controller {
 								'insert_date'  => date('Y-m-d H:i:s'),
 								'type'         => 'pending',
 								'collection_id' => $collect_id,
-								'store_id'       => 1,
 								'payment_type' =>  1,
-								'bank_id' =>  $this->input->post('bank_id'),
+								'bank_id' 		=>  $this->input->post('bank_id'),
 								'store_id'     => $store_id,
+								'cheque_date'  => $this->input->post('cheque_date'),
 							  );
 							  if($this->input->post('cc_no')){
 								  $bankPending['cheque_no'] = $this->input->post('cc_no');
@@ -371,7 +369,9 @@ class Pos extends MY_Controller {
 				$aging_status=0;
 			}
 
-			if($this->input->post('delivery_date')){$delivery_date=date('Y-m-d',strtotime($this->input->post('delivery_date')) );}else{$delivery_date=date('Y-m-d');}
+
+			if($this->input->post('delivery_date')){ $delivery_date=date('Y-m-d',strtotime($this->input->post('delivery_date')) ); }
+			else{ $delivery_date=date('Y-m-d'); }
         	
 			$data = array(
 				'date' => $date,
@@ -430,7 +430,7 @@ class Pos extends MY_Controller {
 					'pos_paid' => $this->tec->formatDecimal($this->input->post('amount')),
 					'collect_id'  => $collect_id,
 					'store_id' => $store_id,
-					'delivery_date' => $delivery_date,
+					'cheque_date' => $this->input->post('cheque_date'),
 					);
 					if(!$eid) {
 						$payment['pos_balance'] = $this->tec->formatDecimal($this->input->post('balance_amount'));

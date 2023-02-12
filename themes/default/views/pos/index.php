@@ -749,6 +749,7 @@
                 <input type="hidden" name="paying_gift_card_no" id="paying_gift_card_no_val" value=""/>
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
                 <input type="hidden" name="cheque_no" id="cheque_no_val" value=""/>
+                <input type="hidden" name="cheque_date" id="cheque_date_val" value=""/>
                 <input type="hidden" name="tt_no" id="tt_no_val" value=""/>
                 <input type="hidden" name="bank_id" id="bank_id_val" value="0"/>
                 <input type="hidden" name="cc_month" id="cc_month_val" value=""/>
@@ -1147,10 +1148,19 @@
                 </div>
                 <div class="pcheque" style="display:none;">
                   <div class="ccheque" style="display:none;">
+
+
+                      
                     <div class="form-group">
                       <?= lang("cheque_no", "cheque_no"); ?>
                       <input type="text" id="cheque_no"class="form-control cheque_no  kb-text"/>
                     </div>
+
+                    <div class="form-group">
+                      <label class="control-label" for="cheque_date"><?= lang("cheque_date"); ?></label>
+                      <input style="width:45%;" type="text" id="cheque_date" class="pa form-control kb-pad datepicker" />
+                    </div>
+                    <!-- <div class="clearfix"></div> -->
                   </div>
                   <div class="tcheque" style="display:none;">
                     <div class="form-group">

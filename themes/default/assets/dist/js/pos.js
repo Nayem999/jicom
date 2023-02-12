@@ -1055,6 +1055,12 @@ $(document).ready(function(){
     $('#payModal').on('change', '#cheque_no', function (e) {
         $('#cheque_no_val').val($(this).val());
     });
+    $('#payModal').on('blur', '#cheque_date', function (e) {
+        $('#cheque_date_val').val($(this).val());
+    });
+    $('#payModal').on('keyup', '#cheque_date', function (e) {
+        $('#cheque_date_val').val($(this).val());
+    });
     $('#payModal').on('change', '#tt_no', function (e) {
         $('#tt_no_val').val($(this).val());
     });
