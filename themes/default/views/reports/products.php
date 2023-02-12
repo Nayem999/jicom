@@ -8,9 +8,9 @@ $v = "?v=1";
  
     }
 
-    if($this->input->post('warehouse')){
+    if($this->input->post('store_id')){
 
-        $v .= "&warehouse=".$this->input->post('warehouse');
+        $v .= "&store_id=".$this->input->post('store_id');
 
     }
 
@@ -144,14 +144,14 @@ $v = "?v=1";
                        <?php if($this->Admin){ ?>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                     <?= lang('Warehouse','Warehouse'); ?>
+                                     <?= lang('Store','Store'); ?>
                                     <?php
-                                    $wr[''] = lang("select")." ".lang("warehouse");
-                                    foreach($warehouses as $warehouse) {
-                                        $wr[$warehouse->id] = $warehouse->name;
+                                    $wr[''] = lang("select")." ".lang("Store");
+                                    foreach($stores as $store) {
+                                        $wr[$store->id] = $store->name;
                                     }
                                     ?>
-                                    <?= form_dropdown('warehouse', $wr, set_value('warehouse'), 'class="form-control select2 tip" id="warehouse" style="width:100%;"'); ?> 
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" style="width:100%;"'); ?> 
                                 </div>
                             </div> 
                        <?php } ?>

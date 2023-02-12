@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-md-1">
                                 <a href='#' data-toggle='modal' data-target="#myModal"><i onclick="onClickAdd()" class="fa fa-2x fa-plus-circle" style="margin-top:25px" ></i></a> 
- 
+                                <!-- <a href='#' data-toggle='modal' data-target="#myModal"><i onclick="onClickRemove()" class="fa fa-2x fa-minus-circle" style="margin-top:25px" ></i></a> -->
                             </div>
                         </div>
 

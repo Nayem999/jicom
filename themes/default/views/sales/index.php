@@ -123,14 +123,14 @@ $v = "?v=1";
                         <div class="row">
                         <?php if($this->Admin){ ?>
                             <div class="col-sm-3">
-                                 <?= lang('From Warehouse','From Warehouse'); ?>
+                                 <?= lang('From Store','From Store'); ?>
                                 <?php
-                                $wr[''] = lang("select")." ".lang("warehouse");
-                                foreach($warehouses as $warehouse) {
-                                    $wr[$warehouse->id] = $warehouse->name;
+                                $wr[''] = lang("select")." ".lang("store");
+                                foreach($stores as $store) {
+                                    $wr[$store->id] = $store->name;
                                 }
                                 ?>
-                                <?= form_dropdown('warehouse', $wr, set_value('warehouse'), 'class="form-control select2 tip" id="warehouse" required="required" style="width:100%;"'); ?> 
+                                <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?> 
                             </div>
                             <?php } ?>
                             <div class="col-sm-3" id="customerInfo">

@@ -36,7 +36,7 @@ class Sales extends MY_Controller {
 
         $this->data['customers'] = $this->site->getAllCustomers(); 
 
-        $this->data['warehouses'] = $this->site->getAllStores();
+        $this->data['stores'] = $this->site->getAllStores();
 
 		$this->page_construct('sales/index', $this->data, $meta);
 
@@ -58,7 +58,7 @@ class Sales extends MY_Controller {
 
 	function get_sales($today = NULL){
 
-        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL; 
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : NULL; 
         $customer = $this->input->get('customer') ? $this->input->get('customer') : NULL; 
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : NULL; 
@@ -113,7 +113,7 @@ class Sales extends MY_Controller {
 		
 		$this->datatables->where('sales_type', 'sale');
 
-        if($warehouse) { $this->datatables->where('sales.store_id', $warehouse); }
+        if($store_id) { $this->datatables->where('sales.store_id', $store_id); }
         if($customer) { $this->datatables->where('sales.customer_id', $customer); }
         if($start_date) { $this->datatables->where('sales.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->datatables->where('sales.date <=', $end_date.' 23:59:59'); } 

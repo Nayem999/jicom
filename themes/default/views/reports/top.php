@@ -1,7 +1,7 @@
 <?php 
-    if($this->input->post('warehouse')){
+    if($this->input->post('store_id')){
 
-        $warehouse =$this->input->post('warehouse');
+        $store_id =$this->input->post('store_id');
 
     } 
 ?>
@@ -160,14 +160,14 @@
                         <?= form_open("reports/top_products");?>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                     <?= lang('Warehouse','Warehouse'); ?>
+                                     <?= lang('Store','Store'); ?>
                                     <?php
-                                    $wr[''] = lang("select")." ".lang("warehouse");
-                                    foreach($warehouses as $warehouse) {
-                                        $wr[$warehouse->id] = $warehouse->name;
+                                    $wr[''] = lang("select")." ".lang("Store");
+                                    foreach($stores as $store) {
+                                        $wr[$store->id] = $store->name;
                                     }
                                     ?>
-                                    <?= form_dropdown('warehouse', $wr, set_value('warehouse'), 'class="form-control select2 tip" id="warehouse" style="width:100%;"'); ?> 
+                                    <?= form_dropdown('store_id', $wr, set_value('store_id'), 'class="form-control select2 tip" id="store_id" style="width:100%;"'); ?> 
                                 </div>
                             </div> 
 

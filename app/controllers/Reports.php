@@ -62,7 +62,7 @@ class Reports extends MY_Controller
         $this->data['donations'] = $this->reports_model->donationsPay($start_date,$end_date,$store_id);
         $this->data['results'] = $results; 
         $this->data['date_range'] = $start_date;
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $bc = array(array('link' => '#', 'page' => lang('daily_Statement')), array('link' => '#', 'page' => lang('Daily_Report')));
         $meta = array('page_title' => lang('Daily_Statement'), 'bc' => $bc);
         $this->page_construct('reports/daily_statement', $this->data, $meta); 
@@ -470,7 +470,7 @@ class Reports extends MY_Controller
         $this->data['end_date'] = $end_date;
         $this->data['store_id'] = $store_id;
         $results = array(); 
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("daily_sales");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
@@ -618,7 +618,7 @@ class Reports extends MY_Controller
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
 
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("Expenses Report");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Expenses Report')));
         $meta = array('page_title' => lang('Expenses Report'), 'bc' => $bc);
@@ -823,7 +823,7 @@ class Reports extends MY_Controller
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
         $this->data['store_id'] = $store_id;
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("credit_collection");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('credit_collection')));
         $meta = array('page_title' => lang('credit_collection'), 'bc' => $bc);
@@ -1279,12 +1279,12 @@ class Reports extends MY_Controller
     function products() {
         $this->load->model('customers_model'); 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $warehouse = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
+        // $warehouse = $this->input->post('store_id') ? $this->input->post('store_id') : NULL;
         $this->data['customers'] = $this->site->getAllCustomers();  
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['warehouses'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
 
-        $this->data['store_id'] = $this->input->get('warehouse') ? $this->input->get('warehouse') : 0;
+        $this->data['store_id'] = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
         $this->data['product'] = $this->input->get('product') ? $this->input->get('product') : 0;
         $this->data['start_date'] = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
         $this->data['end_date'] = $this->input->get('end_date') ? $this->input->get('end_date') : NULL;
@@ -1297,7 +1297,7 @@ class Reports extends MY_Controller
     }
 
     function get_products()  {
-        $store_id = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : NULL;
         $product = $this->input->get('product') ? $this->input->get('product') : NULL;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : NULL;
@@ -1329,10 +1329,13 @@ class Reports extends MY_Controller
         if($product) { $this->datatables->where('products.id', $product); }
         if($start_date) { $this->datatables->where('sales.date >=', $start_date.' 00:00:00'); }
         if($end_date) { $this->datatables->where('sales.date <=', $end_date.' 23:59:59'); }
-        if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
         if($customer !=NULL) { $this->datatables->where('sales.customer_id',$customer); }
+
         if(!$this->Admin){
             $this->datatables->where('sale_items.store_id',$this->session->userdata('store_id'));
+        }else
+        {
+            if($store_id !=NULL) { $this->datatables->where('sale_items.store_id',$store_id); }
         }
 
         echo $this->datatables->generate();
@@ -1412,13 +1415,13 @@ class Reports extends MY_Controller
         }
         
         if(!$this->Admin){
-            $warehouse = $this->session->userdata('store_id');
+            $store_id = $this->session->userdata('store_id');
         }else{
-            $warehouse = $this->input->post('warehouse'); 
+            $store_id = $this->input->post('store_id'); 
         }
         
-        $this->data['warehouses'] = $this->site->getAllStores();
-        $this->data['results'] = $this->reports_model->saleAndPurseCount($warehouse);  
+        // $this->data['stores'] = $this->site->getAllStores();
+        $this->data['results'] = $this->reports_model->saleAndPurseCount($store_id);  
         $this->data['products'] = $this->reports_model->getAllProducts();
         $this->data['page_title'] = $this->lang->line("Sold and Purchase");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sold and Purchase')));
@@ -1474,13 +1477,13 @@ class Reports extends MY_Controller
     function productQuery() {
         $type = $this->input->post('type');    
         $pcode = $this->input->post('pcode');   //49w750d'; 
-        $warehouse = $this->input->post('warehouse');        
+        $store_id = $this->input->post('store_id');        
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['results'] = $this->reports_model->pquery($type,$pcode,$warehouse);
-        // echo "<pre>".print_r($this->reports_model->pquery($type,$pcode,$warehouse));die;
+        $this->data['results'] = $this->reports_model->pquery($type,$pcode,$store_id);
+        // echo "<pre>".print_r($this->reports_model->pquery($type,$pcode,$store_id));die;
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products Query')));
         $meta = array('page_title' => lang('Products Query'), 'bc' => $bc);
-        $this->data['warehouses'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->page_construct('reports/report_pquery', $this->data, $meta);
     }
 
@@ -1489,7 +1492,7 @@ class Reports extends MY_Controller
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = $this->lang->line("Products List Staff Report");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List Staff Report')));
         $meta = array('page_title' => lang('Products List Staff Report'), 'bc' => $bc);
@@ -1511,7 +1514,7 @@ class Reports extends MY_Controller
 			}
 		}
 		$this->data['cost'] = $cost;
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
 		$this->data['page_title'] = $this->lang->line("Products List All Report");
 		$bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Products List All Report')));
 		$meta = array('page_title' => lang('Products List All Report'), 'bc' => $bc);
@@ -1727,13 +1730,13 @@ class Reports extends MY_Controller
     }
 
     function top_products() {
-        $store_id = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
+        $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : NULL;
 
         $this->data['topProducts'] = $this->reports_model->topProducts($store_id);
         $this->data['topProducts1'] = $this->reports_model->topProducts1($store_id);
         $this->data['topProducts3'] = $this->reports_model->topProducts3($store_id);
         $this->data['topProducts12'] = $this->reports_model->topProducts12($store_id);
-        $this->data['warehouses'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
 
         $this->data['page_title'] = $this->lang->line("top_products");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('top_products')));
@@ -1855,11 +1858,11 @@ class Reports extends MY_Controller
             $this->session->set_flashdata('error', lang('access_denied'));            
             redirect('pos');            
             } 
-            $this->data['warehouses'] = $this->site->getAllStores();
+            // $this->data['stores'] = $this->site->getAllStores();
             if(!$this->Admin){
                 $store_id =$this->session->userdata('store_id');
             }else{
-                $store_id = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;
+                $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : NULL;
             }
            
             // $date ='';
@@ -2123,14 +2126,14 @@ class Reports extends MY_Controller
         redirect('pos');            
         }
         if(!$this->Admin){
-            $warehouse = $this->session->userdata('store_id');
+            $store_id = $this->session->userdata('store_id');
         } else {
-            $warehouse = $this->input->post('warehouse') ? $this->input->post('warehouse') : NULL;       
+            $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : NULL;       
         }
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['products'] = $this->reports_model->getAllProducts();
-        $this->data['quantity'] = $this->reports_model->getAllquantityByStore($warehouse);
-        $this->data['warehouses'] = $this->site->getAllStores();
+        $this->data['quantity'] = $this->reports_model->getAllquantityByStore($store_id);
+        // $this->data['warehouses'] = $this->site->getAllStores();
         $costs = $this->reports_model->getAllcost();
         $cost = 0;
         foreach($costs as $costs_value){
@@ -2148,7 +2151,7 @@ class Reports extends MY_Controller
     }
 
     public function get_store_product_stock() {
-        $store_id = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
+        $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : NULL;
 
         $this->load->library('datatables');
         $this->datatables->select($this->db->dbprefix('product_store_qty').".id as pid,
@@ -2382,7 +2385,7 @@ class Reports extends MY_Controller
             'bc' => $bc
         ); 
         $this->data['results'] = $this->reports_model->invoiceProfit($store_id);
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->page_construct('reports/invoiceFrofit', $this->data, $meta);  
     }
     
@@ -2628,7 +2631,7 @@ class Reports extends MY_Controller
         $this->data['end_date'] = $end_date;
         $this->data['store_id'] = $store_id;
         $results = array(); 
-        $this->data['stores'] = $this->site->getAllStores();
+        // $this->data['stores'] = $this->site->getAllStores();
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("Aging Report");
         $bc = array(array('link' => '#', 'page' => lang('Aging Report')), array('link' => '#', 'page' => lang('Aging Report')));
