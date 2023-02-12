@@ -102,7 +102,7 @@ class Suppliers extends MY_Controller
 			if(($this->session->userdata('store_id') !=0) && ($this->session->userdata('store_id') !='')){
 				$data['store_id'] = $this->session->userdata('store_id');
 			}else{
-				$data['store_id'] = $this->input->post('warehouse');
+				$data['store_id'] = $this->input->post('store_id');
 			}
 
 		}
@@ -136,7 +136,7 @@ class Suppliers extends MY_Controller
     		$bc = array(array('link' => site_url('suppliers'), 'page' => lang('suppliers')), array('link' => '#', 'page' => lang('add_supplier')));
 
     		$meta = array('page_title' => lang('add_supplier'), 'bc' => $bc);
-    		$this->data['warehouses'] = $this->site->getAllStores(); 
+    		// $this->data['warehouses'] = $this->site->getAllStores(); 
 
     		$this->page_construct('suppliers/add', $this->data, $meta);
 
@@ -183,7 +183,7 @@ class Suppliers extends MY_Controller
 			if(($this->session->userdata('store_id') !=0) && ($this->session->userdata('store_id') !='')){
 				$data['store_id'] = $this->session->userdata('store_id');
 			}else{
-				$data['store_id'] = $this->input->post('warehouse');
+				$data['store_id'] = $this->input->post('store_id');
 			}
 		}
 
@@ -205,7 +205,7 @@ class Suppliers extends MY_Controller
 
     		$meta = array('page_title' => lang('edit_supplier'), 'bc' => $bc);
 
-    		$this->data['warehouses'] = $this->site->getAllStores(); 
+    		// $this->data['warehouses'] = $this->site->getAllStores(); 
 
     		$this->page_construct('suppliers/edit', $this->data, $meta);
 

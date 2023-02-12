@@ -11,14 +11,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <?php if($this->session->userdata('store_id')==0){ ?>
-                <?= lang('From Warehouse','From Warehouse'); ?>
+                <?= lang('From Store','From Store'); ?>
                 <?php
-                $wr[''] = lang("select")." ".lang("warehouse");
-                foreach($warehouses as $warehouse) {
-                    $wr[$warehouse->id] = $warehouse->name;
-                }
+                  $wr[''] = lang("select")." ".lang("Store");
+                  foreach($stores as $store) {
+                      $wr[$store->id] = $store->name;
+                  }
                 ?>
-                <?= form_dropdown('warehouse', $wr, $supplier->store_id, 'class="form-control select2 tip" id="from-warehouse" required="required" style="width:100%;"'); ?> 
+                <?= form_dropdown('store_id', $wr, $supplier->store_id, 'class="form-control select2 tip" id="store_id" required="required" style="width:100%;"'); ?> 
             </div>
             <?php } ?>
             <div class="form-group">

@@ -52,7 +52,7 @@ class Customers extends MY_Controller
 
 		if ($this->Admin){
 
-			$this->form_validation->set_rules('warehouse', 'Store Name', 'required');
+			$this->form_validation->set_rules('store_id', 'Store Name', 'required');
 
 		}
 
@@ -71,7 +71,7 @@ class Customers extends MY_Controller
 			if($this->session->userdata('store_id') !=0){
 				$data['store_id'] = $this->session->userdata('store_id');
 			}else{
-				$data['store_id'] = $this->input->post('warehouse');
+				$data['store_id'] = $this->input->post('store_id');
 			}
 
 		}
@@ -106,7 +106,7 @@ class Customers extends MY_Controller
 
     		$meta = array('page_title' => lang('add_customer'), 'bc' => $bc);
 
-    		$this->data['warehouses'] = $this->site->getAllStores(); 
+    		// $this->data['warehouses'] = $this->site->getAllStores(); 
 
     		$this->page_construct('customers/add', $this->data, $meta);
 
@@ -153,7 +153,7 @@ class Customers extends MY_Controller
 			if(($this->session->userdata('store_id') !=0) && ($this->session->userdata('store_id') !='')){
 				$data['store_id'] = $this->session->userdata('store_id');
 			}else{
-				$data['store_id'] = $this->input->post('warehouse');
+				$data['store_id'] = $this->input->post('store_id');
 			}
 
 		}
@@ -176,7 +176,7 @@ class Customers extends MY_Controller
 
     		$meta = array('page_title' => lang('edit_customer'), 'bc' => $bc);
 
-    		$this->data['warehouses'] = $this->site->getAllStores(); 
+    		// $this->data['warehouses'] = $this->site->getAllStores(); 
 
     		$this->page_construct('customers/edit', $this->data, $meta);
 
