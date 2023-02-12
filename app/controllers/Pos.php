@@ -228,14 +228,27 @@ class Pos extends MY_Controller {
 			$grand_total = $this->tec->formatDecimal($this->tec->formatDecimal($total) + $total_tax - $order_discount);
 			$paid = $this->input->post('amount') ? $this->input->post('amount') : 0;
 
-			$salesCustomers = $this->sales_model->getCustomerDeu($customer_id);
-			$totalDeu = 0;
-			if(isset($salesCustomers) && is_array($salesCustomers))
+			// $salesCustomers = $this->sales_model->getCustomerDeu($customer_id);			
+			/* if(isset($salesCustomers) && is_array($salesCustomers))
 			{
 				foreach ($salesCustomers as $key => $value) {
 					$totalDeu = $totalDeu + $value->deu;
 				}
+			} */
+			$grandTotalSalesCustomers = $this->sales_model->getCustomerGrandTotal($customer_id);
+			$totalPaymentSalesCustomers = $this->sales_model->getCustomerAmountWithBankApproved($customer_id);
+			// echo $this->db->last_query();die;
+			$totalDeu = $pre_grand_total=0;
+			if(is_array($grandTotalSalesCustomers))
+			{
+				$pre_grand_total = $grandTotalSalesCustomers[0]->grand_total;
 			}
+
+			if(is_array($totalPaymentSalesCustomers))
+			{
+				$totalDeu = abs($pre_grand_total-$totalPaymentSalesCustomers[0]->chk_amount + $totalPaymentSalesCustomers[0]->other_amount);
+			}
+
 			$incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
 			if(!$eid) {
 				$status = 'due';
@@ -248,7 +261,7 @@ class Pos extends MY_Controller {
 					$credit_over=0;
 				}
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
-				// echo $status."__".$credit_over."__".$customer_credit_limit."_".$this->input->post('cheque_date');die;
+				// echo $status."__".$credit_over."__".$customer_credit_limit."_".$totalDeu."_".$pre_grand_total;die;
 				if($credit_over>0){
 					if($credit_over>$customer_credit_limit){
 						$this->session->set_flashdata('error', lang('Credit Over'));
@@ -328,8 +341,6 @@ class Pos extends MY_Controller {
 								$bank_chk=0;
 							}
 						} */
-
-						if($this->input->post('cheque_date')){ $cheque_date=date('Y-m-d',strtotime($this->input->post('cheque_date')) ); }else{$cheque_date='';}
 
 						if($bank_chk)
 						{ 

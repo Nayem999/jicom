@@ -333,7 +333,7 @@ class Sales_model extends CI_Model
     }
     return FALSE; 
   }
-  public function getCustomerDeu($id) {
+    public function getCustomerDeu($id) {
        $this->db->select('id,paid,grand_total,(grand_total - paid ) as deu ');
        $this->db->from('sales');
        $this->db->where('customer_id', $id);
@@ -344,6 +344,30 @@ class Sales_model extends CI_Model
         }
         return FALSE;
     }
+
+    public function getCustomerGrandTotal($id) {
+       $this->db->select('sum(grand_total) as grand_total');
+       $this->db->from('sales');
+       $this->db->where('customer_id', $id);
+       $q =$this->db->get();
+        if( $q->num_rows() > 0 ) {
+            return $q->result();
+        }
+        return FALSE;
+    }
+
+    public function getCustomerAmountWithBankApproved($id) {
+       $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash', payments.amount,0)) as other_amount ");
+       $this->db->from('payments');
+       $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$id",'left');
+       $this->db->where('payments.customer_id', $id);
+       $q =$this->db->get();
+        if( $q->num_rows() > 0 ) {
+            return $q->result();
+        }
+        return FALSE;
+    }
+    
   public function UpdateCustomerDeu($data,$id){
    
     $this->db->where('id', $id);
