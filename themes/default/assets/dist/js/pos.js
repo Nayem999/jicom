@@ -340,6 +340,15 @@ $(document).ready(function(){
         $('#pro_tax').text(formatMoney(pr_tax_val));
     });
 
+    $(document).on('change', '#qnty_type', function () {
+        var qnty_type_id = $('#qnty_type').val();
+        if(qnty_type_id==1){ $('#per_type_qnty').val(20); }
+        else if(qnty_type_id==2){ $('#per_type_qnty').val(6); }
+        else if(qnty_type_id==3){ $('#per_type_qnty').val(10); }
+        else if(qnty_type_id==4){ $('#per_type_qnty').val(25); }
+        else{ $('#per_type_qnty').val(0); }
+    });
+
     /* =============================
     Edit Item Method
     ============================= */

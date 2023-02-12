@@ -983,11 +983,12 @@
 
             <div class="form-group">
               <?= lang("qnty_type", "qnty_type"); ?>
-              <select id="qnty_type" class="form-control qnty_type select2" style="width:100%;">
+              <select id="qnty_type" class="form-control qnty_type" style="width:100%;">
                 <option value="0">Select</option>
-                <option value="1">bucket</option>
-                <option value="2">carton</option>
-                <option value="3">bag</option>               
+                <option value="1">Bucket</option>
+                <option value="2">Carton</option>
+                <option value="3">Bag 10</option>               
+                <option value="4">Bag 25</option>               
               </select>
             </div>
 
