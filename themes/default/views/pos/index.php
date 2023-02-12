@@ -1079,9 +1079,9 @@
                     <option value="cash">
                     <?= lang("cash"); ?>
                     </option>
-                    <option value="CC">
+                    <!-- <option value="CC">
                     <?= lang("cc"); ?>
-                    </option>
+                    </option> -->
                     <option value="Cheque">
                     <?= lang("cheque"); ?>
                     </option>

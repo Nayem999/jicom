@@ -16,10 +16,10 @@
 $lang['quick_cash_notes']               = array('10', '20', '50', '100', '500');
 
 /* --------------------------- CUSTOM FILEDS --------------------------- */
-$lang['ccf1']                               = "Customer Address Eng.";
-$lang['ccf2']                               = "Customer Address Ban.";
-$lang['scf1']                               = "Supplier Address Eng.";
-$lang['scf2']                               = "Supplier Address Ban.";
+$lang['ccf1']                               = "Address (Eng)";
+$lang['ccf2']                               = "Address (Ben)";
+$lang['scf1']                               = "Address (Eng)";
+$lang['scf2']                               = "Address (Ben)";
 
 
 /* ----------------------- GENERAL LANGUAGE KEYS ----------------------- */
