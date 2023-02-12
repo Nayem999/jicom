@@ -744,7 +744,7 @@
                 <input type="hidden" name="balance_amount" id="balance_val" value=""/>
                 <input type="hidden" name="paid_by" id="paid_by_val" value="cash"/>
                 <input type="hidden" name="delivery_date" id="delivery_date_val" value="<?=date('Y-m-d')?>"/>
-                <input type="hidden" name="aging_day" id="aging_day_val" value="0"/>
+                <input type="hidden" name="aging_day" id="aging_day_val" value="<?php echo $Settings->aging_day;?>"/>
                 <input type="hidden" name="cc_no" id="cc_no_val" value=""/>
                 <input type="hidden" name="paying_gift_card_no" id="paying_gift_card_no_val" value=""/>
                 <input type="hidden" name="cc_holder" id="cc_holder_val" value=""/>
@@ -1112,8 +1112,7 @@
               <div class="col-xs-6">
                 <div class="form-group">
                   <?= lang("Aging Day", "Aging Day"); ?>
-                  <input name="aging_day[]" type="text" id="aging_day" 
-									class="pa form-control" />
+                  <input name="aging_day[]" type="text" id="aging_day" class="pa form-control" value="<?php echo $Settings->aging_day;?>" />
                 </div>
 
               </div>
