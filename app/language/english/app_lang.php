@@ -304,6 +304,7 @@ $lang['default_tax_rate']                   = "Default Tax Rate";
 $lang['display_product']                    = "Display Product";
 $lang['pro_limit']                          = "Product Display Limit";
 $lang['bin_number']                         = "BIN Number";
+$lang['aging_day']                          = "Aging Day";
 $lang['display_kb']                         = "Display Keyboard";
 $lang['default_category']                   = "Default Category";
 $lang['default_customer']                   = "Default Customer";

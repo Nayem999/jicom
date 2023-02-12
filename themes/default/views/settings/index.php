@@ -296,6 +296,13 @@
 
                                 </div>
 
+                                <div class="form-group">
+
+                                    <?= lang('aging_day', 'aging_day'); ?>
+
+                                    <?= form_input('aging_day', $settings->aging_day, 'class="form-control tip" id="aging_day"'); ?>
+
+                                </div>
 
                             </div>
 
