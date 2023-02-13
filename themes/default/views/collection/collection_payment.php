@@ -25,7 +25,7 @@
                             <?php echo form_open_multipart("collection/todayCollectionPayment", 'class="validation"'); ?>
 
                             <div class="form-group">
-                               <?= lang('Customer'); ?>*
+                                <label><?= lang('Customer'); ?>*</label>
 
                                 <?php  $sp[''] = lang("select")." ".lang("Customer");
 
@@ -44,14 +44,15 @@
                                <select class="form-control select2 tip" name="type" required="required" id="type">
                                  <option value="">Select</option>
                                  <option value="cash">Cash</option>
-                                 <option value="cheque">Cheque</option>
+                                 <option value="Cheque">Cheque</option>
                                  <option value="TT">TT</option>
-                                 <option value="card">Card</option>
+                                 <!-- <option value="card">Card</option> -->
+                                 <option value="Deposit">Deposit</option>
                                </select>
                             </div>
                             <div id="bankInfo"></div>
                             <div class="form-group">
-                                <?= lang("Paid Amount"); ?>*
+                                <label><?= lang("Paid Amount"); ?>*</label>
 
                                 <input type="text" name="colAmount" placeholder="<?= lang('Collection Amount'); ?>" id="colAmount" value="" class="form-control" required="required">
                             </div>

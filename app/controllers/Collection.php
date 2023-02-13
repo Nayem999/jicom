@@ -440,7 +440,7 @@ class Collection extends MY_Controller
         
         $grand_total  = 0;
 
-        if($type=='cheque' || $type=='card' || $type=='TT'){
+        if($type=='Cheque' || $type=='card' || $type=='TT'){
           $bankPending = array(
             'customer_id'  => $this->input->post('customer'),
             'amount'       => $this->input->post('colAmount'),
@@ -455,6 +455,30 @@ class Collection extends MY_Controller
 
           $this->bank_model->bankPendingTranjection($bankPending);
           
+        }
+        else if($type=='Deposit')
+        {
+          $bankPending = array(
+            'customer_id'  => $this->input->post('customer'),
+            'amount'       => $this->input->post('colAmount'),
+            'bank_id'      => $this->input->post('bank'),
+            'cheque_no'    => $this->input->post('cheque_no'),
+            'insert_date'  => date('Y-m-d H:i:s'),
+            'type'         => 'Approved',
+            'collection_id' => $collect_id,
+            'store_id'       => 1,
+            'payment_type' =>  1,
+          );
+
+          $cid=$this->bank_model->bankPendingTranjection($bankPending);
+          $dataTransaction = array(
+            'bank_account_id'   => $cid,
+            'tran_amount'  => $this->input->post('current_amount'),			
+            'tran_type'    => 1,				
+            'tran_date'    => date('Y-m-d H:i:s'),	
+          );
+        
+          $this->site->insertQuery($dataTransaction) ;
         }
 
 
@@ -520,25 +544,33 @@ class Collection extends MY_Controller
       
       $banks = $this->site->wheres_rows('bank_account',null); 
     
-      if($type == 'cheque' || $type == 'TT'){
+      if($type == 'Cheque' || $type == 'TT' || $type == 'Deposit'){
         $output= '<div class="form-group">
-              <p>Bank information </p> 
-                 <select class="form-control select2 tip" name="bank" required="required" id="type">
+                <label>Bank information </label> 
+                <select class="form-control select2 tip" name="bank" required="required" id="type">
             <option value="">Select Bank</option>';
 
             foreach ($banks as $key => $bank) {
               $output .='<option value="'.$bank->bank_account_id.'">'.$bank->bank_name .' ('.$bank->account_name.' ) ( '.$bank->account_no.')</option>';
             }
-        if($type == 'cheque')  {
+        if($type == 'Cheque')  {
           $output .='</select></div>
                   <div class="form-group">
                   <label>Cheque No </label>
               <input type="text" name="cheque_no" class="form-control" required="required">
                   </div>'; 
-        }else{
+        }
+        else if($type == 'TT'){
             $output .='</select></div>
             <div class="form-group">
             <label>TT No </label>
+        <input type="text" name="cheque_no" class="form-control" required="required">
+            </div>'; 
+        }  
+        else if($type == 'Deposit'){
+            $output .='</select></div>
+            <div class="form-group">
+            <label>Deposit No </label>
         <input type="text" name="cheque_no" class="form-control" required="required">
             </div>'; 
         }  
