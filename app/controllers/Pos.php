@@ -252,12 +252,15 @@ class Pos extends MY_Controller {
 			$incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
 			if(!$eid) {
 				$status = 'due';
+				$payment_status=3;
 				$credit_over=$totalDeu + $grand_total;
 				if ($grand_total > $paid && $paid > 0) {
 					$status = 'partial';
+					$payment_status=2;
 					$credit_over=$totalDeu + ($grand_total-$paid);
 				} elseif ($grand_total <= $paid) {
 					$status = 'paid';
+					$payment_status=1;
 					$credit_over=0;
 				}
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
@@ -410,6 +413,7 @@ class Pos extends MY_Controller {
 				'aging_day' => $this->input->post('aging_day'),
 				'aging_status' =>$aging_status,
 				'delivery_date' =>$delivery_date,
+				'payment_status' => $payment_status,
 				);
 			if(!$eid) {
 				$data['status'] = $status;
