@@ -177,19 +177,32 @@ public function getCustomerLaserByCid($cusromer){
                 $salesid[] = $row->id ;
             }          
         } 
+
         //else return 'No data pound';  (coment this line by sahin 20-02-19)
-        $this->db->select('today_collection.today_collect_id, today_collection.payment_date as datetime, payment_amount as amount');
+        /* $this->db->select('today_collection.today_collect_id, today_collection.payment_date as datetime, payment_amount as amount');
         $this->db->order_by("today_collect_id","DESC");    
-        $q = $this->db->get_where('today_collection', array('customer_id' => $cusromer,));
+        $this->db->join("today_collect_id","DESC");    
+        $q = $this->db->get_where('today_collection', array('customer_id' => $cusromer,)); */
+
+        $this->db->select("today_collection.today_collect_id, today_collection.payment_date as datetime, if(paid_by='Cheque' && type='Approved',payments.amount,0) as chk_amount, if(paid_by='TT' || paid_by='cash', payments.amount,0) as other_amount");  
+        $this->db->join("payments","payments.collect_id=today_collection.today_collect_id and payments.customer_id=$cusromer");    
+        $this->db->join("bank_pending","bank_pending.collection_id=today_collection.today_collect_id and bank_pending.customer_id=$cusromer and bank_pending.payment_type=1 and bank_pending.type='Approved'",'left');    
+        $this->db->group_by('today_collection.today_collect_id,today_collection.payment_date'); 
+        $this->db->order_by("today_collect_id","DESC");  
+        $q = $this->db->get_where('today_collection', array('today_collection.customer_id' => $cusromer,));
+        // echo $this->db->last_query();die;
         if($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
-                $rows['datetime'] = $row->datetime ;
-                $rows['total'] = $row->amount ;
-                $rows['sgtotal'] = $row->amount ;
-                $rows['sale'] = '0.00' ;
-                $rows['type'] = 'collection' ;
-                $rows['id'] = $row->today_collect_id ;
-                $results[] = $rows ;
+                if($row->chk_amount>0 || $row->other_amount>0)
+                {
+                    $rows['datetime'] = $row->datetime ;
+                    $rows['total'] = $row->chk_amount + $row->other_amount;
+                    $rows['sgtotal'] = $row->chk_amount + $row->other_amount;
+                    $rows['sale'] = '0.00' ;
+                    $rows['type'] = 'collection' ;
+                    $rows['id'] = $row->today_collect_id ;
+                    $results[] = $rows ;
+                }
             } 
 
         }  

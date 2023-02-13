@@ -637,11 +637,17 @@ class Reports_model extends CI_Model
             $resultsCustomar = $queryCustomer->row();   
             
             // Collection
-            $this->db->select('SUM(payment_amount) as payment_amount ');
+            /* $this->db->select('SUM(payment_amount) as payment_amount ');
             $this->db->from('today_collection'); 
-            $this->db->where('customer_id',$customer_id);    
+            $this->db->where('customer_id',$customer_id); */    
+           
+            $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash', payments.amount,0)) as other_amount ");
+            $this->db->from('payments');
+            $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$customer_id and bank_pending.payment_type=1",'left');
+            $this->db->where('payments.customer_id', $customer_id);
             $querycollection = $this->db->get();
             $collectionResults = $querycollection->row(); 
+            // echo $this->db->last_query();die;
   
 	        $this->db->from('salesreturn'); 
 	        $this->db->where('customer_id', $customer_id);
@@ -671,14 +677,16 @@ class Reports_model extends CI_Model
               $marge = '' ;
             } 
 
-            $tdue = $resultsCustomar->gtotal - $collectionResults->payment_amount;      
+            // $tdue = $resultsCustomar->gtotal - $collectionResults->payment_amount;      
+            $tdue = $resultsCustomar->gtotal - $collectionResults->chk_amount - $collectionResults->other_amount;      
 
             $Sales['id'] = $value->id;
             $Sales['cname'] = $value->name ;
             // $Sales['cid'] = $resultsPurchases->cid ;
             $Sales['cid'] = $resultsCustomar->cid ;
             $Sales['gtotal'] = $resultsCustomar->gtotal + $value->opening_blance - $returnDue;
-            $Sales['tpaid'] = $collectionResults->payment_amount;
+            // $Sales['tpaid'] = $collectionResults->payment_amount;
+            $Sales['tpaid'] = $collectionResults->chk_amount + $collectionResults->other_amount;
             $Sales['due'] =  $tdue + $value->opening_blance - $returnDue;
             $Sales['marge_id'] =  $marge ;
             $Sales['store_id'] =  $value->store_id ; 

@@ -362,6 +362,7 @@ class Sales_model extends CI_Model
        $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$id",'left');
        $this->db->where('payments.customer_id', $id);
        $q =$this->db->get();
+       
         if( $q->num_rows() > 0 ) {
             return $q->result();
         }

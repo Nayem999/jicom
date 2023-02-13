@@ -74,7 +74,7 @@ $cid ='';
                         <tbody>
                           <tr>
                           <?php 
-                            if(!is_bool($cID))
+                            /* if(!is_bool($cID))
                             {
                                 foreach ($cID as $key => $cIDgetby) {
                                     $cIDgetby->customer_id;
@@ -99,7 +99,7 @@ $cid ='';
                                             <th class="col-xs-2">'.$tDue.'</th>
                                             <th class="col-xs-2"><a href='.site_url('customers/customer_laser').'/'.$cids.' target="_blank">Report</a></th>';
                                 } } 
-                            }
+                            } */
                             
                             ?>
 

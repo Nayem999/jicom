@@ -2238,9 +2238,9 @@ class Reports extends MY_Controller
         $cID = NULL; 
 
         $this->data['recivabl'] = $this->reports_model->recablelist($cID);  
-        $customer = $this->reports_model->recablelist($cID); 
-        $this->data['tDue'] = $customer[0]['due']; 
-        $this->data['cID'] = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
+        // $customer = $this->reports_model->recablelist($cID); 
+        // $this->data['tDue'] = $customer[0]['due']; 
+        // $this->data['cID'] = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
         $this->data['page_title'] = 'Account Receivable';        
         $bc = array( array( 
             'link' => '#',
@@ -2262,9 +2262,9 @@ class Reports extends MY_Controller
         $cID = NULL; 
 
         $recivabl = $this->reports_model->recablelist($cID);  
-        $customer = $this->reports_model->recablelist($cID); 
-        $tDue = $customer[0]['due']; 
-        $cID = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
+        // $customer = $this->reports_model->recablelist($cID); 
+        // $tDue = $customer[0]['due']; 
+        // $cID = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
        
         $fileName = "account_receivable_" . date('Y-m-d_h_i_s') . ".xls"; 			
 		$fields = array('Customer Name', 'Store Name', 'Grand total', 'Paid', 'Balance');
