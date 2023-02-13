@@ -256,7 +256,7 @@ if ($modal) {
                 $i =0;
                 $tax_summary = array();
                 $countItem  =  sizeof($rows);
-
+                $qnty_type=array(1=>"Bucket",2=>"Carton",3=>"Bag 10",4=>"Bag 25");
                 if($countItem ==1){
                    $rowClass = 'class="row-item1"'; 
                 }else{

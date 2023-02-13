@@ -248,7 +248,7 @@ if ($modal) {
                 <?php
                 $i =0;
                 $tax_summary = array();
-                $qnty_type=array(1=>"Bucket",2=>"Carton",3=>"Bag");
+                $qnty_type=array(1=>"Bucket",2=>"Carton",3=>"Bag 10",4=>"Bag 25");
                 $warranty_year='';
                 foreach ($rows as $row) {
                     $sequence = $this->site->getWhereDataByElement('pro_sequence','pro_id','sales_id',$row->product_id,$row->sale_id); 

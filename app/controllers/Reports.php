@@ -2237,7 +2237,7 @@ class Reports extends MY_Controller
         else
         $cID = NULL; 
 
-        $this->data['recivabl'] = $this->reports_model->recablelist();  
+        $this->data['recivabl'] = $this->reports_model->recablelist($cID);  
         $customer = $this->reports_model->recablelist($cID); 
         $this->data['tDue'] = $customer[0]['due']; 
         $this->data['cID'] = $this->site->findMergeIdbycp('customer_id',$this->input->post('customer'));
