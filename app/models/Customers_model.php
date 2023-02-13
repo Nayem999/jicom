@@ -184,7 +184,7 @@ public function getCustomerLaserByCid($cusromer){
         $this->db->join("today_collect_id","DESC");    
         $q = $this->db->get_where('today_collection', array('customer_id' => $cusromer,)); */
 
-        $this->db->select("today_collection.today_collect_id, today_collection.payment_date as datetime, if(paid_by='Cheque' && type='Approved',payments.amount,0) as chk_amount, if(paid_by='TT' || paid_by='cash', payments.amount,0) as other_amount");  
+        $this->db->select("today_collection.today_collect_id, today_collection.payment_date as datetime, if(paid_by='Cheque' && type='Approved',payments.amount,0) as chk_amount, if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0) as other_amount");  
         $this->db->join("payments","payments.collect_id=today_collection.today_collect_id and payments.customer_id=$cusromer");    
         $this->db->join("bank_pending","bank_pending.collection_id=today_collection.today_collect_id and bank_pending.customer_id=$cusromer and bank_pending.payment_type=1 and bank_pending.type='Approved'",'left');    
         $this->db->group_by('today_collection.today_collect_id,today_collection.payment_date'); 

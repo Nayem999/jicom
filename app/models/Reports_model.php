@@ -641,7 +641,7 @@ class Reports_model extends CI_Model
             $this->db->from('today_collection'); 
             $this->db->where('customer_id',$customer_id); */    
            
-            $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash', payments.amount,0)) as other_amount ");
+            $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
             $this->db->from('payments');
             $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$customer_id and bank_pending.payment_type=1",'left');
             $this->db->where('payments.customer_id', $customer_id);
@@ -1312,6 +1312,39 @@ class Reports_model extends CI_Model
 
         $query = $this->db->get();
         return $query->result(); 
+    }
+
+    public function cashCollectionReport($start_date=NULL,$end_date=NULL,$store_id=0){
+
+        $this->db->select('sum(tec_payments.amount) as cash_amount'); 
+        $this->db->from('sales');  
+		$this->db->join('payments','sales.id=payments.sale_id'); 
+        $this->db->where('sales.paid_by', 'cash');
+        $this->db->where('sales.payment_status !=', 3);
+
+        if($start_date && $end_date){ 
+            $this->db->where('sales.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('sales.date <=', $end_date.' 23:59:59');   
+        } 
+        if($store_id){$this->db->where('sales.store_id', $store_id); }
+
+        $query = $this->db->get()->row(); 
+        return $query; 
+    }
+
+    public function expensesCollectionReport($start_date=NULL,$end_date=NULL,$store_id=0){
+
+        $this->db->select('sum(tec_expenses.amount) as expense_amount'); 
+        $this->db->from('expenses');  
+
+        if($start_date && $end_date){ 
+            $this->db->where('expenses.date >=', $start_date.' 00:00:00'); 
+            $this->db->where('expenses.date <=', $end_date.' 23:59:59');   
+        } 
+        if($store_id){$this->db->where('expenses.store_id', $store_id); }
+
+        $query = $this->db->get()->row(); 
+        return $query; 
     }
     
     public function getAllBank()

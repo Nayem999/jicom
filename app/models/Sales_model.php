@@ -357,7 +357,7 @@ class Sales_model extends CI_Model
     }
 
     public function getCustomerAmountWithBankApproved($id) {
-       $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash', payments.amount,0)) as other_amount ");
+       $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
        $this->db->from('payments');
        $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$id",'left');
        $this->db->where('payments.customer_id', $id);

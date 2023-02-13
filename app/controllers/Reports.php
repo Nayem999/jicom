@@ -819,6 +819,8 @@ class Reports extends MY_Controller
         $store_id = $this->input->post('store_id') ? $this->input->post('store_id') : 0;  
 
         $this->data['creditCollection'] = $this->reports_model->creditCollectionReport($start_date,$end_date,$store_id); 
+        $this->data['cashCollection'] = $this->reports_model->cashCollectionReport($start_date,$end_date,$store_id); 
+        $this->data['expensesCollection'] = $this->reports_model->expensesCollectionReport($start_date,$end_date,$store_id); 
 
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
@@ -840,6 +842,8 @@ class Reports extends MY_Controller
         $store_id = $data_arr[2] ? $data_arr[2] : 0; 
 
         $creditCollection = $this->reports_model->creditCollectionReport($start_date,$end_date,$store_id); 
+        $cashCollection = $this->reports_model->cashCollectionReport($start_date,$end_date,$store_id); 
+        $expensesCollection = $this->reports_model->expensesCollectionReport($start_date,$end_date,$store_id); 
 
 
         $fileName = "credit_collection_report" . date('Y-m-d_h_i_s') . ".xls"; 
@@ -858,15 +862,52 @@ class Reports extends MY_Controller
         $fields = array('SL','Date','V. No','Customer','Cash','Chq/TT','Bank');
         $excelData .= implode("\t", array_values($fields)) . "\n"; 
 
-        $i=1;$total_cash=$total_bank=0;
-        if(count($creditCollection) > 0){ 
+        $i=1; $total_cash = $total_bank = $total_bank_tt = $cash_amount = $expense_amount = 0;
+        if(count($creditCollection) > 0){   
+
             foreach($creditCollection as $key=>$row){ 
                 $lineData = array($i++,date("d-M-Y",strtotime($row->payments_date)),$row->collection_id,$row->customers_name,($row->paid_by == "cash")? $row->payment_amount:0 , ($row->paid_by == "cash")? 0:$row->payment_amount , $row->bank_name );
-                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
                 if($row->paid_by == "cash"){ $total_cash+=$row->payment_amount; }else{ $total_bank+=$row->payment_amount; }
+                if($row->paid_by == "TT"){ $total_bank_tt+=$row->payment_amount; }
+
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             } 
 
             $lineData = array('','','','Grand Total',$total_cash,$total_bank,'');
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+
+            $cash_amount = $expense_amount = $cah_bill = 0;
+            if(isset($cashCollection->cash_amount)){ $cash_amount=$cashCollection->cash_amount; }
+            $sub_total= $total_cash+$total_bank+$cash_amount;
+            if(isset($expensesCollection->expense_amount)){ $expense_amount=$expensesCollection->expense_amount; }
+            $cah_bill = $sub_total - $total_bank_tt;
+            $gand_total = $cah_bill - $expense_amount;
+
+
+            $lineData = array('','' );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','Cash Sale', $cash_amount );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','(+) CR Col', $total_cash+$total_bank );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','Sub Total', $sub_total );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','(-) TT', $total_bank_tt );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','CASH BILL', $cah_bill );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            
+            $lineData = array('','EXPENSES', $expense_amount );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','GRAND TOTAL', $gand_total );
             $excelData .= implode("\t", array_values($lineData)) . "\n"; 
             
         }else{ 

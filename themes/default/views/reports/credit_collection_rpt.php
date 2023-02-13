@@ -47,7 +47,7 @@ if (isset($_POST['start_date'])) {
                         <?= form_close(); ?>
                     </div>
                     <div class="table-responsive" id="print_content">
-                        <div class="col-xs-12">
+                        <div class="col-xs-9">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -62,7 +62,7 @@ if (isset($_POST['start_date'])) {
                                 </thead>
                                 <tbody>
                                     <?php 
-                                        $i=1;$total_cash=$total_bank=0;
+                                        $i=1;$total_cash=$total_bank=$total_bank_tt=0; $ck='';
                                         foreach($creditCollection as $key=>$row)
                                         {
                                             ?>
@@ -92,6 +92,10 @@ if (isset($_POST['start_date'])) {
                                                     <td><?=$row->bank_name;?></td>
                                                 </tr>
                                             <?php
+                                            if($row->paid_by == "TT")
+                                            {
+                                                $total_bank_tt+=$row->payment_amount;
+                                            }
 
                                         }
                                     ?>
@@ -106,6 +110,49 @@ if (isset($_POST['start_date'])) {
                                         <th class="text-center"></th>
                                     </tr>
                                 </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-xs-3">
+                            <br>
+                            <table class="table table-bordered">
+                                <?php
+                                    $cash_amount = $expense_amount = $cah_bill = 0;
+                                    if(isset($cashCollection->cash_amount)){ $cash_amount=$cashCollection->cash_amount; }
+                                    $sub_total= $total_cash+$total_bank+$cash_amount;
+                                    if(isset($expensesCollection->expense_amount)){ $expense_amount=$expensesCollection->expense_amount; }
+                                    $cah_bill = $sub_total - $total_bank_tt;
+                                    $gand_total = $cah_bill - $expense_amount;
+                                ?>
+                                <tbody>
+                                        <tr>
+                                            <td>Cash Sale</td>
+                                            <td><?php echo $cash_amount;?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>(+) CR Col</td>
+                                            <td><?php echo $total_cash+$total_bank;?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sub Total</td>
+                                            <td><?php echo $sub_total;?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>(-) TT</td>
+                                            <td><?php echo $total_bank_tt;?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>CASH BILL</td>
+                                            <td><?php echo $cah_bill; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>EXPENSES</td>
+                                            <td><?php echo $expense_amount;?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>GRAND TOTAL</td>
+                                            <td><?php echo $gand_total;?></td>
+                                        </tr>
+                                </tbody>
                             </table>
                         </div>
                         <div class="clearfix"></div>
