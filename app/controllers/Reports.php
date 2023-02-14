@@ -1073,6 +1073,8 @@ class Reports extends MY_Controller
         $this->data['sale'] = $this->reports_model->saleReport($start_date,$end_date);
         $this->data['saleItem'] = $this->reports_model->saleItemReport($start_date,$end_date); 
         $this->data['saleCollection'] = $this->reports_model->saleCollectionReport($start_date,$end_date); 
+        $this->data['cashCollection'] = $this->reports_model->cashCollectionReport($start_date,$end_date); 
+        $this->data['expensesCollection'] = $this->reports_model->expensesCollectionReport($start_date,$end_date); 
 
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
@@ -1080,7 +1082,7 @@ class Reports extends MY_Controller
         $this->data['results'] = $results; 
         $this->data['page_title'] = $this->lang->line("daily_sales");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('daily_sales')));
-        $meta = array('page_title' => lang('daily_sales'), 'bc' => $bc);
+        $meta = array('page_title' => lang('Master Sales Report'), 'bc' => $bc);
         $this->page_construct('reports/sales', $this->data, $meta);
     }
 
@@ -1153,6 +1155,8 @@ class Reports extends MY_Controller
         $sale = $this->reports_model->saleReport($start_date,$end_date);
         $saleItem = $this->reports_model->saleItemReport($start_date,$end_date); 
         $saleCollection = $this->reports_model->saleCollectionReport($start_date,$end_date); 
+        $cashCollection = $this->reports_model->cashCollectionReport($start_date,$end_date); 
+        $expensesCollection = $this->reports_model->expensesCollectionReport($start_date,$end_date); 
 
 
         $salesItemQnty = $productArr = $storeArr = $cash_sale = $credit_sale = $cash_collection = $bank_collection = $chkArr = $chkArr2 = $chkArr3 = $chkArr4 = $chkArr5 = $total_item_qty = array();
@@ -1213,7 +1217,7 @@ class Reports extends MY_Controller
             }
         }
 
-        
+        $collection_arr=array();$cr_collection=0;$cheque_collection=0;
         if ($saleCollection) {
             foreach ($saleCollection as $key => $result) {
                 if($result->paid_by=='cash'){
@@ -1232,6 +1236,24 @@ class Reports extends MY_Controller
                         $chkArr5[]=$result->store_id;
                         $bank_collection[$result->store_id] = $result->payment_amount;
                     }
+                }
+
+                $collection_arr[$result->collection_id]['customer_name'] = $result->cname;
+                $collection_arr[$result->collection_id]['amount'] = $result->payment_amount;
+                $collection_arr[$result->collection_id]['bank_name'] = $result->bank_name;
+
+                if($result->sales_id > 0)
+                {
+
+                }
+                else
+                {
+                    $cr_collection += $result->payment_amount;
+                }
+
+                if($result->paid_by=='Cheque')
+                {
+                    $cheque_collection+=$result->payment_amount;
                 }
             }
         }
@@ -1302,6 +1324,48 @@ class Reports extends MY_Controller
                 array_push($lineData,$total_item_qty[$key]);
             }
             array_push($lineData,$total_cash_sale,$total_credit_sale,$total_cash_collection,$total_bank_collection);
+            $excelData .= implode("\t", array_values($lineData)) . "\n\n"; 
+
+            $lineData=array("SL","Customer Name","Amount","Bank Name");
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $i=1;$total_collection=0;
+            foreach($collection_arr as $key=>$val)
+            {
+                $lineData=array($i++,$val['customer_name'],$val['amount'],$val['bank_name']);
+                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+                $total_collection+=$val['amount'];
+            }
+
+            $lineData = array('','Total', $total_collection );
+            $excelData .= implode("\t", array_values($lineData)) . "\n\n";
+
+            $cash_amount = $expense_amount = $cah_bill = 0;
+            if(isset($cashCollection->cash_amount)){ $cash_amount=$cashCollection->cash_amount; }
+            $sub_total= $cr_collection+$cash_amount;
+            if(isset($expensesCollection->expense_amount)){ $expense_amount=$expensesCollection->expense_amount; }
+            $cash_banlance = $sub_total - $cheque_collection;
+            $gand_total = $cash_banlance - $expense_amount;
+
+            $lineData = array('','Cash Sale', $cash_amount );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','(+) CR Col', $cr_collection );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','Sub Total', $sub_total );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','(-) Cheq/DD', $cheque_collection );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','Today Cash Balance', $cash_banlance );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+            
+            $lineData = array('','EXPENSES', $expense_amount );
+            $excelData .= implode("\t", array_values($lineData)) . "\n"; 
+
+            $lineData = array('','GRAND TOTAL', $gand_total );
             $excelData .= implode("\t", array_values($lineData)) . "\n"; 
 
         }else{ 

@@ -90,9 +90,10 @@
                                 }
                             }
 
-                            
+                            $collection_arr=array();$cr_collection=0;$cheque_collection=0;
                             if ($saleCollection) {
                                 foreach ($saleCollection as $key => $result) {
+   
                                     $storeArr[$result->store_id] = $result->store_name;
                                     if($result->paid_by=='cash'){
                                         if (in_array($result->store_id, $chkArr4)) {
@@ -111,6 +112,25 @@
                                             $bank_collection[$result->store_id] = $result->payment_amount;
                                         }
                                     }
+                                    
+                                    $collection_arr[$result->collection_id]['customer_name'] = $result->cname;
+                                    $collection_arr[$result->collection_id]['amount'] = $result->payment_amount;
+                                    $collection_arr[$result->collection_id]['bank_name'] = $result->bank_name;
+
+                                    if($result->sales_id > 0)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        $cr_collection += $result->payment_amount;
+                                    }
+
+                                    if($result->paid_by=='Cheque')
+                                    {
+                                        $cheque_collection+=$result->payment_amount;
+                                    }
+
                                 }
                             }
                             // print_r($cash_sale);print_r($credit_sale);die;
@@ -210,6 +230,88 @@
                                     </tr>
                                 </tfoot>
                             </table>
+
+                            <div class="table-responsive" id="print_content">
+                                <div class="col-xs-9">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>SL</th>
+                                                <th>Customer Name</th>
+                                                <th>Amount</th>
+                                                <th>Bank Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                $i=1;$total_collection=0;
+                                                foreach($collection_arr as $key=>$val)
+                                                {
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $i++;?></td>
+                                                            <td><?php echo $val['customer_name'];?></td>
+                                                            <td><?php echo $val['amount'];?></td>
+                                                            <td><?php echo $val['bank_name'];?></td>
+                                                        </tr>
+                                                    <?php
+                                                    $total_collection+=$val['amount'];
+                                                }
+                                            ?>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-center">Total:</th>
+                                                <th class="text-center"><?php echo $total_collection; ?></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="col-xs-3">
+                                    <br>
+                                    <table class="table table-bordered">
+                                        <?php
+                                            $cash_amount = $expense_amount = $cah_bill = 0;
+                                            if(isset($cashCollection->cash_amount)){ $cash_amount=$cashCollection->cash_amount; }
+                                            $sub_total= $cr_collection+$cash_amount;
+                                            if(isset($expensesCollection->expense_amount)){ $expense_amount=$expensesCollection->expense_amount; }
+                                            $cash_banlance = $sub_total - $cheque_collection;
+                                            $gand_total = $cash_banlance - $expense_amount;
+                                        ?>
+                                        <tbody>
+                                                <tr>
+                                                    <td>Cash Sale</td>
+                                                    <td><?php echo $cash_amount;?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>(+) CR Col</td>
+                                                    <td><?php echo $cr_collection;?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sub Total</td>
+                                                    <td><?php echo $sub_total;?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>(-) Cheq/DD</td>
+                                                    <td><?php echo $cheque_collection;?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Today Cash Balance</td>
+                                                    <td><?php echo $cash_banlance; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>EXPENSES</td>
+                                                    <td><?php echo $expense_amount;?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>GRAND TOTAL</td>
+                                                    <td><?php echo $gand_total;?></td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
