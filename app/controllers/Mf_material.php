@@ -31,9 +31,9 @@ class Mf_material extends MY_Controller
     function index()
     {
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-    	$this->data['page_title'] = lang('materials');
-    	$bc = array(array('link' => '#', 'page' => lang('materials')));
-    	$meta = array('page_title' => lang('materials'), 'bc' => $bc);
+    	$this->data['page_title'] = lang('material_list');
+    	$bc = array(array('link' => '#', 'page' => lang('material_list')));
+    	$meta = array('page_title' => lang('material_list'), 'bc' => $bc);
     	$this->page_construct('mf_material/index', $this->data, $meta);
     }
 
