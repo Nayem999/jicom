@@ -632,8 +632,14 @@
                   <?= lang('Raw Material Stock'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
-                <li id="mf_material_stock_stock_list"><a href="<?= site_url('mf_material_stock/stock_list'); ?>"><i class="fa fa-circle-o"></i>
+                <li id="mf_material_stock_index"><a href="<?= site_url('mf_material_stock'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('stock_list'); ?></a>
+                </li>
+                <li id="mf_material_stock_stock_adjust"><a href="<?= site_url('mf_material_stock/stock_adjust'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('stock_adjust'); ?></a>
+                </li>
+                <li id="mf_material_stock_adjust_log_list"><a href="<?= site_url('mf_material_stock/adjust_log_list'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('adjust_log'); ?></a>
                 </li>
                 <li class="divider"></li>
               </ul>

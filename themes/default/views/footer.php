@@ -188,6 +188,11 @@
 	 var site_url = "<?php echo site_url('bank/approveCheque'); ?>/"+id; //append id at end
 	 $("#paySalary").load(site_url);
 	}
+
+	function stockAdjust(id) { 		 
+		var site_url = "<?php echo site_url('mf_material_stock/adjustStock'); ?>/"+id; //append id at end
+		$("#paySalary").load(site_url);
+	}
 	function loan_cheque_approve(id) {         
      var site_url = "<?php echo site_url('bank/loan_cheque_approve'); ?>/"+id; //append id at end
      $("#paySalary").load(site_url);

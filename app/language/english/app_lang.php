@@ -541,3 +541,5 @@ $lang['delete_material_unit']               = "Delete Material Unit";
 $lang['add_material_unit']                  = "Add Raw Material Unit";
 $lang['material_unit_name']                 = "MaterialUnit Name";
 $lang['alert_x_unit']                       = "You are going to delete Unit, please click ok to delete.";
+$lang['stock_adjust']                       = "Stock Adjustment";
+$lang['adjust_log']                         = "Adjustment Log";

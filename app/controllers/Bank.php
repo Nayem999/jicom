@@ -888,6 +888,7 @@ class Bank extends MY_Controller
 		$this->data['id'] = $id;
 		$this->load->view($this->theme.'bank/approveCheque', $this->data,$id);	
 	}
+
 	public function chequeApproed($id){
 		$bank_id = $this->input->post('bank_id'); 
 		$info = $this->bank_model->getPendingChequeByID($id); 
@@ -1029,6 +1030,7 @@ class Bank extends MY_Controller
 		redirect('bank/pendingCheque'); 
 	
 	}
+	
 	public function loan_cheque_approve($id){
 		$this->data['info'] = $this->site->whereRow('bank_pending_loan', 'id', $id); 
 		$this->data['title'] = 'Change Cheque Status';

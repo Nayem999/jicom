@@ -90,7 +90,7 @@ class Mf_material extends MY_Controller
             if($this->input->is_ajax_request()) {
                 echo json_encode(array('status' => 'failed', 'msg' => validation_errors())); die();
             }
-
+			$this->data['all_uom'] = $this->mf_material_model->get_all_uom();
 			$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
     		$this->data['page_title'] = lang('add_material');
     		$bc = array(array('link' => site_url('mf_material'), 'page' => lang('materials')), array('link' => '#', 'page' => lang('add_material')));
@@ -131,6 +131,7 @@ class Mf_material extends MY_Controller
 
 			$this->data['material'] = $this->mf_material_model->getMaterialByID($id);
 			$this->data['categories'] = $this->site->getAllMfCategories(); 
+			$this->data['all_uom'] = $this->mf_material_model->get_all_uom();
 			$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
     		$this->data['page_title'] = lang('edit_material');
     		$bc = array(array('link' => site_url('mf_material'), 'page' => lang('materials')), array('link' => '#', 'page' => lang('edit_material')));

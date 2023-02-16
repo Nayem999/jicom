@@ -17,7 +17,14 @@
 						<div class="form-group">
 							<label class="control-label" for="uom_id"><?= lang('Unit','Unit'); ?> <span class="text-danger">*</span></label>
 	                        <?php
-								$uom_arr=array(''=>"Select UOM",1=>"PCS",2=>"KG",3=>"GM",4=>"LR",5=>"ML");
+								// $uom_arr=array(''=>"Select UOM",1=>"PCS",2=>"KG",3=>"GM",4=>"LR",5=>"ML");
+								$uom_arr[0] = lang("select")." ".lang("UOM");
+								if(is_array($all_uom))
+								{
+									foreach($all_uom as $uom_val) {
+										$uom_arr[$uom_val->id] = $uom_val->name;
+									}
+								}
 	                        ?>
 	                        <?= form_dropdown('uom_id', $uom_arr, set_value('uom_id'), 'class="form-control select2 tip" id="uom_id" required="required" style="width:100%;"'); ?> 
 						</div>

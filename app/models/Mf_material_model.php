@@ -109,4 +109,17 @@ class mf_material_model extends CI_Model
         }      
         return $results; 
     }
+
+    public function get_all_uom()
+    {
+        $this->db->order_by('id');
+        $q = $this->db->get('mf_unit');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 }
