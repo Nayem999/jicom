@@ -22,7 +22,7 @@
                                             <td><?=$result->material_name; ?></td>
                                             <td><?=$result->brand_name; ?></td>
                                             <td><?=$result->store_name; ?></td>
-                                            <td><?=$result->quantity; ?></td>
+                                            <td><?=$result->quantity.' '.$result->unit_name; ?></td>
                                             <td><a href='javascript:;' onClick="stockAdjust(<?=$result->id;?>)" title='Adjust' class='tip btn btn-primary btn-xs'><i class='fa fa-edit'></i></a></td>
                                         </tr>
                                         <?php

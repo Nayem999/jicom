@@ -24,7 +24,7 @@
                                             <td><?=$result->material_name; ?></td>
                                             <td><?=$result->brand_name; ?></td>
                                             <td><?=$result->store_name; ?></td>
-                                            <td><?=$result->quantity; ?></td>
+                                            <td><?=$result->quantity.' '.$result->unit_name; ?></td>
                                         </tr>
                                         <?php
                                     }

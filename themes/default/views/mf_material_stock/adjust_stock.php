@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-sm-1">:</div>
                         <div class="col-sm-7">
-                            <?php echo $matarial_info->quantity; ?>
+                            <?php echo $matarial_info->quantity.' '.$matarial_info->unit_name; ?>
                         </div>
                     </div>
                     <div class="row">
