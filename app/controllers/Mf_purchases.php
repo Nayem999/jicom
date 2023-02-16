@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class mf_purchases extends MY_Controller
+class Mf_purchases extends MY_Controller
 {
     
     function __construct() {
@@ -784,44 +784,5 @@ class mf_purchases extends MY_Controller
      }
     
     }
-
-
-    public function stock_list()  {
-        $this->data['matarial_list'] = $this->mf_purchases_model->getStockList();   
-
-        $this->data['page_title'] = $this->lang->line("stock_list");
-        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('stock_list')));
-        $meta = array('page_title' => lang('stock_list'), 'bc' => $bc);
-        $this->page_construct('mf_purchases/stock_list', $this->data, $meta);
-
-    }
-
-
-    function excel_stock_list()  {
-
-        $matarial_list = $this->mf_purchases_model->getStockList();  
-
-        $fileName = "raw_material_stock_list_" . date('Y-m-d_h_i_s') . ".xls"; 
-
-        $fields = array('Name','Brand','Store','Quantity');
-        $excelData = implode("\t", array_values($fields)) . "\n"; 
-
-        if(count($matarial_list) > 0){ 
-            foreach($matarial_list as $result){ 
-                $lineData=array($result->material_name,$result->brand_name,$result->store_name,$result->quantity);
-                $excelData .= implode("\t", array_values($lineData)) . "\n"; 
-            }            
-        }else{ 
-            $excelData .= 'No records found...'. "\n"; 
-        } 
-            
-        // Headers for download 
-        header("Content-Type: application/vnd.ms-excel"); 
-        header("Content-Disposition: attachment; filename=\"$fileName\""); 
-            
-        // Render excel data 
-        echo $excelData; 
-
-    }
-  
+ 
 }

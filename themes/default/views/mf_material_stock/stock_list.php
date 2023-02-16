@@ -42,9 +42,7 @@
 <script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/moment.min.js" type="text/javascript"></script>
 <script>
     $("#excelWindow").click(function() {
-        // var data = $("#start_date").val() + '_' + $("#end_date").val() + '_' + $("#store_id").val();
-        // var url = '<?= site_url('mf_purchases/excel_stock_list/'); ?>' + '/' + data;
-        var url = '<?= site_url('mf_purchases/excel_stock_list/'); ?>';
+        var url = '<?= site_url('mf_material_stock/excel_stock_list/'); ?>';
         location.replace(url);
     });
 </script>

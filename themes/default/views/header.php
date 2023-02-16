@@ -614,7 +614,6 @@
               </ul>
             </li>
 
-
             <li class="treeview mm_mf_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
                   <?= lang('Raw Material Purchases'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -625,7 +624,15 @@
                 <li id="mf_purchases_add"><a href="<?= site_url('mf_purchases/add'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('add_purchase'); ?></a>
                 </li>
-                <li id="mf_purchases_add"><a href="<?= site_url('mf_purchases/stock_list'); ?>"><i class="fa fa-circle-o"></i>
+                <li class="divider"></li>
+              </ul>
+            </li>
+
+            <li class="treeview mm_mf_material_stock"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('Raw Material Stock'); ?>
+                </span> <i class="fa fa-angle-left pull-right"></i> </a>
+              <ul class="treeview-menu">
+                <li id="mf_material_stock_stock_list"><a href="<?= site_url('mf_material_stock/stock_list'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('stock_list'); ?></a>
                 </li>
                 <li class="divider"></li>
