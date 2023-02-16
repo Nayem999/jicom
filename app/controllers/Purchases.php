@@ -131,10 +131,8 @@ class Purchases extends MY_Controller
             $this->db->dbprefix('suppliers') . ".name as cname , total, paid , deu , note, attachment", FALSE);
         
         $this->datatables->join('suppliers', 'suppliers.id=purchases.supplier_id');
-        $this->datatables->join('stores', 'stores.id=purchases.store_id'); 
-        
-        $this->datatables->from('purchases');
-        
+        $this->datatables->join('stores', 'stores.id=purchases.store_id');         
+        $this->datatables->from('purchases');        
         $this->datatables->group_by('purchases.id');
 
         if($data = $this->session->userdata('group_id')==1){

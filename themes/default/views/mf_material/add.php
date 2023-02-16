@@ -15,7 +15,15 @@
 						</div>
 
 						<div class="form-group">
-							<label class="control-label" for="category_id"><?= lang('From Category','From Category'); ?> <span class="text-danger">*</span></label>
+							<label class="control-label" for="uom_id"><?= lang('Unit','Unit'); ?> <span class="text-danger">*</span></label>
+	                        <?php
+								$uom_arr=array(''=>"Select UOM",1=>"PCS",2=>"KG",3=>"GM",4=>"LR",5=>"ML");
+	                        ?>
+	                        <?= form_dropdown('uom_id', $uom_arr, set_value('uom_id'), 'class="form-control select2 tip" id="uom_id" required="required" style="width:100%;"'); ?> 
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" for="category_id"><?= lang('Category','Category'); ?> <span class="text-danger">*</span></label>
 	                        <?php
 								$cr[0] = lang("select")." ".lang("Category");
 								if(is_array($categories))
@@ -25,7 +33,7 @@
 									}
 								}
 	                        ?>
-	                        <?= form_dropdown('category_id', $cr, set_value('category_id'), 'class="form-control select2 tip" id="from-category_id" required="required" style="width:100%;"'); ?> 
+	                        <?= form_dropdown('category_id', $cr, set_value('category_id'), 'class="form-control select2 tip" id="category_id" required="required" style="width:100%;"'); ?> 
 						</div>
 
 						<div class="form-group">

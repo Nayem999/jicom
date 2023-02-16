@@ -108,7 +108,7 @@
     <ul class="sidebar-menu"> 
       <li class="mm_welcome"><a href="<?= site_url(); ?>"><i class="fa fa-dashboard"></i> <span><?= lang('dashboard'); ?></span></a></li>
       <li class="divider"></li>
-      <li style="background: #2e742c;" ><a href=""><span><b><?= lang('OUT LATE'); ?></b></span></a></li>
+      <li style="background: #2e742c;" ><a href=""><span><b><?= lang('OUTLET'); ?></b></span></a></li>
       <li class="divider"></li>
       <li class="mm_pos"><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i> <span><?= lang('pos'); ?></span></a></li>
       <?php 
@@ -585,6 +585,20 @@
             <li id="mf_material_add"><a href="<?= site_url('mf_material/add'); ?>"><i class="fa fa-circle-o"></i>
               <?= lang('add_material'); ?>
               </a></li>
+          </ul>
+        </li>
+
+        <li class="treeview mm_mf_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
+          <?= lang('Raw Material Purchases'); ?>
+          </span> <i class="fa fa-angle-left pull-right"></i> </a>
+          <ul class="treeview-menu">
+            <li id="mf_purchases_index"><a href="<?= site_url('mf_purchases'); ?>"><i class="fa fa-circle-o"></i>
+              <?= lang('list_purchases'); ?></a>
+            </li>
+            <li id="mf_purchases_add"><a href="<?= site_url('mf_purchases/add'); ?>"><i class="fa fa-circle-o"></i>
+                <?= lang('add_purchase'); ?></a>
+              </li>
+            <li class="divider"></li>         
           </ul>
         </li>
       

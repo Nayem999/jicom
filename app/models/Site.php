@@ -99,6 +99,21 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getAllMfSuppliers($id=NULL) {
+        if($id){
+            $this->db->where('store_id', $id);
+        }
+        
+        $q = $this->db->get('mf_suppliers');
+        if($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
     public function getAllStores($id=0)
     {
         if($id){ $this->db->where('id',$id);}
@@ -157,6 +172,15 @@ class Site extends CI_Model
         $q = $this->db->get_where('products', array('id' => $id), 1);
         // echo $this->db->last_query();die;
         // echo "<pre>".print_r($q);die;
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+    public function getMaterialByID($id)
+    {
+        
+        $q = $this->db->get_where('mf_Material', array('id' => $id), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
