@@ -560,7 +560,6 @@
                   </a></li>
               </ul>
             </li>
-
             
             <li class="treeview mm_mf_unit"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('uom'); ?>
@@ -640,6 +639,20 @@
                 </li>
                 <li id="mf_material_stock_adjust_log_list"><a href="<?= site_url('mf_material_stock/adjust_log_list'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('adjust_log'); ?></a>
+                </li>
+                <li class="divider"></li>
+              </ul>
+            </li>
+
+            <li class="treeview mm_mf_recipe"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('recipe'); ?>
+                </span> <i class="fa fa-angle-left pull-right"></i> </a>
+              <ul class="treeview-menu">
+                <li id="mf_recipe_index"><a href="<?= site_url('mf_recipe'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('recipe_list'); ?></a>
+                </li>
+                <li id="mf_recipe_add"><a href="<?= site_url('mf_recipe/add'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('add_recipe'); ?></a>
                 </li>
                 <li class="divider"></li>
               </ul>
