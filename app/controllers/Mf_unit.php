@@ -125,8 +125,8 @@ class Mf_unit extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        if ($this->mf_unit_model->deleteCategory($id)) {
-            $this->session->set_flashdata('message', lang("category_deleted"));
+        if ($this->mf_unit_model->deleteUnit($id)) {
+            $this->session->set_flashdata('message', lang("Unit Deleted"));
             redirect('mf_unit');
         }
     }

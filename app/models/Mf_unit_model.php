@@ -22,8 +22,8 @@ class Mf_unit_model extends CI_Model
         return false;
     }
 
-    public function deleteCategory($id) {
-        if ($this->db->delete('mf_categories', array('id' => $id))) {
+    public function deleteUnit($id) {
+        if ($this->db->delete('mf_unit', array('id' => $id))) {
             return true;
         }
         return FALSE;
