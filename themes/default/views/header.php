@@ -562,15 +562,15 @@
             </li>
 
             
-            <li class="treeview mm_mf_material_unit"> <a href="#"> <i class="fa fa-folder"></i> <span>
-                  <?= lang('raw_material_unit'); ?>
+            <li class="treeview mm_mf_unit"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('uom'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
-                <li id="mf_material_unit_index"><a href="<?= site_url('mf_material_unit'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_material_unit'); ?>
+                <li id="mf_unit_index"><a href="<?= site_url('mf_unit'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('list_uom'); ?>
                   </a></li>
-                <li id="mf_material_unit_add"><a href="<?= site_url('mf_material_unit/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_material_unit'); ?>
+                <li id="mf_unit_add"><a href="<?= site_url('mf_unit/add'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('add_uom'); ?>
                   </a></li>
               </ul>
             </li>
@@ -589,7 +589,7 @@
             </li>
 
             <li class="treeview mm_mf_brands"> <a href="#"> <i class="fa fa-folder"></i> <span>
-                  <?= lang('Brands'); ?>
+                  <?= lang('Raw Material Brands'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
                 <li id="mf_brands_index"><a href="<?= site_url('mf_brands'); ?>"><i class="fa fa-circle-o"></i>

@@ -10,7 +10,7 @@
                 <div class="box-body">
                     <div class="col-lg-12">
 
-                        <?php echo form_open("mf_material_unit/add", 'class="validation"'); ?>
+                        <?php echo form_open("mf_unit/add", 'class="validation"'); ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="form-group">
-                            <?= form_submit('add_unit', lang('add_unit'), 'class="btn btn-primary"'); ?>
+                            <?= form_submit('add_uom', lang('add_uom'), 'class="btn btn-primary"'); ?>
                         </div>
 
                         <?php echo form_close();?>
