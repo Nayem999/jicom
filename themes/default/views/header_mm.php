@@ -41,7 +41,7 @@
               <li class="hidden-xs"><a href="<?= site_url('settings'); ?>"><i class="fa fa-cogs"></i></a></li>
             <?php
             } ?>
-            <!-- <li><a href="<?= site_url('pos/view_bill'); ?>" target="_blank"><i class="fa fa-file-text-o"></i></a></li> -->
+
             <li><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i></a></li>
             <?php
             if ($Admin && $qty_alert_num) { ?>
@@ -50,31 +50,7 @@
                   </span> </a> </li>
             <?php
             }
-            if ($suspended_sales) { ?>
-              <li class="dropdown notifications-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-bell-o"></i> <span class="label label-warning"><?= sizeof($suspended_sales); ?></span> </a>
-                <ul class="dropdown-menu">
-                  <li class="header">
-                    <?= lang('recent_suspended_sales'); ?>
-                  </li>
-                  <li>
-                    <ul class="menu">
-                      <li>
-                        <?php
-                        foreach ($suspended_sales as $ss) {
-                          echo '<a href="' . site_url('pos/?hold=' . $ss->id) . '" class="load_suspended">' . $this->tec->hrld($ss->date) . ' (' . $ss->customer_name . ')<br><strong>' . $ss->hold_ref . '</strong></a>';
-                        }
-                        ?>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="<?= site_url('sales/opened'); ?>">
-                      <?= lang('view_all'); ?>
-                    </a></li>
-                </ul>
-              </li>
-            <?php
-            } ?>
+            ?>
             <li class="dropdown user user-menu" style="padding-right:5px;">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="<?= base_url('uploads/avatars/thumbs/' . ($this->session->userdata('avatar') ? $this->session->userdata('avatar') : $this->session->userdata('gender') . '.png')) ?>" class="user-image" alt="Avatar" />
@@ -108,10 +84,18 @@
           <li class="divider"></li>
           <li style="background: #001B35;"><a href=""><span><b><?= lang('OUTLET'); ?></b></span></a></li>
           <li class="divider"></li>
-          <li class="mm_pos"><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i> <span><?= lang('pos'); ?></span></a></li>
           <?php
-          if (($Admin) || ($Manager)) {
-            ?>
+
+          // POS MODULE
+          if ($this->site->permission('pos')) {
+          ?>
+            <li class="mm_pos"><a href="<?= site_url('pos'); ?>"><i class="fa fa-th"></i> <span><?= lang('pos'); ?></span></a></li>
+          <?php
+          }
+
+          // PRODUCTS MODULE
+          if ($this->site->permission('products')) {
+          ?>
             <li class="treeview mm_products"> <a href="#"> <i class="fa fa-barcode"></i> <span>
                   <?= lang('products'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -133,7 +117,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // CATEGORY MODULE
+          if ($this->site->permission('categories')) {
+          ?>
             <li class="treeview mm_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('categories'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -152,7 +141,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // BRANDS MODULE
+          if ($this->site->permission('brands')) {
+          ?>
             <li class="treeview mm_brands"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('Brands'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -165,7 +159,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // SALES MODULE
+          if ($this->site->permission('sales')) {
+          ?>
             <li class="treeview mm_sales"> <a href="#"> <i class="fa fa-shopping-cart"></i> <span>
                   <?= lang('sales'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -179,7 +178,12 @@
                     <?= lang('list_opened_bills'); ?> </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // SALERETURN MODULE
+          if ($this->site->permission('salereturn')) {
+          ?>
             <li class="treeview mm_salereturn"> <a href="#"> <i class="fa fa-shopping-cart"></i> <span>
                   <?= lang('Sales_Return'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -190,15 +194,12 @@
                 <li id="sales_opened"><a href="javascript:;" onClick="salereturnPage('return')"><i class="fa fa-circle-o"></i> Add sales return</a></li>
               </ul>
             </li>
+          <?php
+          }
 
-            <!-- <li class="treeview mm_service"> <a href="#"><i class="fa fa-tree" aria-hidden="true"></i><span>Service</span> <i class="fa fa-angle-left pull-right"></i> </a>
-            <ul class="treeview-menu">
-              <li id="sales_index"><a href="<? // site_url('service'); 
-                                            ?>"><i class="fa fa-circle-o"></i> List Service</a></li>
-              <li id="sales_opened"><a href="javascript:;" onClick="servicePage('Service')"><i class="fa fa-circle-o"></i> Add Service</a></li>
-            </ul>
-            </li> -->
-
+          // PURCHASES MODULE
+          if ($this->site->permission('purchases')) {
+          ?>
             <li class="treeview mm_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
                   <?= lang('Product purchases'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -215,22 +216,28 @@
                 <li class="divider"></li>
               </ul>
             </li>
+          <?php
+          }
 
-            <?php
-            if ($Admin) { ?>
-              <!-- <li class="treeview mm_transfers"> <a href="#"> <i class="fa fa-folder"></i> <span>
-              <?= lang('Transfers'); ?>
-              </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu"> 
-                <li id="transfers_index"><a href="<?= site_url('transfers'); ?>"><i class="fa fa-circle-o"></i>
+          // TRANSFERS MODULE
+          if ($this->site->permission('transfers')) {
+          ?>
+            <li class="treeview mm_transfers"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('Transfers'); ?>
-                  </a></li> 
+                </span> <i class="fa fa-angle-left pull-right"></i> </a>
+              <ul class="treeview-menu">
+                <li id="transfers_index"><a href="<?= site_url('transfers'); ?>"><i class="fa fa-circle-o"></i>
+                    <?= lang('Transfers'); ?>
+                  </a></li>
                 <li id="transfers_add"><a href="javascript:;" onClick="productsTransfer()"><i class="fa fa-circle-o"></i> Add Transfers</a></li>
               </ul>
-            </li> -->
-            <?php
-            }
-            ?>
+            </li>
+          <?php
+          }
+
+          // SUPPLIERPAYMENT MODULE
+          if ($this->site->permission('supplierpayment')) {
+          ?>
             <li class="treeview mm_supplierpayment"> <a href="#"><i class="fa fa-user" aria-hidden="true"></i><span>
                   <?= lang('Supplier\'s payments'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -244,7 +251,12 @@
                 <li class="divider"></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // EXPENSES MODULE
+          if ($this->site->permission('expenses')) {
+          ?>
             <li class="treeview mm_expenses"> <a href="#"><i class="fa fa-delicious" aria-hidden="true"></i><span>
                   <?= lang('Expenses'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -263,6 +275,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
+
+          // COLLECTION MODULE
+          if ($this->site->permission('collection')) {
+          ?>
 
             <li class="treeview mm_collection"> <a href="#"><i class="fa fa-reply" aria-hidden="true"></i> <span>
                   <?= lang('Collections'); ?>
@@ -276,7 +294,13 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+
+          // REPORTS MODULE
+          if ($this->site->permission('reports')) {
+          ?>
             <li class="treeview mm_reports"> <a href="#"> <i class="fa fa-bar-chart-o"></i> <span>
                   <?= lang('reports'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -284,42 +308,20 @@
                 <li id="reports_daily_statement"><a href="<?= site_url('reports/daily_statement'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Daily Statement'); ?>
                   </a></li>
-                <!-- <li id="reports_hand_cash"><a href="<?= site_url('reports/hand_cash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Hand Cash'); ?>
-              </a></li> -->
                 <li id="reports_todayhighlight"><a href="<?= site_url('reports/todayhighlight'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Today\'s Highlights'); ?>
                   </a></li>
-                <!-- <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash'); ?></a></li>
-              <li id="reports_pettycashlist"><a href="<?= site_url('reports/pettycashlist'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash list'); ?> </a></li>-->
                 <li id="reports_payablelist"><a href="<?= site_url('reports/payablelist'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Account Payable'); ?></a></li>
                 <li id="reports_receivablelist"><a href="<?= site_url('reports/receivablelist'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Acount Receivable'); ?>
                   </a></li>
-                <!-- <li id="reports_netprofit"><a href="<?= site_url('reports/netprofit'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Net Profit'); ?>
-              </a></li> -->
                 <li id="reports_daily_sales"><a href="<?= site_url('reports/daily_sales'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('daily_sales'); ?>
                   </a></li>
-                <!-- <li id="reports_monthly_sales"><a href="<?= site_url('reports/monthly_sales'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('monthly_sales'); 
-              ?>
-              </a></li> -->
                 <li id="reports_index"><a href="<?= site_url('reports'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('sales_report'); ?>
                   </a></li>
-                <!-- <li class="divider"></li>
-            <li id="reports_payments"><a href="<?= site_url('reports/payments'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('payments_report'); ?>
-              </a></li> -->
-                <!-- <li class="divider"></li> -->
-                <!-- <li id="reports_registers"><a href="<?= site_url('reports/registers'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('registers_report'); ?>
-              </a></li> -->
                 <li class="divider"></li>
                 <li id="reports_top_products"><a href="<?= site_url('reports/top_products'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('top_products'); ?>
@@ -333,16 +335,12 @@
                 <li id="reports_productquery"><a href="<?= site_url('reports/productQuery'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Product Query'); ?>
                   </a></li>
-                <!-- <li id="reports_sequenceReport"><a href="<?= site_url('reports/sequenceReport'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Sequence Report'); ?>
-              </a></li> -->
                 <li id="reports_products_staff"><a href="<?= site_url('reports/products_staff'); ?>"><i class="fa fa-circle-o"> </i>Products list (Staff) </a></li>
                 <li id="reports_products_all"><a href="<?= site_url('reports/products_all'); ?>"><i class="fa fa-circle-o"> </i>Products list (All) </a></li>
                 <li id="reports_product_stock"><a href="<?= site_url('reports/product_stock'); ?>"><i class="fa fa-circle-o"> </i>Products Stock </a></li>
                 <li id="reports_store_product_stock"><a href="<?= site_url('reports/store_product_stock'); ?>"><i class="fa fa-circle-o"> </i>Store Stock Product </a></li>
                 <li id="reports_invoiceprofit"><a href="<?= site_url('reports/invoiceProfit'); ?>"><i class="fa fa-circle-o"> </i>Invoice Profit</a></li>
                 <li id="reports_salaryreport"><a href="<?= site_url('reports/salaryReport'); ?>"><i class="fa fa-circle-o"> </i>Salary Report</a></li>
-                <!-- <li id="reports_warrentyReport"><a href="<?= site_url('reports/warrentyReport'); ?>"><i class="fa fa-circle-o"> </i>Warranty Report</a></li> -->
                 <li id="reports_expenses_rpt"><a href="<?= site_url('reports/expenses_rpt'); ?>"><i class="fa fa-circle-o"> </i>Expenses Report</a></li>
                 <li id="reports_credit_collection_rpt"><a href="<?= site_url('reports/credit_collection_rpt'); ?>"><i class="fa fa-circle-o"> </i>Credit Collection</a></li>
                 <li id="reports_aging_rpt"><a href="<?= site_url('reports/aging_rpt'); ?>"><i class="fa fa-circle-o"> </i>Aging Report</a></li>
@@ -352,79 +350,13 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
-            <!--<li class="treeview mm_quotation"> <a href="#"><i class="fa fa-comment"></i>
-           <span>
-            <? // lang('Sms Corner'); 
-            ?>
-           </span> <i class="fa fa-angle-left pull-right"></i> </a>
-            <ul class="treeview-menu">
-            <li id="smscorner_paymentList"><a href="<?= site_url('smscorner/paymentList'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Supplier Payments'); 
-              ?>
-              </a></li>
-              <li id="smscorner_receivablelist"><a href="<?= site_url('smscorner/receivablelist'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Customer Payment'); 
-              ?>
-              </a></li> 
-              <li id="smscorner_history"><a href="<?= site_url('smscorner/history'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Sms History'); 
-              ?>
-              </a></li> 
-          </ul>
-        </li>
-        <li class="treeview mm_quotation"> <a href="#"><i class="fa fa-exchange"></i>
-           <span>
-            <? // lang('Quotation'); 
-            ?>
-           </span> <i class="fa fa-angle-left pull-right"></i> </a>
-            <ul class="treeview-menu">
-            <li id="quotation_index"><a href="<?= site_url('quotation'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Quotation list'); 
-              ?>
-              </a></li>
-              <li id="quotation_addQuotation"><a href="<?= site_url('quotation/addQuotation'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Add Quotation'); 
-              ?>
-              </a></li> 
-          </ul>
-        </li>
-        <li class="treeview mm_merge"> <a href="#"><i class="fa fa-exchange"></i>
-           <span>
-            <? // lang('Merge'); 
-            ?>
-           </span> <i class="fa fa-angle-left pull-right"></i> </a>
-            <ul class="treeview-menu">
-            <li id="merge_index"><a href="<?= site_url('merge'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Merge list'); 
-              ?>
-              </a></li>
-              <li id="merge_add_merge"><a href="<?= site_url('merge/add_merge'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Add merge'); 
-              ?>
-              </a></li>
-            <li id="merge_laser"><a href="<?= site_url('merge/laser'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('Laser list'); 
-              ?>
-              </a></li>
-          </ul>
-        </li>
-         <li class="treeview mm_gift_cards"> <a href="#"> <i class="fa fa-credit-card"></i> <span>
-          <? // lang('gift_cards'); 
+
+          // BANK MODULE
+          if ($this->site->permission('bank')) {
           ?>
-          </span> <i class="fa fa-angle-left pull-right"></i> </a>
-          <ul class="treeview-menu">
-            <li id="gift_cards_index"><a href="<?= site_url('gift_cards'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('list_gift_cards'); 
-              ?>
-              </a></li>
-            <li id="gift_cards_add"><a href="<?= site_url('gift_cards/add'); ?>"><i class="fa fa-circle-o"></i>
-              <? // lang('add_gift_card'); 
-              ?>
-              </a></li>
-          </ul>
-        </li> -->
-
             <li class="treeview mm_bank"> <a href="#"><i class="fa fa-university" aria-hidden="true"></i>
                 <span>Bank Account</span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
@@ -432,87 +364,69 @@
                 <li id="bank_add"><a href="<?= site_url('bank/add'); ?>"><i class="fa fa-circle-o"></i>New Bank Account</a></li>
                 <li id="bank_pendingCheque"><a href="<?= site_url('bank/pendingCheque'); ?>"><i class="fa fa-circle-o"></i>Peding Cheque</a></li>
                 <li id="bank_approved_cheque"><a href="<?= site_url('bank/approved_cheque'); ?>"><i class="fa fa-circle-o"></i>Approved Cheque</a> </li>
-                <!--<li id="bank_pending_loan"><a href="<?= site_url('bank/pending_loan'); ?>"><i class="fa fa-circle-o"></i>Bank Loan</a></li>
-            <li id="bank_pending_donations"><a href="<?= site_url('bank/pending_donations'); ?>"><i class="fa fa-circle-o"></i>Bank Pending Donations </a></li>
-            <li id="bank_pending_salary"><a href="<?= site_url('bank/pending_salary'); ?>"><i class="fa fa-circle-o"></i>Bank Pending salary </a></li>
-            <li id="bank_pending_expenses"><a href="<?= site_url('bank/pending_expenses'); ?>"><i class="fa fa-circle-o"></i>Bank Pending expenses </a></li>-->
               </ul>
             </li>
+          <?php
+          }
 
-            <!--<li class="treeview mm_loan"> <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>
-          <span>Loan Module</span> <i class="fa fa-angle-left pull-right"></i> </a>
-          <ul class="treeview-menu">  
-            <li id="loan_add_loaner"><a href="<?= site_url('loan/add_loaner'); ?>"><i class="fa fa-circle-o"></i>Add Loaner</a></li>
-            <li id="loan_index"><a href="<?= site_url('loan'); ?>"><i class="fa fa-circle-o"></i>List Loaner</a></li>  
-            <li id="loan_pay_loan"><a href="<?= site_url('loan/pay_loan'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Pay Loan'); ?>
-            </li>
-            <li id="loan_add_loan"><a href="<?= site_url('loan/add_loan'); ?>"><i class="fa fa-circle-o"></i>Receive Loan</a>
-            </li> 
-            <li id="loan_loan_report"><a href="<?= site_url('loan/loan_report'); ?>"><i class="fa fa-circle-o"></i>Loaner Report </a>
-            </li> 
-            <li id="loan_list_loan"><a href="<?= site_url('loan/list_loan'); ?>"><i class="fa fa-circle-o"></i>All Loan Transcation</a>
-            </li>
-          </ul>
-        </li>
-        <li class="treeview mm_donations"> <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>
-          <span>Donations Module</span> <i class="fa fa-angle-left pull-right"></i> </a>
-          <ul class="treeview-menu">  
-            <li id="donations_add"><a href="<?= site_url('donations/add'); ?>"><i class="fa fa-circle-o"></i>Add Persons or Organizations</a></li>
-            <li id="donations_index"><a href="<?= site_url('donations'); ?>"><i class="fa fa-circle-o"></i>Persons or Organizations List</a></li>  
-            <li id="donations_pay"><a href="<?= site_url('donations/pay'); ?>"><i class="fa fa-circle-o"></i> Pay</a> </li>   
-            <li id="donations_pay_list"><a href="<?= site_url('donations/pay_list'); ?>"><i class="fa fa-circle-o"></i>Pay List</a>
-            </li>
-          </ul>
-        </li>
-        <li class="treeview mm_attachment"> <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>
-          <span>Attachment Module</span> <i class="fa fa-angle-left pull-right"></i> </a>
-          <ul class="treeview-menu">  
-            <li id="attachment_add_person"><a href="<?= site_url('attachment/add_person'); ?>"><i class="fa fa-circle-o"></i>Add Name</a></li>
-            <li id="attachment_index"><a href="<?= site_url('attachment'); ?>"><i class="fa fa-circle-o"></i>Name List</a></li> 
-            <li id="attachment_add_category"><a href="<?= site_url('attachment/add_category'); ?>"><i class="fa fa-circle-o"></i>Add Note Category</a></li>
-            <li id="attachment_category"><a href="<?= site_url('attachment/category'); ?>"><i class="fa fa-circle-o"></i>Note Category List</a></li>  
-            <li id="attachment_docs"><a href="<?= site_url('attachment/docs'); ?>"><i class="fa fa-circle-o"></i>Note Recived/Send</a> </li>   
-            <li id="attachment_docs_list"><a href="<?= site_url('attachment/docs_list'); ?>"><i class="fa fa-circle-o"></i>Note List</a>
-            </li>
-            <li id="attachment_docs_log_list"><a href="<?= site_url('attachment/docs_log_list'); ?>"><i class="fa fa-circle-o"></i>Note log List</a>
-            </li>
-          </ul>
-        </li>-->
-            <!-- sahin -->
-
+          // People MODULE
+          if ($this->site->permission('user') || $this->site->permission('employee') || $this->site->permission('customers') || $this->site->permission('suppliers')) {
+          ?>
             <li class="treeview mm_auth mm_customers mm_suppliers"> <a href="#"> <i class="fa fa-users"></i> <span>
                   <?= lang('people'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
-
               <ul class="treeview-menu">
-                <?php if ($Admin) { ?>
+                <?php
+                if ($this->site->permission('user')) {
+                ?>
                   <li id="auth_users"><a href="<?= site_url('users'); ?>"><i class="fa fa-circle-o"></i>
                       <?= lang('list_users'); ?>
                     </a></li>
                   <li id="auth_add"><a href="<?= site_url('users/add'); ?>"><i class="fa fa-circle-o"></i>
                       <?= lang('add_user'); ?>
                     </a></li>
-                <?php } ?>
-                <li class="divider"></li>
-                <li id="auth_users"><a href="<?= site_url('employee'); ?>"><i class="fa fa-circle-o"></i> List Employee</a></li>
-                <li id="auth_add"><a href="<?= site_url('employee/add'); ?>"><i class="fa fa-circle-o"></i> Add Employee </a></li>
-                <li class="divider"></li>
-                <li id="customers_index"><a href="<?= site_url('customers'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_customers'); ?>
-                  </a></li>
-                <li id="customers_add"><a href="<?= site_url('customers/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_customer'); ?>
-                  </a></li>
-                <li class="divider"></li>
-                <li id="suppliers_index"><a href="<?= site_url('suppliers'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_suppliers'); ?>
-                  </a></li>
-                <li id="suppliers_add"><a href="<?= site_url('suppliers/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_supplier'); ?>
-                  </a></li>
+                <?php
+                }
+                if ($this->site->permission('employee')) {
+                ?>
+                  <li class="divider"></li>
+                  <li id="auth_users"><a href="<?= site_url('employee'); ?>"><i class="fa fa-circle-o"></i> List Employee</a></li>
+                  <li id="auth_add"><a href="<?= site_url('employee/add'); ?>"><i class="fa fa-circle-o"></i> Add Employee </a></li>
+                <?php
+                }
+                if ($this->site->permission('customers')) {
+                ?>
+                  <li class="divider"></li>
+                  <li id="customers_index"><a href="<?= site_url('customers'); ?>"><i class="fa fa-circle-o"></i>
+                      <?= lang('list_customers'); ?>
+                    </a></li>
+                  <li id="customers_add"><a href="<?= site_url('customers/add'); ?>"><i class="fa fa-circle-o"></i>
+                      <?= lang('add_customer'); ?>
+                    </a></li>
+                <?php
+                }
+                if ($this->site->permission('suppliers')) {
+                ?>
+                  <li class="divider"></li>
+                  <li id="suppliers_index"><a href="<?= site_url('suppliers'); ?>"><i class="fa fa-circle-o"></i>
+                      <?= lang('list_suppliers'); ?>
+                    </a></li>
+                  <li id="suppliers_add"><a href="<?= site_url('suppliers/add'); ?>"><i class="fa fa-circle-o"></i>
+                      <?= lang('add_supplier'); ?>
+                    </a></li>
+                <?php
+                }
+                ?>
               </ul>
             </li>
+          <?php
+          }
 
+
+
+          // STORE MODULE
+          if ($this->site->permission('store')) {
+          ?>
             <li class="treeview mm_store"> <a href="#"> <i class="fa fa-sitemap"></i> <span>
                   <?= lang('Stores'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -520,13 +434,15 @@
                 <li id="store_index"><a href="<?= site_url('store'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('Stores'); ?>
                   </a></li>
-                <?php if ($Admin) { ?>
-                  <li id="store_add"><a href="<?= site_url('store/add'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Add Store'); ?></a></li>
-                <?php } ?>
-
+                <li id="store_add"><a href="<?= site_url('store/add'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Add Store'); ?></a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // SETTINGS MODULE
+          if ($this->site->permission('settings')) {
+          ?>
             <li class="treeview mm_settings"> <a href="#"> <i class="fa fa-cogs"></i> <span>
                   <?= lang('settings'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -534,24 +450,26 @@
                 <li id="settings_index"><a href="<?= site_url('settings'); ?>"><i class="fa fa-circle-o"></i>
                     <?= lang('settings'); ?>
                   </a></li>
-
                 <li id="settings_backups"><a href="<?= site_url('settings/backups'); ?>"><i class="fa fa-circle-o"></i> <?= lang('backups'); ?></a></li>
               </ul>
             </li>
-            
-            <li class="treeview mm_group"> <a href="#"> <i class="fa fa-sitemap"></i> <span>
-                  <?= lang('group'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="group_index"><a href="<?= site_url('group'); ?>"><i class="fa fa-circle-o"></i> <?= lang('group_list'); ?></a></li>
-                <li id="group_add"><a href="<?= site_url('group/add'); ?>"><i class="fa fa-circle-o"></i> <?= lang('add_group'); ?></a></li>
-              </ul>
-            </li>
+          <?php
+          }
 
-            <li class="divider2"></li>
-            <li style="background:#001B35;"><a href=""><span class="border border-success"><b><?= lang('MANUFACTURE'); ?></b></span></a></li>
-            <li class="divider2"></li>
+          ?>
 
+
+
+
+
+          <li class="divider2"></li>
+          <li style="background:#001B35;"><a href=""><span class="border border-success"><b><?= lang('MANUFACTURE'); ?></b></span></a></li>
+          <li class="divider2"></li>
+
+          <?php
+          // mf_categories MODULE
+          if ($this->site->permission('mf_categories')) {
+          ?>
             <li class="treeview mm_mf_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('raw_material_category'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -567,7 +485,12 @@
                   </a></li>
               </ul>
             </li>
-            
+          <?php
+          }
+
+          // mf UNIT MODULE
+          if ($this->site->permission('mf_unit')) {
+          ?>
             <li class="treeview mm_mf_unit"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('uom'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -580,7 +503,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_material MODULE
+          if ($this->site->permission('mf_material')) {
+          ?>
             <li class="treeview mm_mf_material"> <a href="#"> <i class="fa fa-barcode"></i> <span>
                   <?= lang('raw_material'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -593,7 +521,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_brands MODULE
+          if ($this->site->permission('mf_brands')) {
+          ?>
             <li class="treeview mm_mf_brands"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('Raw Material Brands'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -606,7 +539,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_suppliers MODULE
+          if ($this->site->permission('mf_suppliers')) {
+          ?>
             <li class="treeview mm_mf_suppliers"> <a href="#"> <i class="fa fa-users"></i> <span>
                   <?= lang('raw_material_supplier'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -619,7 +557,12 @@
                   </a></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_purchases MODULE
+          if ($this->site->permission('mf_purchases')) {
+          ?>
             <li class="treeview mm_mf_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
                   <?= lang('Raw Material Purchases'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -633,7 +576,12 @@
                 <li class="divider"></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_material_stock MODULE
+          if ($this->site->permission('mf_material_stock')) {
+          ?>
             <li class="treeview mm_mf_material_stock"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('Raw Material Stock'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -650,7 +598,12 @@
                 <li class="divider"></li>
               </ul>
             </li>
+          <?php
+          }
 
+          // mf_recipe MODULE
+          if ($this->site->permission('mf_recipe')) {
+          ?>
             <li class="treeview mm_mf_recipe"> <a href="#"> <i class="fa fa-folder"></i> <span>
                   <?= lang('recipe'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
@@ -664,177 +617,16 @@
                 <li class="divider"></li>
               </ul>
             </li>
-
           <?php
-          } 
-          else 
-          {    //  Staff
-            ?>
+          }
+          ?>
 
 
-            <li class="treeview mm_products"> <a href="#"> <i class="fa fa-barcode"></i> <span>
-                  <?= lang('products'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="products_index"><a href="<?= site_url('products'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_products'); ?>
-                  </a></li>
-                <li id="products_add"><a href="<?= site_url('products/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_product'); ?>
-                  </a></li>
-                <li id="products_import"><a href="<?= site_url('products/import'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('import_products'); ?>
-                  </a></li>
-                <li id="products_print_barcodes"><a onclick="window.open('<?= site_url('products/print_barcodes'); ?>', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;" href="#"><i class="fa fa-circle-o"></i>
-                    <?= lang('print_barcodes'); ?>
-                  </a></li>
-                <li id="products_print_labels"><a onclick="window.open('<?= site_url('products/print_labels'); ?>', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;" href="#"><i class="fa fa-circle-o"></i>
-                    <?= lang('print_labels'); ?>
-                  </a></li>
-              </ul>
-            </li>
 
-            <li class="treeview mm_categories"> <a href="#"> <i class="fa fa-folder"></i> <span>
-                  <?= lang('categories'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="categories_index"><a href="<?= site_url('categories'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_categories'); ?>
-                  </a></li>
-                <li id="categories_add"><a href="<?= site_url('categories/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_category'); ?>
-                  </a></li>
-              </ul>
-            </li>
 
-            <li class="treeview mm_sales"> <a href="#"> <i class="fa fa-shopping-cart"></i> <span>
-                  <?= lang('sales'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="sales_index"><a href="<?= site_url('sales/today'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Today sales'); ?>
-                <li id="sales_index"><a href="<?= site_url('sales'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_sales'); ?>
-                  </a></li>
-                <li id="sales_opened"><a href="<?= site_url('sales/opened'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_opened_bills'); ?>
-                  </a></li>
-              </ul>
-            </li>
 
-            <li class="treeview mm_purchases"> <a href="#"> <i class="fa fa-plus"></i> <span>
-                  <?= lang('Product purchases'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="purchases_index"><a href="<?= site_url('purchases/today'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Today\'s Purchases'); ?>
-                  </a></li>
-                <li id="purchases_index"><a href="<?= site_url('purchases'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_purchases'); ?>
-                  </a></li>
-                <li id="purchases_add"><a href="<?= site_url('purchases/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_purchase'); ?>
-                  </a></li>
-                <li class="divider"></li>
-              </ul>
-            </li>
 
-            <li class="treeview mm_collection"> <a href="#"><i class="fa fa-reply" aria-hidden="true"></i><span>
-                  <?= lang('Collections'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="collection_index"><a href="<?= site_url('collection'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Collections list'); ?>
-                  </a></li>
-                <li id="collection_collectionpayment"><a href="<?= site_url('collection/collectionpayment'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Add Collections'); ?>
-                  </a></li>
-              </ul>
-            </li>
-
-            <li class="treeview mm_supplierpayment"> <a href="#"><i class="fa fa-user" aria-hidden="true"></i><span>
-                  <?= lang('Supplier\'s payments'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="supplierpayment_payment"><a href="<?= site_url('supplierpayment/purchase_payment'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Add Payments'); ?>
-                  </a></li>
-                <li id="supplierpayment_paymentList"><a href="<?= site_url('supplierpayment/paymentList'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Payments list'); ?>
-                  </a></li>
-                <li class="divider"></li>
-              </ul>
-            </li>
-
-            <li class="treeview mm_expenses"> <a href="#"><i class="fa fa-delicious" aria-hidden="true"></i><span>
-                  <?= lang('Expenses'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="expenses_add_category"><a href="<?= site_url('expenses/add_category'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Add category'); ?>
-                  </a></li>
-                <li id="expenses_listcategory"><a href="<?= site_url('expenses/listcategory'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('Category list'); ?>
-                  </a></li>
-                <li id="expenses_index"><a href="<?= site_url('expenses'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_expenses'); ?>
-                  </a></li>
-                <li id="expenses_add_expense"><a href="<?= site_url('expenses/add_expense'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_expense'); ?>
-                  </a></li>
-              </ul>
-            </li>
-
-            <li class="treeview mm_customers"> <a href="#"> <i class="fa fa-users"></i> <span>
-                  <?= lang('customers'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="customers_index"><a href="<?= site_url('customers'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_customers'); ?>
-                  </a></li>
-                <li id="customers_add"><a href="<?= site_url('customers/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_customer'); ?>
-                  </a></li>
-              </ul>
-            </li>
-
-            <li class="treeview mm_suppliers"> <a href="#"> <i class="fa fa-users"></i> <span>
-                  <?= lang('suppliers'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                <li id="suppliers_index"><a href="<?= site_url('suppliers'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('list_suppliers'); ?>
-                  </a></li>
-                <li id="suppliers_add"><a href="<?= site_url('suppliers/add'); ?>"><i class="fa fa-circle-o"></i>
-                    <?= lang('add_supplier'); ?>
-                  </a></li>
-              </ul>
-            </li>
-
-            <li class="treeview mm_reports"> <a href="#"> <i class="fa fa-bar-chart-o"></i> <span>
-                  <?= lang('reports'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-                </a>
-            </li>
-            <!-- <li id="reports_pettycash"><a href="<?= site_url('reports/pettycash'); ?>"><i class="fa fa-circle-o"></i>
-              <?= lang('Petty Cash'); ?> </a></li> -->
-            <li id="reports_products_staff"><a href="<?= site_url('reports/products_staff'); ?>"><i class="fa fa-circle-o"> </i>Products list (Staff) </a></li>
-            </ul>
-            </li>
-
-            <li class="treeview mm_settings"> <a href="#"> <i class="fa fa-cogs"></i> <span>
-                  <?= lang('settings'); ?>
-                </span> <i class="fa fa-angle-left pull-right"></i> </a>
-              <ul class="treeview-menu">
-
-                <li id="settings_backups"><a href="<?= site_url('settings/backups'); ?>"><i class="fa fa-circle-o"></i> <?= lang('backups'); ?></a></li>
-
-              </ul>
-            </li>
-            <?php
-          } ?>
-      </ul>
+        </ul>
       </section>
     </aside>
 

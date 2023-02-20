@@ -17,10 +17,12 @@ class MY_Controller extends CI_Controller {
         $this->data['factory_stores'] = $this->site->getAllFactoryStores();
         $this->data['categories'] = $this->site->getAllCategories();
         $this->data['mf_categories'] = $this->site->getAllMfCategories();
+
         $this->Admin = $this->tec->in_group('admin') ? TRUE : NULL;
         $this->data['Admin'] = $this->Admin;
         $this->Manager = $this->tec->in_group('manager') ? TRUE : NULL;
         $this->data['Manager'] = $this->Manager;
+        
         $this->m = strtolower($this->router->fetch_class());
         $this->v = strtolower($this->router->fetch_method());
         $this->data['m']= $this->m;

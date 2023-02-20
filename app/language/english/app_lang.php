@@ -548,3 +548,13 @@ $lang['edit_recipe']                        = "Edit Recipe";
 $lang['recipe_added']                       = "Recipe successfully added";
 $lang['recipe_updated']                     = "Recipe successfully updated";
 $lang['alert_x_recipe']                     = "You are going to delete Recipe, please click ok to delete.";
+
+$lang['group']                             = "Group";
+$lang['group_name']                        = "Group Name";
+$lang['group_code']                        = "Group Code";
+$lang['group_list']                        = "Group List";
+$lang['add_group']                         = "Add Group";
+$lang['edit_group']                        = "Edit Group";
+$lang['group_added']                       = "Group successfully added";
+$lang['group_updated']                     = "Group successfully updated";
+$lang['alert_x_group']                     = "You are going to delete group, please click ok to delete.";
