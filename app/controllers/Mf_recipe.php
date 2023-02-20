@@ -37,8 +37,10 @@ class Mf_recipe extends MY_Controller
          	$this->db->dbprefix('mf_recipe_mst').".description,", FALSE); 
         $this->datatables->from('mf_recipe_mst'); 
         $this->datatables->join('products','mf_recipe_mst.product_id=products.id'); 
+        $this->datatables->where('mf_recipe_mst.active_status',1); 
 
         $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
+        <a onclick=\"window.open('" . site_url('mf_recipe/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Recipe' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>
         <a href='" . site_url('mf_recipe/edit/$1') . "' title='" . lang("edit_uom") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
         <a href='" . site_url('mf_recipe/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_unit') . "')\" title='" . lang("delete_unit") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
         $this->datatables->unset_column('id');
@@ -235,6 +237,18 @@ class Mf_recipe extends MY_Controller
             ));
             
         }
+        
+    }
+
+    function view($id = NULL) { 
+
+        $this->data['recipe_mst'] = $this->mf_recipe_model->getRecipeByID($id);
+        $this->data['recipe_dtls'] = $this->mf_recipe_model->getRecipeDtlsByID($id);
+               
+        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));        
+        $this->data['page_title'] = lang('View Recipe');
+        
+        $this->load->view($this->theme . 'mf_recipe/view', $this->data);
         
     }
 
