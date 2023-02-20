@@ -3,10 +3,7 @@
 
 
 class Store extends MY_Controller
-
 {
-
-
 
     function __construct() {
 
@@ -77,32 +74,23 @@ class Store extends MY_Controller
 		$this->form_validation->set_rules('state', $this->lang->line("state"), 'required');
 		$this->form_validation->set_rules('postal_code', $this->lang->line("postal_code"), 'required');
 		$this->form_validation->set_rules('country', $this->lang->line("country"), 'required'); 
+		$this->form_validation->set_rules('store_type', $this->lang->line("Store Type"), 'required'); 
 
 		if ($this->form_validation->run() == true) {
 
 			$data = array(
 				'name' => $this->input->post('name'),
-
+				'store_type' => $this->input->post('store_type'),
 				'email' => $this->input->post('email'),
-
 				'phone' => $this->input->post('phone'),
-
 				'address1' => $this->input->post('address1'),
-
 				'address2' => $this->input->post('address1'),
-
 				'city' => $this->input->post('city'),
-
 				'state' => $this->input->post('state'),
-
 				'postal_code' => $this->input->post('postal_code'),
-
 				'country' => $this->input->post('country'),
-
 				'currency_code' => $this->input->post('currency_code'),
-
 				'receipt_header' => $this->input->post('receipt_header'),
-
 				'receipt_footer' => $this->input->post('receipt_footer'), 	
 			); 
 			 
@@ -143,27 +131,17 @@ class Store extends MY_Controller
 
 			$data = array(
 				'name' => $this->input->post('name'),
-
+				'store_type' => $this->input->post('store_type'),
 				'email' => $this->input->post('email'),
-
 				'phone' => $this->input->post('phone'),
-
 				'address1' => $this->input->post('address1'),
-
 				'address2' => $this->input->post('address1'),
-
 				'city' => $this->input->post('city'),
-
 				'state' => $this->input->post('state'),
-
 				'postal_code' => $this->input->post('postal_code'),
-
 				'country' => $this->input->post('country'),
-
 				'currency_code' => $this->input->post('currency_code'),
-
 				'receipt_header' => $this->input->post('receipt_header'),
-
 				'receipt_footer' => $this->input->post('receipt_footer'), 	
 			); 
 			 

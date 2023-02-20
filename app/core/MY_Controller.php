@@ -14,6 +14,7 @@ class MY_Controller extends CI_Controller {
         $this->loggedIn = $this->tec->logged_in();
         $this->data['loggedIn'] = $this->loggedIn;
         $this->data['stores'] = $this->site->getAllStores();
+        $this->data['factory_stores'] = $this->site->getAllFactoryStores();
         $this->data['categories'] = $this->site->getAllCategories();
         $this->data['mf_categories'] = $this->site->getAllMfCategories();
         $this->Admin = $this->tec->in_group('admin') ? TRUE : NULL;

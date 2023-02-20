@@ -22,27 +22,7 @@ class Mf_purchases extends MY_Controller
         $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
 		$this->session->unset_userdata($ses_unset);
     }
-    
-    public function today() { 
-
-        $this->data['stores'] = $this->site->getAllStores();
-        $this->data['page_title'] = 'Today Purchases';
-        
-        $bc = array(
-            array(
-                'link' => '#',
-                'page' => 'Today Purchases'
-            )
-        );
-        
-        $meta = array(
-            'page_title' => 'Today Purchases',
-            'bc' => $bc
-        );
-        
-        $this->page_construct('mf_purchases/today', $this->data, $meta);
-    }    
-    
+       
     function index() { 
         
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
@@ -150,7 +130,7 @@ class Mf_purchases extends MY_Controller
         $this->form_validation->set_rules('date', lang('date'), 'required');
         $this->form_validation->set_rules('mf_supplier_id', lang('supplier'), 'required');
         $this->form_validation->set_rules('store_id', lang('Store'), 'required');
-        echo 'nayem';die;
+
         if ($this->form_validation->run() == true) {
             
             $total = 0;

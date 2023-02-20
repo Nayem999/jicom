@@ -31,10 +31,10 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <?= lang('From Stores', 'From Stores'); ?>
+                                    <?= lang('Fatory', 'Fatory'); ?>
                                     <?php
-                                    $wr[''] = lang("Select") . " " . lang("Stores");
-                                    foreach ($stores as $store) {
+                                    $wr[''] = lang("Select") . " " . lang("Fatory");
+                                    foreach ($factory_stores as $store) {
                                         $wr[$store->id] = $store->name;
                                     }
                                     ?>
