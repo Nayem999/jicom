@@ -97,7 +97,7 @@ class Mf_recipe_model extends CI_Model
 
     public function getRecipeByID($id) {
 
-        $this->db->select('mf_recipe_mst.id, mf_recipe_mst.code as code, mf_recipe_mst.name as recipe_name, mf_recipe_mst.description as description, mf_recipe_mst.created_at as created_at, mf_unit.name as uom_name, products.name as products_name ');
+        $this->db->select('mf_recipe_mst.id, mf_recipe_mst.code as code, mf_recipe_mst.name as recipe_name, mf_recipe_mst.description , mf_recipe_mst.created_at as created_at, mf_unit.name as uom_name, products.name as products_name, products.id as product_id, mf_recipe_mst.uom_id ');
         $this->db->join('products','mf_recipe_mst.product_id=products.id');
         $this->db->join('mf_unit','mf_recipe_mst.uom_id=mf_unit.id','left');
         $q = $this->db->get_where('mf_recipe_mst', array('mf_recipe_mst.id' => $id,'mf_recipe_mst.active_status'=>1), 1);
@@ -112,13 +112,13 @@ class Mf_recipe_model extends CI_Model
 
     public function getRecipeDtlsByID($id) {
 
-        $this->db->select('mf_material.name as material_name, mf_brands.name as brand_name, mf_recipe_dtls.quantity as qty, mf_unit.name as uom_name');
+        $this->db->select('mf_material.name, mf_brands.name as brand_name, mf_recipe_dtls.quantity as qty, mf_unit.name as unit_name, mf_recipe_dtls.material_id, mf_recipe_dtls.material_stock_id ');
         $this->db->join('mf_material','mf_recipe_dtls.material_id=mf_material.id');
         $this->db->join('mf_material_store_qty','mf_recipe_dtls.material_stock_id=mf_material_store_qty.id');
         $this->db->join('mf_brands','mf_material_store_qty.brand_id=mf_brands.id','left');
         $this->db->join('mf_unit','mf_material.uom_id=mf_unit.id','left');
 
-        $q = $this->db->get_where('mf_recipe_dtls', array('mf_recipe_dtls.recipe_id' => $id,'mf_recipe_dtls.active_status'=>1), 1);
+        $q = $this->db->get_where('mf_recipe_dtls', array('mf_recipe_dtls.recipe_id' => $id,'mf_recipe_dtls.active_status'=>1));
 
         if( $q->num_rows() > 0 ) {
             foreach (($q->result()) as $row){  
@@ -128,6 +128,32 @@ class Mf_recipe_model extends CI_Model
         }
 
         return FALSE;
+
+    }
+
+    public function updateRecipe($id, $data = NULL, $items = array()) {
+
+        if ($this->db->update('mf_recipe_mst', $data, array('id' => $id)) && $this->db->update('mf_recipe_dtls', array('active_status'=>0), array('recipe_id' => $id))) {
+
+            foreach ($items as $item) {
+                $item['recipe_id'] = $id;
+                $this->db->insert('mf_recipe_dtls', $item);
+            }
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+    public function deleteRecipe($id,$data) {
+
+        if ($this->db->update('mf_recipe_mst', $data, array('id' => $id)) && $this->db->update('mf_recipe_dtls', $data, array('recipe_id' => $id))) {
+            return true;
+        }
+        return false;
 
     }
 

@@ -45,7 +45,7 @@
                                         $pr[$all_product_arr->id] = $all_product_arr->name;
                                     }
                                     ?>
-                                    <?= form_dropdown('product_id', $pr, set_value('store_id'), 'class="form-control select2 tip" required="required" id="product_id" style="width:100%;"'); ?>
+                                    <?= form_dropdown('product_id', $pr, set_value('product_id'), 'class="form-control select2 tip" required="required" id="product_id" style="width:100%;"'); ?>
                                 </div>
                             </div>
 
@@ -65,7 +65,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <?= lang('description', 'description'); ?>
-                                    <?= form_input('description', set_value('date'), 'class="form-control tip" id="description"'); ?>
+                                    <?= form_input('description', set_value('description'), 'class="form-control tip" id="description"'); ?>
                                 </div>
                             </div>
 
@@ -200,15 +200,13 @@
             });
         });
 
-
-
     });
 
     function load_recipe_items(prid) {
 
         if (get('recipe_items')) {
-            total = 0;
-            tqty = 0;
+
+
             $("#poTable tbody").empty();
 
             recipe_items = JSON.parse(get('recipe_items'));
@@ -249,23 +247,14 @@
                     tr_html += '<td></td>';
                 }
 
-                tr_html += '<td style="padding:2px;"><input class="form-control input-sm kb-pad text-center rquantity" name="quantity[]" type="text" value="" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" ></td>';
-
+                tr_html += '<td style="padding:2px;"><input class="form-control input-sm kb-pad text-center rquantity" name="quantity[]" type="text" value="' + item_qty + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" ></td>';
 
                 tr_html += '<td class="text-center"><a href="javascript:;" onClick="pRemove(' + parseFloat(row_no) + ',' + material_stock_id + ')" class=""><i class="fa fa-trash-o tip pointer spodel"><i></a></td>';
                 newTr.html(tr_html);
                 newTr.prependTo("#poTable");
 
-                $('#add_purchase').removeAttr('disabled', true);
-                $('#edit_purchase').removeAttr('disabled', true);
-
             });
 
-            grand_total = formatMoney(total);
-            $("#gtotal").val(grand_total);
-            var transport_cost = parseFloat($("#transport_cost").val()) + total;
-            $("#grand_total").val(transport_cost);
-            $("#prqty").text(tqty);
             $('#add_item').focus();
 
         }

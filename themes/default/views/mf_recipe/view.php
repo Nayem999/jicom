@@ -93,11 +93,11 @@
                             foreach ($recipe_dtls as $item) {
                               echo '<tr>';
 
-                              echo '<td class="text-center">' . $item->material_name . '</td>';
+                              echo '<td class="text-center">' . $item->name . '</td>';
 
                               echo '<td class="text-center">' . $item->brand_name . '</td>';
 
-                              echo '<td class="text-center">' . $item->qty .' '. $item->uom_name . '</td>';
+                              echo '<td class="text-center">' . $item->qty .' '. $item->unit_name . '</td>';
 
                               echo '</tr>';
                             }

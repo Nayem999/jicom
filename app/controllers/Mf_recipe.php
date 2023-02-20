@@ -11,6 +11,7 @@ class Mf_recipe extends MY_Controller
         }
 
         $this->load->library('form_validation');
+        $this->load->model('products_model');
         $this->load->model('mf_recipe_model');
         $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
 		$this->session->unset_userdata($ses_unset);
@@ -41,8 +42,8 @@ class Mf_recipe extends MY_Controller
 
         $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
         <a onclick=\"window.open('" . site_url('mf_recipe/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Recipe' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>
-        <a href='" . site_url('mf_recipe/edit/$1') . "' title='" . lang("edit_uom") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
-        <a href='" . site_url('mf_recipe/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_unit') . "')\" title='" . lang("delete_unit") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
+        <a href='" . site_url('mf_recipe/edit/$1') . "' title='Edit Recipe' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
+        <a href='" . site_url('mf_recipe/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_recipe') . "')\" title='" . lang("delete_unit") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
 
@@ -50,7 +51,6 @@ class Mf_recipe extends MY_Controller
 
     function add() {
 
-        $this->load->model('products_model');
         $max_id = $this->mf_recipe_model->get_max_id();
          
         $this->form_validation->set_rules('recipe_name', lang('recipe_name'), 'required');
@@ -106,7 +106,7 @@ class Mf_recipe extends MY_Controller
                       
             $this->session->set_flashdata('message', lang('recipe_added'));
             
-            redirect("mf_recipe");
+            $this->index();
 
         } else {
             $this->load->model('mf_unit_model');
@@ -132,28 +132,83 @@ class Mf_recipe extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        $this->form_validation->set_rules('name', lang('uom_name'), 'required');
+        $this->form_validation->set_rules('recipe_name', lang('recipe_name'), 'required');
+        $this->form_validation->set_rules('product_id', lang('product'), 'required');
+        $this->form_validation->set_rules('uom_id', lang('uom'), 'required');
 
         if ($this->form_validation->run() == true) {
-            $data = array(  
-                'name' => $this->input->post('name'),
-                'description' => $this->input->post('description'),
-                'updated_by' =>  $this->session->userdata('user_id'),
-                'updated_at' => date('Y-m-d H:i:s')
+
+            $i = isset($_POST['material_stock_id']) ? sizeof($_POST['material_stock_id']) : 0;            
+            
+            for ($r = 0; $r < $i; $r++) {  
+
+                $material_stock_id = $_POST['material_stock_id'][$r];
+                $material_id = $_POST['material_id'][$r];              
+                $item_qty = $_POST['quantity'][$r]; 
+                
+                if ($material_stock_id && $item_qty ) { 
+
+                    $products[] = array(           
+                        'material_id' => $material_id,                    
+                        'material_stock_id' => $material_stock_id,                    
+                        'quantity' => $item_qty,    
+                        'created_by' => $this->session->userdata('user_id'),               
+                        'created_at' =>  date('Y-m-d H:i:s'),                                      
+                    ); 
+                   
+                }                
+            }                        
+            
+            if (!isset($products) || empty($products)) {                
+                $this->form_validation->set_rules('product', lang("order_items"), 'required');
+                $this->form_validation->set_rules('mf_supplier_id', lang("order_items"), 'required');
+                
+            } else {                
+                krsort($products);                
+            }
+
+            $data = array(                                                          
+                'name' => $this->input->post('recipe_name'),
+                'product_id' => $this->input->post('product_id'),          
+                'uom_id' => $this->input->post('uom_id'),          
+                'description' => $this->input->post('description'),          
+                'updated_by' => $this->session->userdata('user_id'),               
+                'updated_at' =>  date('Y-m-d H:i:s'),               
             );
         }
 
-        if ($this->form_validation->run() == true && $this->mf_recipe_model->updateUnit($id, $data)) {
+        if ($this->form_validation->run() == true && $this->mf_recipe_model->updateRecipe($id, $data, $products)) {
 
             $this->session->set_flashdata('message', lang('category_updated'));
-            redirect("mf_recipe");
+            $this->index();
 
         } else {
 
-            $this->load->model('mf_recipe_model');
+            $this->load->model('mf_unit_model');
 
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['unit_info'] = $this->mf_recipe_model->getUnitByID($id);
+
+            $this->data['all_product']  = $this->products_model->getAllProducts();
+            $this->data['all_uom']  = $this->mf_unit_model->getAllUnit();
+            $this->data['recipe_mst'] = $this->mf_recipe_model->getRecipeByID($id);
+            $recipe_dtls = $this->mf_recipe_model->getRecipeDtlsByID($id);
+
+            $c = rand(100000, 9999999);
+
+            foreach ($recipe_dtls as $row) {
+
+                $ri = $this->Settings->item_addition ? $row->material_stock_id : $c;
+                
+                $pr[$ri] = array(
+                    'id' => $ri,
+                    'item_id' => $row->material_stock_id,
+                    'label' => $row->name . " (" . $row->brand_name . ")",
+                    'row' => $row
+                );
+                
+                $c++;
+            }  
+            $this->data['recipe_dtls'] = json_encode($pr);  
  
             $this->data['page_title'] = lang('new_category');
             $bc = array(array('link' => site_url('unit'), 'page' => lang('unit')), array('link' => '#', 'page' => lang('edit_uom')));
@@ -176,9 +231,10 @@ class Mf_recipe extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        if ($this->mf_recipe_model->deleteCategory($id)) {
-            $this->session->set_flashdata('message', lang("category_deleted"));
-            redirect('mf_recipe');
+        $data['active_status']=0;
+        if ($this->mf_recipe_model->deleteRecipe($id,$data)) {
+            $this->session->set_flashdata('message', lang("Recipe successfully deleted"));
+            $this->index();
         }
     }
 
