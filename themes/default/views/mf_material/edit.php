@@ -16,7 +16,7 @@
             </div>
 
 						<div class="form-group">
-							<label class="control-label" for="uom_id"><?= lang('From Category','From Category'); ?> <span class="text-danger">*</span></label>	                        
+							<label class="control-label" for="uom_id"><?= lang('From UOM','From UOM'); ?> <span class="text-danger">*</span></label>	                        
               <?php
 								// $uom_arr=array(''=>"Select UOM",1=>"PCS",2=>"KG",3=>"GM",4=>"LR",5=>"ML");
 								$uom_arr[0] = lang("select")." ".lang("UOM");

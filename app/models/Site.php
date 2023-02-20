@@ -180,7 +180,7 @@ class Site extends CI_Model
     public function getMaterialByID($id)
     {
         
-        $q = $this->db->get_where('mf_Material', array('id' => $id), 1);
+        $q = $this->db->get_where('mf_material', array('id' => $id), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
