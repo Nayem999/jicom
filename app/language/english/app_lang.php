@@ -559,3 +559,12 @@ $lang['group_added']                       = "Group successfully added";
 $lang['group_updated']                     = "Group successfully updated";
 $lang['alert_x_group']                     = "You are going to delete group, please click ok to delete.";
 $lang['permission']                         = "Permission";
+
+$lang['producion']                         = "Producion";
+$lang['producion_name']                    = "Producion Name";
+$lang['producion_list']                    = "Producion List";
+$lang['add_producion']                     = "Add Producion";
+$lang['edit_producion']                    = "Edit Producion";
+$lang['producion_added']                   = "Producion successfully added";
+$lang['producion_updated']                 = "Producion successfully updated";
+$lang['alert_x_producion']                 = "You are going to delete producion, please click ok to delete.";
