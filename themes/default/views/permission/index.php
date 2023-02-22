@@ -364,7 +364,9 @@
                             <input type="checkbox" name="permission_view" id="permission_view"  value="<?=isset($permission_route->permission_view)?$permission_route->permission_view:0;?>" <?=(isset($permission_route->permission_view) && $permission_route->permission_view==1)?'checked':'';?> onclick="fn_change_val('permission_view')">
                         </div>
                         <div class="col-sm-2"> </div>
-                        <div class="col-sm-2"> </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="permission_edit" id="permission_edit"  value="<?=isset($permission_route->permission_edit)?$permission_route->permission_edit:0;?>" <?=(isset($permission_route->permission_edit) && $permission_route->permission_edit==1)?'checked':'';?>  onclick="fn_change_val('permission_edit')"> 
+                        </div>
                         <div class="col-sm-2"> </div>
                     </div>
                     <hr>
@@ -531,6 +533,24 @@
                         </div>
                         <div class="col-sm-2">
                             <input type="checkbox" name="mf_recipe_delete" id="mf_recipe_delete"  value="<?=isset($permission_route->mf_recipe_delete)?$permission_route->mf_recipe_delete:0;?>" <?=(isset($permission_route->mf_recipe_delete) && $permission_route->mf_recipe_delete==1)?'checked':'';?>  onclick="fn_change_val('mf_recipe_delete')">   
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row" >
+                        <div class="col-sm-4">
+                            <input type="checkbox" name="mf_producion" id="mf_producion" value="<?=isset($permissiion_module->mf_producion)?$permissiion_module->mf_producion:0;?>" <?=(isset($permissiion_module->mf_producion) && $permissiion_module->mf_producion==1)?'checked':'';?> onclick="fn_change_val('mf_producion')" > <?= lang('producion'); ?>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_producion_view" id="mf_producion_view"  value="<?=isset($permission_route->mf_producion_view)?$permission_route->mf_producion_view:0;?>" <?=(isset($permission_route->mf_producion_view) && $permission_route->mf_producion_view==1)?'checked':'';?> onclick="fn_change_val('mf_producion_view')">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_producion_add" id="mf_producion_add_v"  value="<?=isset($permission_route->mf_producion_add)?$permission_route->mf_producion_add:0;?>" <?=(isset($permission_route->mf_producion_add) && $permission_route->mf_producion_add==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_add_v')">   
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_producion_edit" id="mf_producion_edit"  value="<?=isset($permission_route->mf_producion_edit)?$permission_route->mf_producion_edit:0;?>" <?=(isset($permission_route->mf_producion_edit) && $permission_route->mf_producion_edit==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_edit')">  
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_producion_delete" id="mf_producion_delete"  value="<?=isset($permission_route->mf_producion_delete)?$permission_route->mf_producion_delete:0;?>" <?=(isset($permission_route->mf_producion_delete) && $permission_route->mf_producion_delete==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_delete')">   
                         </div>
                     </div>
                     <hr>

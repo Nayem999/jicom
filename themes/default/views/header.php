@@ -675,6 +675,25 @@
             </li>
           <?php
           }
+
+          // mf_producion MODULE
+          if ($this->site->permission('mf_producion')) {
+          ?>
+            <li class="treeview mm_mf_producion"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('recipe'); ?>
+                </span> <i class="fa fa-angle-left pull-right"></i> </a>
+              <ul class="treeview-menu">
+                <?php if ($this->site->route_permission('mf_producion_view')) {?>
+                  <li id="mf_producion_index"><a href="<?= site_url('mf_producion'); ?>"><i class="fa fa-circle-o"></i><?= lang('recipe_list'); ?></a></li>
+                <?php } ?>  
+                <?php if ($this->site->route_permission('mf_producion_add')) {?>
+                  <li id="mf_producion_add"><a href="<?= site_url('mf_producion/add'); ?>"><i class="fa fa-circle-o"></i><?= lang('add_recipe'); ?></a></li>
+                <?php } ?>  
+                <li class="divider"></li>
+              </ul>
+            </li>
+          <?php
+          }
           ?>
 
         </ul>
