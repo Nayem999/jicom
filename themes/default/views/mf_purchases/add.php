@@ -106,7 +106,7 @@
                                                 <th></th>
                                                 <th class="col-xs-2"></th>
                                                 <th class="col-xs-2" >Grand Total</th>
-                                                <th class="col-xs-2 text-right"><input class="form-control input-sm kb-pad text-center" name="gtotal" type="text" value="0" id="grand_total" readonly></th>
+                                                <th class="col-xs-2 text-right"><input class="form-control input-sm kb-pad text-center" name="grand_total" type="text" value="0" id="grand_total" readonly></th>
                                                 <th style="width:25px;"></th>
                                             </tr>
                                         </tfoot>

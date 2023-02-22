@@ -92,7 +92,7 @@
 
         //change_transport_cost
         $(document).on("keyup", '#transport_cost', function () {
-            var transport_cost=parseFloat($("#gtotal").val())+parseFloat($(this).val());
+            var transport_cost=parseFloat($("#gtotal").val().replace(/,/g, ""))+parseFloat($(this).val());
             $("#grand_total").val(transport_cost);
         }); 
 
