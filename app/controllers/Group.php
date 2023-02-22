@@ -10,6 +10,11 @@ class Group extends MY_Controller
         if (!$this->loggedIn) {
             redirect('login');
         }
+        if(!$this->site->permission('group'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation'); 
         $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
@@ -17,7 +22,10 @@ class Group extends MY_Controller
     }
 
     function index() {
-
+        if(!$this->site->route_permission('group_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));       
         $this->data['page_title'] = lang('Group');
         $bc = array(array('link' => '#', 'page' => lang('Group')));
@@ -25,7 +33,7 @@ class Group extends MY_Controller
         $this->page_construct('group/index', $this->data, $meta);
 
     } 
-     
+
     function get_groups() {
 
         $this->load->library('datatables');
@@ -37,17 +45,27 @@ class Group extends MY_Controller
 
         $this->datatables->group_by('id');
 
-        $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-             
-            <a href='" . site_url('group/edit/$1') . "' title='" . lang("edit_category") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
-            <a href='" . site_url('group/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_category') . "')\" title='" . lang("delete_category") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
+        $action="<div class='text-center'><div class='btn-group'>";
+
+		if($this->site->route_permission('group_edit')) {
+			$action.="<a href='" . site_url('group/edit/$1') . "' title='" . lang("edit_category") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
+		}
+		if($this->site->route_permission('group_delete')) {
+			$action.="<a href='" . site_url('group/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_category') . "')\" title='" . lang("delete_category") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
+
+        $this->datatables->add_column("Actions", $action, "id, image, code, name");
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
 
     }
 
     function add() {
-         
+        if(!$this->site->route_permission('group_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->form_validation->set_rules('name', lang('Group Name'), 'required');
 
         if ($this->form_validation->run() == true) {
@@ -73,10 +91,14 @@ class Group extends MY_Controller
     }
 
     function edit($id = NULL) {
-        if (!$this->Admin) {
+        if(!$this->site->route_permission('group_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect('pos');
-        }
+        } */
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         } 
@@ -112,10 +134,14 @@ class Group extends MY_Controller
             $this->session->set_flashdata('error', lang('disabled_in_demo'));
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
         }
-        if (!$this->Admin) {
+        if(!$this->site->route_permission('group_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect('pos');
-        }
+        } */
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }

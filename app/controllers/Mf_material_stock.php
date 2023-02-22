@@ -11,6 +11,11 @@ class Mf_material_stock extends MY_Controller
         if (!$this->loggedIn) {            
             redirect('login');            
         }
+        if(!$this->site->permission('mf_material_stock'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         
         $this->load->library('form_validation');        
         $this->load->model('mf_material_stock_model');        
@@ -23,6 +28,10 @@ class Mf_material_stock extends MY_Controller
   
     
     public function index()  {
+        if(!$this->site->route_permission('mf_material_stock_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['matarial_list'] = $this->mf_material_stock_model->getStockList();   
 
         $this->data['page_title'] = $this->lang->line("stock_list");
@@ -61,6 +70,10 @@ class Mf_material_stock extends MY_Controller
     }
 
     public function stock_adjust()  {
+        if(!$this->site->route_permission('mf_material_stock_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->data['matarial_list'] = $this->mf_material_stock_model->getStockList();   
         $this->data['page_title'] = $this->lang->line("stock_list");

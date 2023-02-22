@@ -9,6 +9,11 @@ class Pos extends MY_Controller {
 		if (!$this->loggedIn) {
 			redirect('login');
 		}
+		if(!$this->site->permission('pos'))
+		{
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		$this->load->library('form_validation'); 
 		$this->load->model('pos_model');
 		$this->load->model('marge_model');
@@ -22,6 +27,10 @@ class Pos extends MY_Controller {
 	} 
 
 	function index($sid = NULL, $eid = NULL) { 
+		if(!$this->site->route_permission('pos_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		if($this->Admin){
 		  if(!$this->session->userdata('store_id_pos')){
 		  	  $this->data['storeData'] = '';
@@ -960,7 +969,7 @@ class Pos extends MY_Controller {
 		$this->data['modal'] = false;
 		$this->data['payments'] = $this->pos_model->getAllSalePayments($sale_id);
 		$this->data['created_by'] = $this->site->getUser($inv->created_by);
-// print_r($this->pos_model->getAllSalePayments($sale_id));die;
+		// print_r($this->pos_model->getAllSalePayments($sale_id));die;
 		$receipt = $this->load->view($this->theme.'pos/view', $this->data, TRUE);
 		$subject = lang('email_subject');
 
@@ -971,7 +980,6 @@ class Pos extends MY_Controller {
 		}
 
 	}
-
 
 	function register_details()
 	{

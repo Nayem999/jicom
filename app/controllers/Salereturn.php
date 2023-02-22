@@ -1,7 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Salereturn extends MY_Controller
-
 {
     function __construct() {
 
@@ -11,6 +10,11 @@ class Salereturn extends MY_Controller
 
             redirect('login');
 
+        }
+		if(!$this->site->permission('salereturn'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
         }
 
         $this->load->library('form_validation');
@@ -31,7 +35,10 @@ class Salereturn extends MY_Controller
     }
 
     function index() {   
-
+        if(!$this->site->route_permission('salereturn_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
     	$this->data['page_title'] = 'Sales Return';
@@ -52,11 +59,18 @@ class Salereturn extends MY_Controller
 
 	    $this->datatables->from('salesreturn'); 
 
-	    $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-		<a href='#' onClick=\"MyWindow=window.open('" . site_url('salereturn/view/$1/1') . "', 'MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,resizable=yes,width=350,height=600'); return false;\" title='".lang("view invoice")."' class='tip btn btn-primary btn-xs'><i class='fa fa-list'></i></a>
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('salereturn_view')) {
+			$action.="<a href='#' onClick=\"MyWindow=window.open('" . site_url('salereturn/view/$1/1') . "', 'MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,resizable=yes,width=350,height=600'); return false;\" title='".lang("view invoice")."' class='tip btn btn-primary btn-xs'><i class='fa fa-list'></i></a>";
+		}
 
-		  <a href='" . site_url('salereturn/delete/$1') . "' onClick=\"return confirm('You are going to delete Service, please click ok to delete')\" title='Delete service' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "sreturn_id");
+		if($this->site->route_permission('salereturn_delete')) {
+			$action.=" <a href='" . site_url('salereturn/delete/$1') . "' onClick=\"return confirm('You are going to delete Service, please click ok to delete')\" title='Delete service' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
 
+	    $this->datatables->add_column("Actions", $action, "sreturn_id");
+		
 	    $this->datatables->unset_column('sreturn_id');
 
 	    echo $this->datatables->generate();
@@ -124,7 +138,10 @@ class Salereturn extends MY_Controller
 	}		
 		
 	function add() {
-		 
+		if(!$this->site->route_permission('salereturn_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		/* $sela_item_id = $this->input->post('sela_item_id');
 		$ids ='';
 		  foreach($sela_item_id  as $id ){
@@ -160,7 +177,10 @@ class Salereturn extends MY_Controller
 	}
 
   	function addsalesreturn(){ 
-		
+		if(!$this->site->route_permission('salereturn_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		if($this->input->post('save_invoice') !=''){
 
 		$date = date('Y-m-d H:i:s'); 
@@ -257,7 +277,10 @@ class Salereturn extends MY_Controller
 	} 
 		
  	function view($id) {
-			 
+		if(!$this->site->route_permission('salereturn_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		//$this->data['parts'] = $this->service_model->getParts($id);
 		 
 		$saleItems = $this->salesreturn_model->getSaleItemsEdit($id); 
@@ -298,13 +321,14 @@ class Salereturn extends MY_Controller
 
 		if($this->input->get('id')){ $id = $this->input->get('id'); }
 
-		if (!$this->Admin) {
-
-			$this->session->set_flashdata('error', lang("access_denied"));
-
-			redirect('salereturn');
-
+		if(!$this->site->route_permission('salereturn_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
+		/* if (!$this->Admin) {
+			$this->session->set_flashdata('error', lang("access_denied"));
+			redirect('salereturn');
+		} */
 
 		$salesreturn =  $this->site->findeNameByID('salesreturn','sreturn_id',$id);
 

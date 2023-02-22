@@ -558,3 +558,4 @@ $lang['edit_group']                        = "Edit Group";
 $lang['group_added']                       = "Group successfully added";
 $lang['group_updated']                     = "Group successfully updated";
 $lang['alert_x_group']                     = "You are going to delete group, please click ok to delete.";
+$lang['permission']                         = "Permission";

@@ -13,6 +13,11 @@ class Supplierpayment extends MY_Controller
             redirect('login');
             
         }
+        if(!$this->site->permission('supplierpayment'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         
         $this->load->library('form_validation');
         
@@ -35,6 +40,10 @@ class Supplierpayment extends MY_Controller
     }
 
     public function purchase_payment() { 
+      if(!$this->site->route_permission('supplierpayment_add')) {
+        $this->session->set_flashdata('error', lang('access_denied'));
+        redirect();
+      }
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         //$suid = $this->getSupplierByStore();
@@ -471,6 +480,10 @@ class Supplierpayment extends MY_Controller
         echo $this->datatables->generate(); 
 	  }
     public function paymentList() { 
+      if(!$this->site->route_permission('supplierpayment_view')) {
+        $this->session->set_flashdata('error', lang('access_denied'));
+        redirect();
+      }
 
        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;

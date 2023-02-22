@@ -10,6 +10,11 @@ class Categories extends MY_Controller
         if (!$this->loggedIn) {
             redirect('login');
         }
+        if(!$this->site->permission('categories'))
+		{
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->load->library('form_validation');
         $this->load->model('categories_model');
@@ -18,6 +23,10 @@ class Categories extends MY_Controller
     }
 
     function index() {
+        if(!$this->site->route_permission('categories_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['categories'] = $this->site->getAllCategories();        
@@ -73,14 +82,27 @@ class Categories extends MY_Controller
         $this->datatables->from('categories'); 
 
         $this->datatables->group_by('id');
+        $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('categories_edit')) {
+			$action.="<a href='" . site_url('categories/edit/$1') . "' title='" . lang("edit_category") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
+		}
+		if($this->site->route_permission('categories_delete')) {
+			$action.="<a href='" . site_url('categories/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_category') . "')\" title='" . lang("delete_category") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="<a class='tip image btn btn-primary btn-xs' id='$4 ($3)' href='" . base_url('uploads/$2') . "' title='" . lang("view_image") . "'><i class='fa fa-picture-o'></i></a>";
+        $action.="</div></div>";
 
-        $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'><a class='tip image btn btn-primary btn-xs' id='$4 ($3)' href='" . base_url('uploads/$2') . "' title='" . lang("view_image") . "'><i class='fa fa-picture-o'></i></a> <a href='" . site_url('categories/edit/$1') . "' title='" . lang("edit_category") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> <a href='" . site_url('categories/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_category') . "')\" title='" . lang("delete_category") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
+        $this->datatables->add_column("Actions",$action, "id, image, code, name");
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
 
     }
 
     function add() {
+        if(!$this->site->route_permission('categories_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
          
         $this->form_validation->set_rules('name', lang('category_name'), 'required');
 
@@ -147,10 +169,14 @@ class Categories extends MY_Controller
     }
 
     function edit($id = NULL) {
-        if (!$this->Admin) {
+        if(!$this->site->route_permission('categories_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect('pos');
-        }
+        } */
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
@@ -231,10 +257,14 @@ class Categories extends MY_Controller
             $this->session->set_flashdata('error', lang('disabled_in_demo'));
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
         }
-        if (!$this->Admin) {
+        if(!$this->site->route_permission('categories_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect('pos');
-        }
+        } */
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }

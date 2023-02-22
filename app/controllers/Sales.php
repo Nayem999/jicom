@@ -10,6 +10,11 @@ class Sales extends MY_Controller {
 			redirect('login');
 
 		}
+        if(!$this->site->permission('sales'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
 		$this->load->library('form_validation');
 
@@ -25,7 +30,10 @@ class Sales extends MY_Controller {
 	}
 
 	function index(){         
-
+		if(!$this->site->route_permission('sales_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
 		$this->data['page_title'] = lang('sales');
@@ -43,7 +51,10 @@ class Sales extends MY_Controller {
 	}
 
     function today(){
-
+		if(!$this->site->route_permission('sales_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
         $this->data['page_title'] = 'Today sales';

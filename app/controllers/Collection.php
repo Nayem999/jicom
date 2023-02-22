@@ -11,6 +11,11 @@ class Collection extends MY_Controller
         if (!$this->loggedIn) {            
             redirect('login');            
         }        
+        if(!$this->site->permission('collection'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         $this->load->library('form_validation');       
         $this->load->model('sales_model');
         $this->load->model('bank_model');
@@ -131,6 +136,10 @@ class Collection extends MY_Controller
     } 
 
     function index() {    
+      if(!$this->site->route_permission('collection_view')) {
+        $this->session->set_flashdata('error', lang('access_denied'));
+        redirect();
+      }
        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : NULL;
        $customer = $this->input->post('customer') ? $this->input->post('customer') : NULL;
@@ -155,6 +164,10 @@ class Collection extends MY_Controller
     }
  
     public function collectionpayment() {
+      if(!$this->site->route_permission('collection_add')) {
+        $this->session->set_flashdata('error', lang('access_denied'));
+        redirect();
+      }
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));            
         $this->data['customers'] = $this->site->getAllCustomers();        
         $this->data['page_title'] = 'Payments Collection';
@@ -488,7 +501,10 @@ class Collection extends MY_Controller
     }
 
   public function collectdelete($id = null){
-       
+    if(!$this->site->route_permission('collection_delete')) {
+      $this->session->set_flashdata('error', lang('access_denied'));
+      redirect();
+    }
       $getSalesIdfpaytb = $this->sales_model->getAllsalesID($id);
 
       foreach ($getSalesIdfpaytb as $key => $value) {

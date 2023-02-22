@@ -4,6 +4,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Settings extends MY_Controller {
     function __construct() {
         parent::__construct();
+        if(!$this->site->permission('settings'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         $this->load->library('form_validation');
         $this->load->library('encryption');
         $this->load->model('settings_model');
@@ -13,7 +18,10 @@ class Settings extends MY_Controller {
     }
 
     function index() { 
-         
+        if(!$this->site->route_permission('settings_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->form_validation->set_rules('site_name', lang('site_name') , 'required');
         $this->form_validation->set_rules('tel', lang('tel') , 'required'); 
         $this->form_validation->set_rules('currency_prefix', lang('currency_code') , 'required|max_length[3]|min_length[3]');
@@ -168,11 +176,15 @@ class Settings extends MY_Controller {
             $this->session->set_flashdata('error', lang('disabled_in_demo'));
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
         }
-
-         if((!$this->Admin) && (!$this->Manager)){
+        
+        if(!$this->site->route_permission('settings_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+         /* if((!$this->Admin) && (!$this->Manager)){
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect("welcome");
-        }
+        } */
 
         $this->form_validation->set_rules('purchase_code', lang("purchase_code") , 'required');
         $this->form_validation->set_rules('envato_username', lang("envato_username") , 'required');

@@ -16,11 +16,13 @@ class Products extends MY_Controller
             redirect('login');
 
         }
-
-
+        if(!$this->site->permission('products'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation');
-
         $this->load->model('products_model');
         
 		$ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
@@ -28,9 +30,11 @@ class Products extends MY_Controller
 
     }
 
-
-
     function index() {
+        if(!$this->site->route_permission('products_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -81,10 +85,19 @@ class Products extends MY_Controller
 
         $this->datatables->group_by('products.id');
 
-        $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'><a href='".site_url('products/view/$1')."' title='" . lang("view") . "' class='tip btn btn-primary btn-xs' data-toggle='ajax'><i class='fa fa-file-text-o'></i></a><a onclick=\"window.open('".site_url('products/single_barcode/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='".lang('print_barcodes')."' class='tip btn btn-default btn-xs'><i class='fa fa-print'></i></a> <a onclick=\"window.open('".site_url('products/single_label/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='".lang('print_labels')."' class='tip btn btn-default btn-xs'><i class='fa fa-print'></i></a> <a id='$4 ($3)' href='" . site_url('products/php_barcode/$3/$5') . "' title='" . lang("view_barcode") . "' class='barcode tip btn btn-primary btn-xs'><i class='fa fa-barcode'></i></a> <a class='tip image btn btn-primary btn-xs' id='$4 ($3)' href='" . base_url('uploads/$2') . "' title='" . lang("view_image") . "'><i class='fa fa-picture-o'></i></a> 
-        <a href='" . site_url('products/edit/$1') . "' title='" . lang("edit_product") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>
-        <a href='" . site_url('products/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_product') . "')\" title='" . lang("delete_product") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>
-                </div></div>", "pid, image, code, pname, barcodeSymbology");
+        $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('products_view')) {
+			$action.="<a href='".site_url('products/view/$1')."' title='" . lang("view") . "' class='tip btn btn-primary btn-xs' data-toggle='ajax'><i class='fa fa-file-text-o'></i></a><a onclick=\"window.open('".site_url('products/single_barcode/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='".lang('print_barcodes')."' class='tip btn btn-default btn-xs'><i class='fa fa-print'></i></a> <a onclick=\"window.open('".site_url('products/single_label/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='".lang('print_labels')."' class='tip btn btn-default btn-xs'><i class='fa fa-print'></i></a> <a id='$4 ($3)' href='" . site_url('products/php_barcode/$3/$5') . "' title='" . lang("view_barcode") . "' class='barcode tip btn btn-primary btn-xs'><i class='fa fa-barcode'></i></a> <a class='tip image btn btn-primary btn-xs' id='$4 ($3)' href='" . base_url('uploads/$2') . "' title='" . lang("view_image") . "'><i class='fa fa-picture-o'></i></a> ";
+		}
+		if($this->site->route_permission('products_edit')) {
+			$action.="<a href='" . site_url('products/edit/$1') . "' title='" . lang("edit_product") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> ";
+		}
+		if($this->site->route_permission('products_delete')) {
+			$action.=" <a href='" . site_url('products/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_product') . "')\" title='" . lang("delete_product") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
+
+        $this->datatables->add_column("Actions",$action, "pid, image, code, pname, barcodeSymbology");
 
         //<a href='" . site_url('products/edit/$1') . "' title='" . lang("edit_product") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> <a href='" . site_url('products/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_product') . "')\" title='" . lang("delete_product") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>
 
@@ -100,6 +113,11 @@ class Products extends MY_Controller
     }
 
     function view($id = NULL) {
+
+        if(!$this->site->route_permission('products_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -180,10 +198,6 @@ class Products extends MY_Controller
         return $imageResource;
 
     }
-
-
-
-
 
     function print_barcodes() {
 
@@ -421,6 +435,10 @@ class Products extends MY_Controller
 
 
     function add() { 
+        if(!$this->site->route_permission('products_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->form_validation->set_rules('code', lang("product_code"), 'trim|is_unique[products.code]|min_length[2]|max_length[50]|required|alpha_numeric');
 
@@ -592,7 +610,10 @@ class Products extends MY_Controller
 
     function edit($id = NULL) {
 
-
+        if(!$this->site->route_permission('products_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         if ($this->input->get('id')) {
 
             $id = $this->input->get('id');
@@ -1026,15 +1047,15 @@ class Products extends MY_Controller
 
         }
 
+        if(!$this->site->route_permission('products_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
-
-        if (!$this->Admin) {
-
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
-
             redirect('pos');
-
-        }
+        } */
 
 
 

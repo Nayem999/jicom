@@ -14,6 +14,11 @@ class Suppliers extends MY_Controller
             redirect('login');
 
         }
+		if(!$this->site->permission('suppliers'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation');
 
@@ -30,7 +35,10 @@ class Suppliers extends MY_Controller
     function index()
     {
 
-
+		if(!$this->site->route_permission('suppliers_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -43,8 +51,6 @@ class Suppliers extends MY_Controller
     	$this->page_construct('suppliers/index', $this->data, $meta);
 
     }
-
-
 
     function get_suppliers() {
 
@@ -62,13 +68,21 @@ class Suppliers extends MY_Controller
         
         $this->datatables->from('suppliers'); 
         
-    	$this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-		
-		<a href='" . site_url('suppliers/edit/$1') . "' class='tip btn btn-primary btn-xs' title='".$this->lang->line("edit_supplier")."'><i class='fa fa-edit'></i></i></a>
-		
-		<a href='" . site_url('suppliers/purchases/$1') . "' class='tip btn btn-warning btn-xs' title='View purchases '><i class='fa fa-list'></i></a>		
-		
-		<a href='" . site_url('suppliers/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_supplier') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_supplier")."'><i class='fa fa-trash-o'></i></a></div></div>", "sid");
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('suppliers_edit')) {
+			$action.="<a href='" . site_url('suppliers/edit/$1') . "' class='tip btn btn-primary btn-xs' title='".$this->lang->line("edit_supplier")."'><i class='fa fa-edit'></i></i></a>";
+		}
+		if($this->site->route_permission('suppliers_view')) {
+			$action.="<a href='" . site_url('suppliers/purchases/$1') . "' class='tip btn btn-warning btn-xs' title='View purchases '><i class='fa fa-list'></i></a>";
+		}
+
+		if($this->site->route_permission('suppliers_delete')) {
+			$action.="<a href='" . site_url('suppliers/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_supplier') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_supplier")."'><i class='fa fa-trash-o'></i></a>";
+		}
+
+		$action.="</div></div>";
+
+    	$this->datatables->add_column("Actions", $action, "sid");
 
     	if($this->session->userdata('store_id') !=0){
     		$this->datatables->where('store_id',$this->session->userdata('store_id'));
@@ -80,6 +94,10 @@ class Suppliers extends MY_Controller
     }
 
 	function add() {
+		if(!$this->site->route_permission('suppliers_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 
 		$this->form_validation->set_rules('email', $this->lang->line("email_address"), 'valid_email');
@@ -146,17 +164,12 @@ class Suppliers extends MY_Controller
 
 	function edit($id = NULL) {
 
-        if((!$this->Admin) && (!$this->Manager)){
-
-            $this->session->set_flashdata('error', $this->lang->line('access_denied'));
-
-            redirect('pos');
-
-        }
+		if(!$this->site->route_permission('suppliers_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
-
-
 
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 
@@ -218,45 +231,28 @@ class Suppliers extends MY_Controller
 	function delete($id = NULL) {
 
 		if(DEMO) {
-
 			$this->session->set_flashdata('error', $this->lang->line("disabled_in_demo"));
-
 			redirect('pos');
-
 		}
-
-
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
-
-
-		if (!$this->Admin)
-
-		{
-
-			$this->session->set_flashdata('error', lang("access_denied"));
-
-			redirect('pos');
-
+		if(!$this->site->route_permission('suppliers_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
 
 
-
 		if ( $this->suppliers_model->deleteSupplier($id) )
-
 		{
-
 			$this->session->set_flashdata('message', lang("supplier_deleted"));
-
 			redirect("suppliers");
-
 		}
 
 	}
 	
 	
-  function purchases($id) { 
+	public function purchases($id) { 
 
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -272,7 +268,7 @@ class Suppliers extends MY_Controller
 
     }
 	
- function get_purchases($id){
+	public function get_purchases($id){
 	
  		if ( ! $this->Admin) {
 
@@ -289,6 +285,16 @@ class Suppliers extends MY_Controller
         $this->datatables->join('suppliers', 'suppliers.id=purchases.supplier_id');
 		
 		$this->datatables->from('purchases');
+
+		/* $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('store_edit')) {
+			$action.="<a href='" . site_url('store/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a>";
+		}
+
+		if($this->site->route_permission('store_delete')) {
+			$action.=" <a href='" . site_url('store/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>"; */
 
         $this->datatables->add_column("Actions", "
 		<div class='text-center'>

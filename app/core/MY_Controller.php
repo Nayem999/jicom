@@ -22,7 +22,14 @@ class MY_Controller extends CI_Controller {
         $this->data['Admin'] = $this->Admin;
         $this->Manager = $this->tec->in_group('manager') ? TRUE : NULL;
         $this->data['Manager'] = $this->Manager;
+
         
+        $this->permissionData = $this->site->permission_data();
+        $this->data['permissionData'] = $this->permissionData;
+        $this->permissionRouteData = $this->site->permission_route_data();
+        $this->data['permissionRouteData'] = $this->permissionRouteData;
+        // $this->data['role_id'] =  $this->site->getUserGroup()  ;
+
         $this->m = strtolower($this->router->fetch_class());
         $this->v = strtolower($this->router->fetch_method());
         $this->data['m']= $this->m;

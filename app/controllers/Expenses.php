@@ -13,6 +13,11 @@ class Expenses extends MY_Controller
             redirect('login');
             
         }
+        if(!$this->site->permission('expenses'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         
         $this->load->library('form_validation');
         
@@ -30,6 +35,10 @@ class Expenses extends MY_Controller
     }
 
     function index($id = NULL) {
+        if(!$this->site->route_permission('expenses_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$start_date = $this->input->post('start_date') ? $this->input->post('start_date')." 00:00:00" : NULL;
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date')." 23:59:59" : NULL;
         $category = $this->input->post('category') ? $this->input->post('category') : NULL;
@@ -51,15 +60,15 @@ class Expenses extends MY_Controller
     	$store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;
     	$start_date = $this->input->get('start_date') ? $this->input->get('start_date')." 00:00:00" : NULL;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date')." 23:59:59" : NULL;        
-        $detail_link = anchor('expenses/expense_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('expense_note'), 'data-toggle="modal" data-target="#myModal2"');        
+        /* $detail_link = anchor('expenses/expense_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('expense_note'), 'data-toggle="modal" data-target="#myModal2"');        
         $edit_link = anchor('expenses/edit_expense/$1', '<i class="fa fa-edit"></i> ' . lang('edit_expense'), 'data-toggle="modal" data-target="#myModal"');        
-        $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line("delete_expense") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('expenses/delete_expense/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> " . lang('delete_expense') . "</a>";        
-        $action = '<div class="text-center"><div class="btn-group text-left">' . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">' . lang('actions') . ' <span class="caret"></span></button>
+        $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line("delete_expense") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('expenses/delete_expense/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> " . lang('delete_expense') . "</a>";  */       
+        /* $action = '<div class="text-center"><div class="btn-group text-left">' . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">' . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $edit_link . '</li>
             <li>' . $delete_link . '</li>
-        </ul></div></div>';        
+        </ul></div></div>'; */        
         $this->load->library('datatables');        
         $this->datatables->select(
         $this->db->dbprefix('expenses') . ".id as id, date, reference, amount,".
@@ -82,10 +91,19 @@ class Expenses extends MY_Controller
         {
            if($store_id){ $this->datatables->where('expenses.store_id', $store_id);}
         }
-        $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-        	<a onclick=\"window.open('" . site_url('expenses/expense_note/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='" . lang('expense_note') . "' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> 
-        	<a href='" . site_url('expenses/edit_expense/$1') . "' title='" . lang("edit_expense") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
-        	<a href='" . site_url('expenses/delete_expense/$1') . "' onClick=\"return confirm('" . lang('alert_x_expense') . "')\" title='" . lang("delete_expense") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id");
+
+        $action="<div class='text-center'><div class='btn-group'>";
+
+		if($this->site->route_permission('expenses_edit')) {
+			$action.="<a href='" . site_url('expenses/edit_expense/$1') . "' title='" . lang("edit_expense") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
+		}
+		if($this->site->route_permission('expenses_delete')) {
+			$action.="<a href='" . site_url('expenses/delete_expense/$1') . "' onClick=\"return confirm('" . lang('alert_x_expense') . "')\" title='" . lang("delete_expense") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="<a onclick=\"window.open('" . site_url('expenses/expense_note/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='" . lang('expense_note') . "' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>";
+        $action.="</div></div>";
+
+        $this->datatables->add_column("Actions",$action, "id");
         
         $this->datatables->unset_column('id');
         
@@ -120,6 +138,10 @@ class Expenses extends MY_Controller
     }     
     
     function add_expense() { 
+        if(!$this->site->route_permission('expenses_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->load->helper('security');        
         // $this->form_validation->set_rules('amount', lang("amount"), 'required');
         // $this->form_validation->set_rules('reference', lang("reference"), 'required');
@@ -264,6 +286,10 @@ class Expenses extends MY_Controller
     }
     
     function edit_expense($id = NULL) { 
+        if(!$this->site->route_permission('expenses_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$getEmpPayId = $this->purchases_model->getExpenseByID($id);    	 
     	if(($getEmpPayId->emp_pay_id !='') || ($getEmpPayId->partner_id !='')) {
     		$this->session->set_flashdata('error', lang('Can\'t Edit this section If you edit/change goto salary setion'));            
@@ -383,6 +409,10 @@ class Expenses extends MY_Controller
         }        
     } 
     function add_category() { 
+        if(!$this->site->route_permission('expenses_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->form_validation->set_rules('name', lang('category_name'), 'required|is_unique[expens_category.name]');
         $this->form_validation->set_rules('code', lang('category code'), 'required|is_unique[expens_category.code]');
 
@@ -471,10 +501,14 @@ class Expenses extends MY_Controller
         echo $this->datatables->generate();
     }
     function edit_category($id = NULL) {
-        if (!$this->Admin) {
+        if(!$this->site->route_permission('expenses_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if (!$this->Admin) {
             $this->session->set_flashdata('error', lang('access_denied'));
             redirect('pos');
-        } 
+        }  */
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
@@ -529,6 +563,10 @@ class Expenses extends MY_Controller
     }
 
     function delete_category($id = NULL) {
+        if(!$this->site->route_permission('expenses_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         if(DEMO) {
             $this->session->set_flashdata('error', lang('disabled_in_demo'));
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
@@ -547,15 +585,20 @@ class Expenses extends MY_Controller
         }
     }  
         
-    function delete_expense($id = NULL) {        
+    function delete_expense($id = NULL) {  
+              
         if (DEMO) {            
             $this->session->set_flashdata('error', lang('disabled_in_demo'));            
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');            
-        }        
-        if(!$this->Admin){            
+        }  
+        if(!$this->site->route_permission('expenses_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}      
+        /* if(!$this->Admin){            
             $this->session->set_flashdata('error', lang('access_denied'));            
             redirect('pos');            
-        }        
+        }  */       
         if ($this->input->get('id')) {            
             $id = $this->input->get('id');            
         }        

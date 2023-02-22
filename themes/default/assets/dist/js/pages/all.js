@@ -4,11 +4,11 @@ $(function () {
 
     $(".select2").select2({minimumResultsForSearch:6});
 
-    $('input').iCheck({
+    /* $('input').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
         increaseArea: '20%'
-    });
+    }); */
 
     $('.redactor').redactor({
         formatting: ['p', 'blockquote', 'h3', 'h4', 'pre'],

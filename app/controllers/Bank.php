@@ -14,6 +14,11 @@ class Bank extends MY_Controller
             redirect('login');
 
         }
+		if(!$this->site->permission('bank'))
+		{
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->load->library('form_validation');
 
@@ -26,6 +31,11 @@ class Bank extends MY_Controller
     }
 
     function index() {
+
+		if(!$this->site->route_permission('bank_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -54,27 +64,21 @@ class Bank extends MY_Controller
        $this->datatables->join('stores', 'bank_account.store_id=stores.id'); 
 
     	$this->datatables->from("bank_account");
+
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('bank_edit')) {
+			$action.="<a href='" . site_url('bank/edit/$1') . "' class='tip btn btn-primary btn-xs' title='Edit Bank Information'> <i class='fa fa-edit'></i></a>";
+		}
+		$action.="<a href='javascript:;' onClick='tranjictionList($1)'  class='tip btn btn-warning btn-xs'  title='Transaction List'> <i class='fa fa-list'></i> </a>
+	<a href='javascript:;' onClick='addTranjiction($1)' class='tip btn btn-warning btn-xs' title='Transaction'> <i class='fa fa-briefcase'></i> </a>";
+
+		if($this->site->route_permission('bank_delete')) {
+			$action.="<a href='" . site_url('bank/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='Delete bank Account'><i class='fa fa-trash-o'></i></a>";
+		}
+
+		$action.="</div></div>";
     
-    	$this->datatables->add_column("Actions", "
-			<div class='text-center'><div class='btn-group'>
-			
-			  <a href='" . site_url('bank/edit/$1') . "' class='tip btn btn-primary btn-xs' title='Edit Bank Information'>
-			      <i class='fa fa-edit'></i>
-			  </a>
-			 
-			 <a href='javascript:;' onClick='tranjictionList($1)'  class='tip btn btn-warning btn-xs'  title='Transaction List'>
-			      <i class='fa fa-list'></i>
-			  </a>
-			  
-			  
-			  <a href='javascript:;' onClick='addTranjiction($1)' class='tip btn btn-warning btn-xs' title='Transaction'>
-			      <i class='fa fa-briefcase'></i>
-			  </a>
-		      <a href='" . site_url('bank/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='Delete bank Account'>
-			    <i class='fa fa-trash-o'></i>
-			  </a>
-			  
-			  </div></div>", "bank_account_id");
+    	$this->datatables->add_column("Actions",$action, "bank_account_id");
     	if(!$this->Admin){
     		$this->datatables->where('store_id', $this->session->userdata('store_id'));
     	}
@@ -99,6 +103,10 @@ class Bank extends MY_Controller
 		}
 
     function add() { 
+		if(!$this->site->route_permission('bank_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		
 		$this->form_validation->set_rules('bank_name','Bank Name', 'required');
 		
@@ -197,13 +205,18 @@ class Bank extends MY_Controller
 
 	function edit($id = NULL){	
 
-        if ((!$this->Admin) && (!$this->Manager)) {
+		if(!$this->site->route_permission('bank_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+
+        /* if ((!$this->Admin) && (!$this->Manager)) {
 
             $this->session->set_flashdata('error', $this->lang->line('access_denied'));
 
             redirect('pos');
 
-        }
+        } */
 
 		$this->form_validation->set_rules('bank_name','Bank Name', 'required');
 		
@@ -287,7 +300,6 @@ class Bank extends MY_Controller
 		if(DEMO) {
 
 			$this->session->set_flashdata('error', $this->lang->line("disabled_in_demo"));
-
 			redirect('pos');
 
 		}
@@ -297,25 +309,22 @@ class Bank extends MY_Controller
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
 
-
-		if (!$this->Admin)
-
-		{
-
-			$this->session->set_flashdata('error', lang("access_denied"));
-
-			redirect('pos');
-
+		if(!$this->site->route_permission('bank_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
+		/* if (!$this->Admin)
+		{
+			$this->session->set_flashdata('error', lang("access_denied"));
+			redirect('pos');
+		} */
 
 
 
 		if ( $this->bank_model->deleteBank($id) )
-
 		{
 
 			$this->session->set_flashdata('message', 'Bank Accounty deleted ');
-
 			redirect("bank");
 
 		}
@@ -381,6 +390,10 @@ class Bank extends MY_Controller
 	}
 	
 	function editTransaction($id){
+		if(!$this->site->route_permission('bank_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 	 
 	 	$bank_id = $this->bank_model->getTransactionByID($id,'1');
 		

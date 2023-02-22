@@ -12,6 +12,11 @@ class Employee extends MY_Controller
             redirect('login');
 
         }
+		if(!$this->site->permission('employee'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation');
 
@@ -27,6 +32,11 @@ class Employee extends MY_Controller
     }
 
     function index()  {
+
+		if(!$this->site->route_permission('employee_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
@@ -57,27 +67,22 @@ class Employee extends MY_Controller
        $this->datatables->join('stores', 'employee.store_id=stores.id');
 
     	$this->datatables->from("employee");
+		
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('employee_view')) {
+			$action.="<a onclick=\"window.open('".site_url('employee/view/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print pay salary ' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>";
+		}
+		if($this->site->route_permission('employee_edit')) {
+			$action.="<a href='" . site_url('employee/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_employee")."'> <i class='fa fa-edit'></i> </a>";
+		}
+		if($this->site->route_permission('employee_delete')) {
+			$action.="<a href='" . site_url('employee/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_employee")."'> <i class='fa fa-trash-o'></i> </a>";
+		}
+        $action.="<a href='javascript:;' onClick='payLisy($1)'  class='tip btn btn-warning btn-xs'  title='Pay Salary list'><i class='fa fa-list'></i></a>";
+        $action.="<a href='javascript:;' onClick='addPay($1)' class='tip btn btn-warning btn-xs' title='Pay Salary'> <i class='fa fa-briefcase'></i> </a>";
+        $action.="</div></div>";
     
-    	$this->datatables->add_column("Actions", "
-			<div class='text-center'><div class='btn-group'>
-			
-			  <a onclick=\"window.open('".site_url('employee/view/$1')."', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print pay salary ' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> 
-			 
-			 <a href='javascript:;' onClick='payLisy($1)'  class='tip btn btn-warning btn-xs'  title='Pay Salary list'>
-			      <i class='fa fa-list'></i>
-			  </a>
-			  
-			  <a href='" . site_url('employee/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_employee")."'>
-			      <i class='fa fa-edit'></i>
-			  </a>
-			  <a href='javascript:;' onClick='addPay($1)' class='tip btn btn-warning btn-xs' title='Pay Salary'>
-			      <i class='fa fa-briefcase'></i>
-			  </a>
-		      <a href='" . site_url('employee/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_employee")."'>
-			    <i class='fa fa-trash-o'></i>
-			  </a>
-			  
-			  </div></div>", "id");
+    	$this->datatables->add_column("Actions", $action, "id");
     	if(!$this->Admin){
     		$this->datatables->where('store_id',$this->session->userdata('store_id'));
     	}
@@ -102,6 +107,10 @@ class Employee extends MY_Controller
 		}
 
     function add() {		
+		if(!$this->site->route_permission('employee_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 		
@@ -193,10 +202,14 @@ class Employee extends MY_Controller
 
 
 	function edit($id = NULL){
-        if ((!$this->Admin) && (!$this->Manager)) {
+		if(!$this->site->route_permission('employee_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+        /* if ((!$this->Admin) && (!$this->Manager)) {
             $this->session->set_flashdata('error', $this->lang->line('access_denied'));
             redirect('pos');
-        }
+        } */
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');		
 		$this->form_validation->set_rules('father_name', 'Father\'s Name', 'required');		
 		$this->form_validation->set_rules('mather_name', 'Mather\'s Name', 'required');
@@ -440,14 +453,15 @@ class Employee extends MY_Controller
 		}
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
-
-		if((!$this->Admin) && (!$this->Manager)){
-
-			$this->session->set_flashdata('error', lang("access_denied"));
-
-			redirect('pos');
-
+		if(!$this->site->route_permission('employee_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
+
+		/* if((!$this->Admin) && (!$this->Manager)){
+			$this->session->set_flashdata('error', lang("access_denied"));
+			redirect('pos');
+		} */
 
 		if ( $this->employee_model->deleteEmployee($id) ) {
 

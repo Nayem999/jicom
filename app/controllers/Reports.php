@@ -9,6 +9,11 @@ class Reports extends MY_Controller
         if ( ! $this->loggedIn) {
             redirect('login');
         }
+        if(!$this->site->permission('reports'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         $this->load->model('reports_model');
         $this->load->model('sales_model');
         $this->load->model('purchases_model');

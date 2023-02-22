@@ -14,6 +14,11 @@ class Mf_material extends MY_Controller
             redirect('login');
 
         }
+		if(!$this->site->permission('mf_material'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation');
 
@@ -30,6 +35,10 @@ class Mf_material extends MY_Controller
 
     function index()
     {
+		if(!$this->site->route_permission('mf_material_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
     	$this->data['page_title'] = lang('material_list');
     	$bc = array(array('link' => '#', 'page' => lang('material_list')));
@@ -48,12 +57,18 @@ class Mf_material extends MY_Controller
     		$this->db->dbprefix('mf_categories') . ".name as category_name, ".
     		$this->db->dbprefix('mf_material') . ".descriptions,", FALSE);       
         $this->datatables->join('mf_categories','mf_categories.id=mf_material.category_id');         
-        $this->datatables->from('mf_material');         
-    	$this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-		
-		<a href='" . site_url('mf_material/edit/$1') . "' class='tip btn btn-primary btn-xs' title='".$this->lang->line("edit_material")."'><i class='fa fa-edit'></i></i></a>
-	
-		<a href='" . site_url('mf_material/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_supplier') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_material")."'><i class='fa fa-trash-o'></i></a></div></div>", "sid");
+        $this->datatables->from('mf_material');        
+				
+        $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('mf_material_edit')) {
+			$action.="<a href='" . site_url('mf_material/edit/$1') . "' class='tip btn btn-primary btn-xs' title='".$this->lang->line("edit_material")."'><i class='fa fa-edit'></i></i></a>";
+		}
+		if($this->site->route_permission('mf_material_delete')) {
+			$action.="<a href='" . site_url('mf_material/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_supplier') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_material")."'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
+
+    	$this->datatables->add_column("Actions", $action, "sid");
 
     	$this->datatables->unset_column('sid'); 
     	echo $this->datatables->generate();
@@ -61,7 +76,10 @@ class Mf_material extends MY_Controller
     }
 
 	function add() {
-
+		if(!$this->site->route_permission('mf_material_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 		$this->form_validation->set_rules('category_id', $this->lang->line("category"), 'required');
 		$this->form_validation->set_rules('uom_id', $this->lang->line("Unit"), 'required');
@@ -103,12 +121,11 @@ class Mf_material extends MY_Controller
 	}
 
 	function edit($id = NULL) {
-
-        if((!$this->Admin) && (!$this->Manager)){
-            $this->session->set_flashdata('error', $this->lang->line('access_denied'));
-            redirect('pos');
-        }
-
+		if(!$this->site->route_permission('mf_material_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+ 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
@@ -153,10 +170,9 @@ class Mf_material extends MY_Controller
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
-		if (!$this->Admin)
-		{
-			$this->session->set_flashdata('error', lang("access_denied"));
-			redirect('pos');
+		if(!$this->site->route_permission('mf_material_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
 
 		if ( $this->mf_material_model->deleteMaterial($id) )

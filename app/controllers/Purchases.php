@@ -13,6 +13,11 @@ class Purchases extends MY_Controller
             redirect('login');
             
         }
+        if(!$this->site->permission('purchases'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         
         $this->load->library('form_validation');
         
@@ -26,6 +31,10 @@ class Purchases extends MY_Controller
     }
     
     public function today() { 
+        if(!$this->site->route_permission('purchases_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = 'Today Purchases';
@@ -46,7 +55,10 @@ class Purchases extends MY_Controller
     }    
     
     function index() { 
-        
+        if(!$this->site->route_permission('purchases_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = lang('purchases');
@@ -68,6 +80,11 @@ class Purchases extends MY_Controller
     }
     
     function today_get_purchases() { 
+
+        if(!$this->site->route_permission('purchases_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
         $today = date('Y-m-d');       
         $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;       
@@ -135,19 +152,20 @@ class Purchases extends MY_Controller
         $this->datatables->from('purchases');        
         $this->datatables->group_by('purchases.id');
 
-        if($data = $this->session->userdata('group_id')==1){
-            $actdata = "<a onclick=\"window.open('" . site_url('purchases/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Purchase' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> ";
-            $actdata .= "<a href='" . site_url('purchases/edit/$1') . "' title='" . lang("edit_purchase") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>"; 
+        $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('purchases_view')) {
+			$action.="<a onclick=\"window.open('" . site_url('purchases/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Purchase' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>  
+            <a href='" . site_url('suppliers/purchases/$2') . "'   title='List of ($3)'  class='tip btn btn-warning btn-xs'><i class='fa fa-user'></i></a>";
+		}
+		if($this->site->route_permission('purchases_edit')) {
+			$action.="<a href='" . site_url('purchases/edit/$1') . "' title='" . lang("edit_purchase") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> ";
+		}
+		if($this->site->route_permission('purchases_delete')) {
+			$action.=" <a href='" . site_url('purchases/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_purchase') . "')\" title='" . lang("delete_purchase") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
 
-            $actdata .= " <a href='" . site_url('suppliers/purchases/$2') . "'   title='List of ($3)'  class='tip btn btn-warning btn-xs'><i class='fa fa-user'></i>";
-            $actdata .= "<a href='" . site_url('purchases/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_purchase') . "')\" title='" . lang("delete_purchase") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
-          }else {
-          $actdata = "<a onclick=\"window.open('" . site_url('purchases/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Purchase' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> ";
-
-          }
-           $this->datatables->add_column("Actions", "
-        <div class='text-center'>
-          <div class='btn-group'>".$actdata."</div></div>", "id , supplier_id , cname ");
+        $this->datatables->add_column("Actions",$action, "id , supplier_id , cname ");
 
         // if ($today != NULL) {
             
@@ -168,7 +186,10 @@ class Purchases extends MY_Controller
     }
     
     function view($id = NULL) { 
-
+        if(!$this->site->route_permission('purchases_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['purchase'] = $this->purchases_model->getPurchaseByID($id);
         
         $supplier_id = $this->data['purchase']->supplier_id;
@@ -207,7 +228,10 @@ class Purchases extends MY_Controller
     }
     
     function add() {  
-        
+        if(!$this->site->route_permission('purchases_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->form_validation->set_rules('date', lang('date'), 'required');
         $this->form_validation->set_rules('supplier', lang('supplier'), 'required');
         
@@ -386,14 +410,15 @@ class Purchases extends MY_Controller
     }       
     
     function edit($id = NULL) {
+        if(!$this->site->route_permission('purchases_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         
-        if (!$this->Admin) {
-            
-            $this->session->set_flashdata('error', lang('access_denied'));
-            
-            redirect('pos');
-            
-        }
+        /* if (!$this->Admin) {            
+            $this->session->set_flashdata('error', lang('access_denied'));            
+            redirect('pos');            
+        } */
         
         if ($this->input->get('id')) {
             
@@ -621,14 +646,16 @@ class Purchases extends MY_Controller
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
             
         }
+
+        if(!$this->site->route_permission('purchases_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         
-        if (!$this->Admin) {
-            
-            $this->session->set_flashdata('error', lang('access_denied'));
-            
-            redirect('pos');
-            
-        }
+        /* if (!$this->Admin) {            
+            $this->session->set_flashdata('error', lang('access_denied'));            
+            redirect('pos');            
+        } */
         
         if ($this->input->get('id')) {
             
@@ -932,6 +959,7 @@ class Purchases extends MY_Controller
         }
         
     }
+
     public function pSequence($qty,$id,$row_no,$sequence,$allSequence  = NULL){ 
         $lastProSeque = $this->purchases_model->lastProSeque();
         $this->data['lastProSeque'] = $lastProSeque; 
@@ -970,7 +998,8 @@ class Purchases extends MY_Controller
         $this->load->view($this->theme.'purchases/sequence', $this->data,$squNo, $qty,$row_no,$allSequence,$startsqe , $startcr);
     
     }
- public function pSequenceEdit($qty,$id,$row_no,$sequence, $purchases_id = NULL ,$allSequence  = NULL){ 
+
+    public function pSequenceEdit($qty,$id,$row_no,$sequence, $purchases_id = NULL ,$allSequence  = NULL){ 
         $lastProSeque = $this->purchases_model->lastProSeque();
         $this->data['lastProSeque'] = $lastProSeque; 
         $this->data['qty'] = $qty;
@@ -1013,9 +1042,6 @@ class Purchases extends MY_Controller
         $this->load->view($this->theme.'purchases/sequenceEdit', $this->data);
     
     }
-
-
-
 
     public function checkDB($sequence, $seqId = NULL){        
       if($sequence==''){
@@ -1070,19 +1096,20 @@ class Purchases extends MY_Controller
       $suppliers = $this->site->getAllSuppliers($store_id);
         ?>
         
-    <label class="control-label" for="supplier"><?= lang("supplier"); ?></label>
+        <label class="control-label" for="supplier"><?= lang("supplier"); ?></label>
 
-    <?php
+        <?php
 
-    $cu[''] = lang("select")." ".lang("supplier");
+        $cu[''] = lang("select")." ".lang("supplier");
 
-    foreach($suppliers as $supplier){
+        foreach($suppliers as $supplier){
 
-        $cu[$supplier->id] = $supplier->name .' ('.$this->site->findeNameByID('stores','id',$supplier->store_id)->name.')';
+            $cu[$supplier->id] = $supplier->name .' ('.$this->site->findeNameByID('stores','id',$supplier->store_id)->name.')';
 
-    }
+        }
 
-    echo form_dropdown('supplier', $cu, set_value('supplier'), 'class="form-control select2" style="width:100%" id="supplier"'); ?>
+        echo form_dropdown('supplier', $cu, set_value('supplier'), 'class="form-control select2" style="width:100%" id="supplier"'); ?>
 
-   <?php  }
+    <?php  
+   }
 }

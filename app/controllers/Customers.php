@@ -6,6 +6,11 @@ class Customers extends MY_Controller
         if (!$this->loggedIn) {
             redirect('login');
         }
+		if(!$this->site->permission('customers'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         $this->load->library('form_validation');
         $this->load->model('customers_model');
         $this->load->model('sales_model');
@@ -14,6 +19,10 @@ class Customers extends MY_Controller
     }
     function index()
     {
+		if(!$this->site->route_permission('customers_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
     	$this->data['page_title'] = lang('customers');
     	$bc = array(array('link' => '#', 'page' => lang('customers')));
@@ -32,10 +41,17 @@ class Customers extends MY_Controller
     		$this->db->dbprefix('customers') . ".cf2,", FALSE);        
        $this->datatables->join('stores', 'customers.store_id=stores.id'); 
     	$this->datatables->from("customers");
-    	$this->datatables->add_column("Actions", "<div class='text-center'>
-    		<div class='btn-group'>    		
-    		<a href='" . site_url('customers/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a> 
-    		<a href='" . site_url('customers/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a></div></div>", "cid");
+
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('customers_edit')) {
+			$action.="<a href='" . site_url('customers/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a>";
+		}
+		if($this->site->route_permission('customers_delete')) {
+			$action.="<a href='" . site_url('customers/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
+
+    	$this->datatables->add_column("Actions", $action, "cid");
     	// $this->datatables->unset_column('cid');
     	if(!$this->Admin){
     		$this->datatables->where('store_id',$this->session->userdata('store_id'));
@@ -49,12 +65,15 @@ class Customers extends MY_Controller
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 		$this->form_validation->set_rules('email', $this->lang->line("email_address"), 'valid_email');
 		$this->form_validation->set_rules('phone', $this->lang->line("phone"), 'required');
+		$this->form_validation->set_rules('store_id', 'Store Name', 'required');
 
-		if ($this->Admin){
-
-			$this->form_validation->set_rules('store_id', 'Store Name', 'required');
-
+		if(!$this->site->route_permission('customers_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
+		/* if ($this->Admin){
+			$this->form_validation->set_rules('store_id', 'Store Name', 'required');
+		} */
 
 		if ($this->form_validation->run() == true) {
 			if($this->input->post('credit_limit')){$credit_limit=$this->input->post('credit_limit');}else{$credit_limit=0;}
@@ -119,16 +138,19 @@ class Customers extends MY_Controller
 
 
 	function edit($id = NULL)
-
 	{
+		if(!$this->site->route_permission('customers_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 
-        if((!$this->Admin) && (!$this->Manager)){
+        /* if((!$this->Admin) && (!$this->Manager)){
 
             $this->session->set_flashdata('error', $this->lang->line('access_denied'));
 
             redirect('pos');
 
-        }         
+        }     */     
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
@@ -190,11 +212,15 @@ class Customers extends MY_Controller
 
 	function delete($id = NULL) { 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
-		if (!$this->Admin)
+		if(!$this->site->route_permission('customers_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+		/* if (!$this->Admin)
 		{
 			$this->session->set_flashdata('error', lang("access_denied"));
 			redirect('pos');
-		}
+		} */
 
 		if ( $this->customers_model->deleteCustomer($id) )
 		{

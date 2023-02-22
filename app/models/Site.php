@@ -441,5 +441,58 @@ class Site extends CI_Model
             return FALSE;
 
     }
+
+    public function permission_data()
+    {
+        if ($this->session->userdata('group_id')) {
+            $this->db->select('permissions.*');
+            $this->db->where('permissions.group_id', $this->session->userdata('group_id'));
+            $q2  =  $this->db->get('permissions');
+            return $q2->row();
+        } else {
+            return false;
+        }
+    }
+
+    public function permission_route_data()
+    {
+        if ($this->session->userdata('group_id')) {
+            $this->db->select('module_routes.*');
+            $this->db->where('module_routes.group_id', $this->session->userdata('group_id'));
+            $q2  =  $this->db->get('module_routes');
+            return $q2->row();
+        } else {
+            return false;
+        }
+    }
+
+    public function permission($row_name)
+    {
+        $group_id = $this->session->userdata('group_id');
+        if ($group_id) {
+            if ($this->permissionData->$row_name  ==  1) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function route_permission($row_name)
+    {
+        $group_id = $this->session->userdata('group_id');
+        if ($group_id) {
+            if ($this->permissionRouteData->$row_name  ==  1) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
       
 }

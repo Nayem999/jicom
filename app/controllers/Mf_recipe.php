@@ -9,6 +9,11 @@ class Mf_recipe extends MY_Controller
         if (!$this->loggedIn) {
             redirect('login');
         }
+        if(!$this->site->permission('mf_recipe'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
 
         $this->load->library('form_validation');
         $this->load->model('products_model');
@@ -18,7 +23,10 @@ class Mf_recipe extends MY_Controller
     }
 
     function index() {
-
+        if(!$this->site->route_permission('mf_recipe_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));       
         $this->data['page_title'] = lang('unit');
         $bc = array(array('link' => '#', 'page' => lang('unit')));
@@ -40,17 +48,29 @@ class Mf_recipe extends MY_Controller
         $this->datatables->join('products','mf_recipe_mst.product_id=products.id'); 
         $this->datatables->where('mf_recipe_mst.active_status',1); 
 
-        $this->datatables->add_column("Actions", "<div class='text-center'><div class='btn-group'>
-        <a onclick=\"window.open('" . site_url('mf_recipe/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Recipe' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a>
-        <a href='" . site_url('mf_recipe/edit/$1') . "' title='Edit Recipe' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> 
-        <a href='" . site_url('mf_recipe/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_recipe') . "')\" title='" . lang("delete_unit") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div></div>", "id, image, code, name");
+        $action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('mf_recipe_view')) {
+			$action.="<a onclick=\"window.open('" . site_url('mf_recipe/view/$1') . "', 'pos_popup', 'width=900,height=600,menubar=yes,scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#' title='Print Recipe' class='tip btn btn-primary btn-xs'><i class='fa fa-file-text-o'></i></a> ";
+		}
+		if($this->site->route_permission('mf_recipe_edit')) {
+			$action.="<a href='" . site_url('mf_recipe/edit/$1') . "' title='Edit Recipe' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a>";
+		}
+		if($this->site->route_permission('mf_recipe_delete')) {
+			$action.=" <a href='" . site_url('mf_recipe/delete/$1') . "' onClick=\"return confirm('" . lang('alert_x_recipe') . "')\" title='" . lang("delete_unit") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
+
+        $this->datatables->add_column("Actions", $action, "id, image, code, name");
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
 
     }
 
     function add() {
-
+        if(!$this->site->route_permission('mf_recipe_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         $max_id = $this->mf_recipe_model->get_max_id();
          
         $this->form_validation->set_rules('recipe_name', lang('recipe_name'), 'required');
@@ -124,10 +144,10 @@ class Mf_recipe extends MY_Controller
     }
 
     function edit($id = NULL) {
-        if (!$this->Admin) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            redirect('pos');
-        }
+        if(!$this->site->route_permission('mf_recipe_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
@@ -223,10 +243,10 @@ class Mf_recipe extends MY_Controller
             $this->session->set_flashdata('error', lang('disabled_in_demo'));
             redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'welcome');
         }
-        if (!$this->Admin) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            redirect('pos');
-        }
+        if(!$this->site->route_permission('mf_recipe_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }

@@ -14,6 +14,11 @@ class Store extends MY_Controller
             redirect('login');
 
         }
+		if(!$this->site->permission('store'))
+        {
+          $this->session->set_flashdata('error', lang('access_denied'));
+          redirect();
+        }
         $this->load->library('form_validation'); 
         $this->load->model('store_model');
 		
@@ -23,7 +28,10 @@ class Store extends MY_Controller
     }
 
     function index() {
-
+        if(!$this->site->route_permission('store_view')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
     	$this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
     	$this->data['page_title'] = lang('stores');
@@ -44,14 +52,17 @@ class Store extends MY_Controller
 
     	$this->datatables->from("stores");
 
-    	$action = "<a href='" . site_url('store/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a>";
+		$action="<div class='text-center'><div class='btn-group'>";
+		if($this->site->route_permission('store_edit')) {
+			$action.="<a href='" . site_url('store/edit/$1') . "' class='tip btn btn-warning btn-xs' title='".$this->lang->line("edit_customer")."'><i class='fa fa-edit'></i></a>";
+		}
 
-    	if($this->session->userdata('store_id') ==0){
-    		$action .= "<a href='" . site_url('store/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a>";
-    	}   	 
+		if($this->site->route_permission('store_delete')) {
+			$action.=" <a href='" . site_url('store/delete/$1') . "' onClick=\"return confirm('". $this->lang->line('alert_x_customer') ."')\" class='tip btn btn-danger btn-xs' title='".$this->lang->line("delete_customer")."'><i class='fa fa-trash-o'></i></a>";
+		}
+        $action.="</div></div>";
 
-    	$this->datatables->add_column("Actions", "<div class='text-center'>
-    		<div class='btn-group'>".$action."</div></div>", "id");
+    	$this->datatables->add_column("Actions",$action, "id");
 
     	$this->datatables->unset_column('id');
     	if($this->session->userdata('store_id') !=0){
@@ -63,10 +74,14 @@ class Store extends MY_Controller
     }
 
 	function add() {
-		 if (!$this->Admin) {
+		if(!$this->site->route_permission('store_add')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
+		 /* if (!$this->Admin) {
             $this->session->set_flashdata('error', $this->lang->line('access_denied'));
             redirect('pos');
-        }
+        } */
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required');
 		$this->form_validation->set_rules('email', $this->lang->line("email_address"), 'required|valid_email|trim|is_unique[stores.email]');
 		$this->form_validation->set_rules('phone', $this->lang->line("phone"), 'required');
@@ -124,7 +139,10 @@ class Store extends MY_Controller
 	}
 
 	function edit($id = NULL) {       
-
+		if(!$this->site->route_permission('store_edit')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
+		}
 		$this->form_validation->set_rules('name', $this->lang->line("name"), 'required'); 
 
 		if ($this->form_validation->run() == true) {
@@ -174,22 +192,20 @@ class Store extends MY_Controller
 	function delete($id = NULL)	{
 
 		if(DEMO) {
-
 			$this->session->set_flashdata('error', $this->lang->line("disabled_in_demo"));
-
 			redirect('pos');
-
 		} 
 
 		if($this->input->get('id')) { $id = $this->input->get('id', TRUE); }
 
-		if (!$this->Admin) {
-
-			$this->session->set_flashdata('error', lang("access_denied"));
-
-			redirect('pos');
-
+		if(!$this->site->route_permission('store_delete')) {
+			$this->session->set_flashdata('error', lang('access_denied'));
+			redirect();
 		}
+		/* if (!$this->Admin) {
+			$this->session->set_flashdata('error', lang("access_denied"));
+			redirect('pos');
+		} */
 		if ( $this->store_model->deleteStore($id) ) {
 
 			$this->session->set_flashdata('message', lang("customer_deleted"));
