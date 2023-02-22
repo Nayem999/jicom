@@ -271,13 +271,13 @@ class Mf_purchases extends MY_Controller
  
                 if ($item_id && $item_qty) {
                     
-                    if (!$this->site->getProductByID($item_id)) {
+                    /* if (!$this->site->getProductByID($item_id)) {
                         
                         $this->session->set_flashdata('error', $this->lang->line("product_not_found") . " ( " . $item_id . " ).");
                         redirect('mf_purchases/edit/' . $id);
                         
                     }
-                    
+                     */
                     $products[] = array( 
                         'material_id' => $item_id,                    
                         'brand_id' => $brand_id,                   
