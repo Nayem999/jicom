@@ -228,7 +228,7 @@ class Mf_purchases extends MY_Controller
             );
             
             $meta = array(
-                'page_title' => lang('add_purchase'),
+                'page_title' => lang('Add Raw Material Purchase'),
                 'bc' => $bc
             );
             $this->session->unset_userdata('squNo');
@@ -367,7 +367,7 @@ class Mf_purchases extends MY_Controller
             );
             
             $meta = array(
-                'page_title' => lang('edit_purchase'),
+                'page_title' => lang('Edit Raw Material Purchase'),
                 'bc' => $bc
             );
             

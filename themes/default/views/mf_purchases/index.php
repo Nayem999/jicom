@@ -125,9 +125,9 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <?= lang('Store', 'Store'); ?>
+                                <?= lang('Factory', 'Factory'); ?>
                                 <?php
-                                $wr[0] = lang("select") . " " . lang("Store");
+                                $wr[0] = lang("select") . " " . lang("Factory");
                                 foreach ($stores as $store) {
                                     $wr[$store->id] = $store->name;
                                 }
