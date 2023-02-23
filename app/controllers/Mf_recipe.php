@@ -28,9 +28,9 @@ class Mf_recipe extends MY_Controller
 			redirect();
 		}
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));       
-        $this->data['page_title'] = lang('unit');
-        $bc = array(array('link' => '#', 'page' => lang('unit')));
-        $meta = array('page_title' => lang('unit'), 'bc' => $bc);
+        $this->data['page_title'] = lang('recipe');
+        $bc = array(array('link' => '#', 'page' => lang('recipe')));
+        $meta = array('page_title' => lang('recipe'), 'bc' => $bc);
         $this->page_construct('mf_recipe/index', $this->data, $meta);
 
     } 
@@ -199,7 +199,7 @@ class Mf_recipe extends MY_Controller
 
         if ($this->form_validation->run() == true && $this->mf_recipe_model->updateRecipe($id, $data, $products)) {
 
-            $this->session->set_flashdata('message', lang('category_updated'));
+            $this->session->set_flashdata('message', lang('recipe_updated'));
             $this->index();
 
         } else {
@@ -251,8 +251,13 @@ class Mf_recipe extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        $data['active_status']=0;
-        if ($this->mf_recipe_model->deleteRecipe($id,$data)) {
+        $data=array(
+            'updated_by' => $this->session->userdata('user_id'),               
+            'updated_at' =>  date('Y-m-d H:i:s'), 
+            'active_status' =>  0, 
+        );
+        $data2['active_status']=0;
+        if ($this->mf_recipe_model->deleteRecipe($id,$data,$data2)) {
             $this->session->set_flashdata('message', lang("Recipe successfully deleted"));
             $this->index();
         }

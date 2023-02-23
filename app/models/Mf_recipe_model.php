@@ -9,28 +9,21 @@ class Mf_recipe_model extends CI_Model
     }
 
     public function update_recipe($id, $data = NULL) {
-        if ($this->db->update('mf_recipe', $data, array('id' => $id))) {
+        if ($this->db->update('mf_recipe_mst', $data, array('id' => $id))) {
             return true;
         }
         return false;
     }
 
-    public function deleteCategory($id) {
-        if ($this->db->delete('mf_categories', array('id' => $id))) {
-            return true;
-        }
-        return FALSE;
-    }
-
     public function get_all_recipe() {
-        $this->db->from('mf_recipe');
+        $this->db->from('mf_recipe_mst');
         $query = $this->db->get();        
         $results = $query->result();     
         return $results ; 
     }
 
     public function get_recipe_by_id($id) {
-        $q = $this->db->get_where('mf_recipe', array('id' => $id));
+        $q = $this->db->get_where('mf_recipe_mst', array('id' => $id));
             if ($q->num_rows() > 0) {
                 return $q->result();
             }
@@ -148,12 +141,35 @@ class Mf_recipe_model extends CI_Model
 
     }
 
-    public function deleteRecipe($id,$data) {
+    public function deleteRecipe($id,$data,$data2) {
 
-        if ($this->db->update('mf_recipe_mst', $data, array('id' => $id)) && $this->db->update('mf_recipe_dtls', $data, array('recipe_id' => $id))) {
+        if ($this->db->update('mf_recipe_mst', $data, array('id' => $id)) && $this->db->update('mf_recipe_dtls', $data2, array('recipe_id' => $id))) {
             return true;
         }
         return false;
+
+    }
+
+    
+    public function get_Recipe_for_production($id) {
+
+        $this->db->select('mf_recipe_mst.uom_id, mf_recipe_mst.product_id, mf_material.name, mf_brands.name as brand_name, mf_recipe_dtls.quantity as qty, mf_unit.name as unit_name, mf_recipe_dtls.material_id, mf_recipe_dtls.material_stock_id, mf_material_store_qty.quantity as stock_qty, mf_material_store_qty.id as material_stock_id, mf_recipe_dtls.id as recipe_dtls_id, mf_material_store_qty.cost as cost');
+        $this->db->join('mf_recipe_mst','mf_recipe_dtls.recipe_id=mf_recipe_mst.id');
+        $this->db->join('mf_material','mf_recipe_dtls.material_id=mf_material.id');
+        $this->db->join('mf_material_store_qty','mf_recipe_dtls.material_stock_id=mf_material_store_qty.id');
+        $this->db->join('mf_brands','mf_material_store_qty.brand_id=mf_brands.id','left');
+        $this->db->join('mf_unit','mf_material.uom_id=mf_unit.id','left');
+
+        $q = $this->db->get_where('mf_recipe_dtls', array('mf_recipe_dtls.recipe_id' => $id,'mf_recipe_dtls.active_status'=>1));
+
+        if( $q->num_rows() > 0 ) {
+            foreach (($q->result()) as $row){  
+                $data[] = $row;  
+            }
+            return $data;
+        }
+
+        return FALSE;
 
     }
 

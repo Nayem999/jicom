@@ -113,7 +113,8 @@ class Permission extends MY_Controller
                 'mf_purchases' => $this->input->post('mf_purchases'),
                 'mf_material_stock' => $this->input->post('mf_material_stock'),
                 'mf_recipe' => $this->input->post('mf_recipe'),
-                'mf_producion' => $this->input->post('mf_producion'),
+                'mf_production' => $this->input->post('mf_production'),
+                'mf_finish_good_stock' => $this->input->post('mf_finish_good_stock'),
             );
 
             $data2 = array(
@@ -217,10 +218,12 @@ class Permission extends MY_Controller
                 'mf_recipe_add' => $this->input->post('mf_recipe_add'),
                 'mf_recipe_edit' => $this->input->post('mf_recipe_edit'),
                 'mf_recipe_delete' => $this->input->post('mf_recipe_delete'),
-                'mf_producion_view' => $this->input->post('mf_producion_view'),
-                'mf_producion_add' => $this->input->post('mf_producion_add'),
-                'mf_producion_edit' => $this->input->post('mf_producion_edit'),
-                'mf_producion_delete' => $this->input->post('mf_producion_delete'),
+                'mf_production_view' => $this->input->post('mf_production_view'),
+                'mf_production_add' => $this->input->post('mf_production_add'),
+                'mf_production_edit' => $this->input->post('mf_production_edit'),
+                'mf_production_delete' => $this->input->post('mf_production_delete'),
+                'mf_finish_good_stock_view' => $this->input->post('mf_finish_good_stock_view'),
+                'mf_finish_good_stock_edit' => $this->input->post('mf_finish_good_stock_edit'),
             );
             // print_r($data);
             // print_r($data2);die;

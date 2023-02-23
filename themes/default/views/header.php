@@ -463,7 +463,7 @@
                   <?= lang('Stores'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
-                <?php if ($this->site->route_permission('store_list')) {?>
+                <?php if ($this->site->route_permission('store_view')) {?>
                   <li id="store_index"><a href="<?= site_url('store'); ?>"><i class="fa fa-circle-o"></i><?= lang('Stores'); ?> </a></li>
                 <?php } ?>  
                 <?php if ($this->site->route_permission('store_add')) {?>
@@ -676,24 +676,43 @@
           <?php
           }
 
-          // PRODUCION MODULE
-          if ($this->site->permission('mf_producion')) {
+          // Production MODULE
+          if ($this->site->permission('mf_production')) {
           ?>
-            <li class="treeview mm_mf_producion"> <a href="#"> <i class="fa fa-folder"></i> <span>
-                  <?= lang('producion'); ?>
+            <li class="treeview mm_mf_production"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('production'); ?>
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
-                <?php if ($this->site->route_permission('mf_producion_view')) {?>
-                  <li id="mf_producion_index"><a href="<?= site_url('mf_producion'); ?>"><i class="fa fa-circle-o"></i><?= lang('recipe_list'); ?></a></li>
+                <?php if ($this->site->route_permission('mf_production_view')) {?>
+                  <li id="mf_production_index"><a href="<?= site_url('mf_production'); ?>"><i class="fa fa-circle-o"></i><?= lang('production_list'); ?></a></li>
                 <?php } ?>  
-                <?php if ($this->site->route_permission('mf_producion_add')) {?>
-                  <li id="mf_producion_add"><a href="<?= site_url('mf_producion/add'); ?>"><i class="fa fa-circle-o"></i><?= lang('add_recipe'); ?></a></li>
+                <?php if ($this->site->route_permission('mf_production_add')) {?>
+                  <li id="mf_production_add"><a href="<?= site_url('mf_production/add'); ?>"><i class="fa fa-circle-o"></i><?= lang('add_production'); ?></a></li>
                 <?php } ?>  
                 <li class="divider"></li>
               </ul>
             </li>
           <?php
           }
+
+          // Production MODULE
+          if ($this->site->permission('mf_finish_good_stock')) {
+          ?>
+            <li class="treeview mm_mf_finish_good_stock"> <a href="#"> <i class="fa fa-folder"></i> <span>
+                  <?= lang('finish_good_stock'); ?>
+                </span> <i class="fa fa-angle-left pull-right"></i> </a>
+              <ul class="treeview-menu">
+                <?php if ($this->site->route_permission('mf_finish_good_stock_view')) {?>
+                  <li id="mf_finish_good_stock_index"><a href="<?= site_url('mf_finish_good_stock'); ?>"><i class="fa fa-circle-o"></i><?= lang('stock_list'); ?></a></li>
+                  <!-- <li id="mf_finish_good_stock_stock_adjust"><a href="<?= site_url('mf_finish_good_stock/stock_adjust'); ?>"><i class="fa fa-circle-o"></i><?= lang('stock_adjust'); ?></a></li>
+                  <li id="mf_finish_good_stock_adjust_log_list"><a href="<?= site_url('mf_finish_good_stock/adjust_log_list'); ?>"><i class="fa fa-circle-o"></i><?= lang('adjust_log'); ?></a></li> -->
+                <?php } ?>   
+                <li class="divider"></li>
+              </ul>
+            </li>
+          <?php
+          }
+
           ?>
 
         </ul>

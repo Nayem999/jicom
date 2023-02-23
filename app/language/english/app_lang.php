@@ -560,11 +560,16 @@ $lang['group_updated']                     = "Group successfully updated";
 $lang['alert_x_group']                     = "You are going to delete group, please click ok to delete.";
 $lang['permission']                         = "Permission";
 
-$lang['producion']                         = "Producion";
-$lang['producion_name']                    = "Producion Name";
-$lang['producion_list']                    = "Producion List";
-$lang['add_producion']                     = "Add Producion";
-$lang['edit_producion']                    = "Edit Producion";
-$lang['producion_added']                   = "Producion successfully added";
-$lang['producion_updated']                 = "Producion successfully updated";
-$lang['alert_x_producion']                 = "You are going to delete producion, please click ok to delete.";
+$lang['production']                         = "Production";
+$lang['batch_no']                           = "Batch No";
+$lang['production_name']                    = "Production Name";
+$lang['production_list']                    = "Production List";
+$lang['add_production']                     = "Add Production";
+$lang['edit_production']                    = "Edit Production";
+$lang['production_added']                   = "Production successfully added";
+$lang['production_updated']                 = "Production successfully updated";
+$lang['alert_x_production']                 = "You are going to delete production, please click ok to delete.";
+
+$lang['finish_good_stock']                         = "Finish Good Stock";
+$lang['finish_good_stock_list']                         = "Finish Good Stock List";
+$lang['finish_good_stock_list']                         = "Finish Good Stock List";

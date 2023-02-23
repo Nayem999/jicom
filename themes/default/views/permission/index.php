@@ -538,20 +538,34 @@
                     <hr>
                     <div class="row" >
                         <div class="col-sm-4">
-                            <input type="checkbox" name="mf_producion" id="mf_producion" value="<?=isset($permissiion_module->mf_producion)?$permissiion_module->mf_producion:0;?>" <?=(isset($permissiion_module->mf_producion) && $permissiion_module->mf_producion==1)?'checked':'';?> onclick="fn_change_val('mf_producion')" > <?= lang('producion'); ?>
+                            <input type="checkbox" name="mf_production" id="mf_production" value="<?=isset($permissiion_module->mf_production)?$permissiion_module->mf_production:0;?>" <?=(isset($permissiion_module->mf_production) && $permissiion_module->mf_production==1)?'checked':'';?> onclick="fn_change_val('mf_production')" > <?= lang('producion'); ?>
                         </div>
                         <div class="col-sm-2">
-                            <input type="checkbox" name="mf_producion_view" id="mf_producion_view"  value="<?=isset($permission_route->mf_producion_view)?$permission_route->mf_producion_view:0;?>" <?=(isset($permission_route->mf_producion_view) && $permission_route->mf_producion_view==1)?'checked':'';?> onclick="fn_change_val('mf_producion_view')">
+                            <input type="checkbox" name="mf_production_view" id="mf_production_view"  value="<?=isset($permission_route->mf_production_view)?$permission_route->mf_production_view:0;?>" <?=(isset($permission_route->mf_production_view) && $permission_route->mf_production_view==1)?'checked':'';?> onclick="fn_change_val('mf_production_view')">
                         </div>
                         <div class="col-sm-2">
-                            <input type="checkbox" name="mf_producion_add" id="mf_producion_add_v"  value="<?=isset($permission_route->mf_producion_add)?$permission_route->mf_producion_add:0;?>" <?=(isset($permission_route->mf_producion_add) && $permission_route->mf_producion_add==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_add_v')">   
+                            <input type="checkbox" name="mf_production_add" id="mf_production_add_v"  value="<?=isset($permission_route->mf_production_add)?$permission_route->mf_production_add:0;?>" <?=(isset($permission_route->mf_production_add) && $permission_route->mf_production_add==1)?'checked':'';?>  onclick="fn_change_val('mf_production_add_v')">   
                         </div>
                         <div class="col-sm-2">
-                            <input type="checkbox" name="mf_producion_edit" id="mf_producion_edit"  value="<?=isset($permission_route->mf_producion_edit)?$permission_route->mf_producion_edit:0;?>" <?=(isset($permission_route->mf_producion_edit) && $permission_route->mf_producion_edit==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_edit')">  
+                            <input type="checkbox" name="mf_production_edit" id="mf_production_edit"  value="<?=isset($permission_route->mf_production_edit)?$permission_route->mf_production_edit:0;?>" <?=(isset($permission_route->mf_production_edit) && $permission_route->mf_production_edit==1)?'checked':'';?>  onclick="fn_change_val('mf_production_edit')">  
                         </div>
                         <div class="col-sm-2">
-                            <input type="checkbox" name="mf_producion_delete" id="mf_producion_delete"  value="<?=isset($permission_route->mf_producion_delete)?$permission_route->mf_producion_delete:0;?>" <?=(isset($permission_route->mf_producion_delete) && $permission_route->mf_producion_delete==1)?'checked':'';?>  onclick="fn_change_val('mf_producion_delete')">   
+                            <input type="checkbox" name="mf_production_delete" id="mf_production_delete"  value="<?=isset($permission_route->mf_production_delete)?$permission_route->mf_production_delete:0;?>" <?=(isset($permission_route->mf_production_delete) && $permission_route->mf_production_delete==1)?'checked':'';?>  onclick="fn_change_val('mf_production_delete')">   
                         </div>
+                    </div>
+                    <hr>
+                    <div class="row" >
+                        <div class="col-sm-4">
+                            <input type="checkbox" name="mf_finish_good_stock" id="mf_finish_good_stock" value="<?=isset($permissiion_module->mf_finish_good_stock)?$permissiion_module->mf_finish_good_stock:0;?>" <?=(isset($permissiion_module->mf_finish_good_stock) && $permissiion_module->mf_finish_good_stock==1)?'checked':'';?> onclick="fn_change_val('mf_finish_good_stock')" > <?= lang('finish_good_stock'); ?>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_finish_good_stock_view" id="mf_finish_good_stock_view"  value="<?=isset($permission_route->mf_finish_good_stock_view)?$permission_route->mf_finish_good_stock_view:0;?>" <?=(isset($permission_route->mf_finish_good_stock_view) && $permission_route->mf_finish_good_stock_view==1)?'checked':'';?> onclick="fn_change_val('mf_finish_good_stock_view')">
+                        </div>
+                        <div class="col-sm-2"> </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_finish_good_stock_edit" id="mf_finish_good_stock_edit"  value="<?=isset($permission_route->mf_finish_good_stock_edit)?$permission_route->mf_finish_good_stock_edit:0;?>" <?=(isset($permission_route->mf_finish_good_stock_edit) && $permission_route->mf_finish_good_stock_edit==1)?'checked':'';?>  onclick="fn_change_val('mf_finish_good_stock_edit')">  
+                        </div>
+                        <div class="col-sm-2"> </div>
                     </div>
                     <hr>
                     <div class="row">

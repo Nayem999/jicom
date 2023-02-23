@@ -10,28 +10,26 @@
             <?php echo form_open('collection/collectionApproed/' . $id); ?>
             <div class="modal-body">
                 <div class="row">
-                    <?php if ($Admin) { ?>
-                        <div class="col-sm-12">
+                    <div class="col-sm-12">
+                    </div>
+                    <div class="col-sm-8">
+
+                        <div class="form-group">
+                            <label>Collection Status:</label> <br>
+                            <input id="paid_by" name="payment_status" type="radio" class="" <?php if ($info->payment_status == "Approved") echo "checked='checked'"; ?> value='Approved' />
+                            <label for="paid_by" class="">Approved</label>
+
+                            <input id="paid_by" name="payment_status" type="radio" class="" <?php if (($info->payment_status == "Pending")) echo "checked='checked'"; ?> value="Pending" />
+                            <label for="paid_by" class="">Pending</label>
+
                         </div>
-                        <div class="col-sm-8">
-
-                            <div class="form-group">
-                                <label>Collection Status:</label> <br>
-                                <input id="paid_by" name="payment_status" type="radio" class="" <?php if ($info->payment_status == "Approved") echo "checked='checked'"; ?> value='Approved' />
-                                <label for="paid_by" class="">Approved</label>
-
-                                <input id="paid_by" name="payment_status" type="radio" class="" <?php if (($info->payment_status == "Pending")) echo "checked='checked'"; ?> value="Pending" />
-                                <label for="paid_by" class="">Pending</label>
-
-                            </div>
-                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary" value="Save" name="add_status">
                 </div>
             </div>
-        <?php } ?>
         </div>
     </div>
 </div>
