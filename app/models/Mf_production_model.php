@@ -156,18 +156,29 @@ class Mf_production_model extends CI_Model
             $finished_good_stock = $q->row();
             if($status=='Approved')
             {
-                $new_qty= $finished_good_stock->quantity+$info->target_qty;
-                $this->db->update('mf_finished_good_stock', array('quantity' => $new_qty), array('product_id' => $info->product_id));
+                $oldTPrice = $finished_good_stock->cost*$finished_good_stock->quantity;
+                $newTPrice = $info->total_cost*$info->target_qty;
+                $TotalPrice = $oldTPrice+$newTPrice;
+                $TotalQty = $finished_good_stock->quantity+$info->target_qty;
+                $coust_amount = $TotalPrice/$TotalQty;
+
+                $this->db->update('mf_finished_good_stock',array('quantity' => $TotalQty,'cost' => $coust_amount), array('product_id' => $info->product_id));
             }
             else
             {
                 $new_qty= $finished_good_stock->quantity-$info->target_qty;
-                $this->db->update('mf_finished_good_stock', array('quantity' => $new_qty), array('product_id' => $info->product_id));
+                $oldTPrice = $finished_good_stock->cost*$finished_good_stock->quantity;
+                $newTPrice = $info->total_cost*$info->target_qty;
+                $TotalPrice = $oldTPrice-$newTPrice;
+                $TotalQty = $finished_good_stock->quantity-$info->target_qty;
+                $coust_amount = $TotalPrice/$TotalQty;
+
+                $this->db->update('mf_finished_good_stock', array('quantity' => $new_qty,'cost' => $coust_amount), array('product_id' => $info->product_id));
             }
         }
         else
         {
-            $this->db->insert('mf_finished_good_stock', array('product_id' => $info->product_id,'quantity' => $info->target_qty));
+            $this->db->insert('mf_finished_good_stock', array('product_id' => $info->product_id,'quantity' => $info->target_qty,'cost' => $info->total_cost));
         }
 
         if($this->db->update('mf_production_mst', $dataAppr, array('id' => $id)) && $this->db->insert('mf_finished_good_stock_log', $data)) {
