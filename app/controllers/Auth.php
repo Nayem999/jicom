@@ -464,7 +464,7 @@ class Auth extends MY_Controller {
     public function storeInfo($type){  
         $this->data['stores'] = $this->site->getAllStores();  
         $stores = $this->data['stores'];
-        if(($type=='2')||($type=='3')){
+        if(($type!='1')){
         $output= '<div class="form-group">
                 <label for="group">Stores</label>
                     <select class="form-control select2 tip" name="store" required="required" id="type">

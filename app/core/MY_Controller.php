@@ -15,6 +15,7 @@ class MY_Controller extends CI_Controller {
         $this->data['loggedIn'] = $this->loggedIn;
         $this->data['stores'] = $this->site->getAllStores();
         $this->data['factory_stores'] = $this->site->getAllFactoryStores();
+        $this->data['outlet_stores'] = $this->site->getAllOutletStores();
         $this->data['categories'] = $this->site->getAllCategories();
         $this->data['mf_categories'] = $this->site->getAllMfCategories();
 
