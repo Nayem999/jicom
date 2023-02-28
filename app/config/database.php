@@ -68,6 +68,7 @@ $db['default'] = array(
 	'username' => 'root',
 	'password' => '',
 	'database' => 'jicom',
+	'port' => '3312',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => 'tec_',
 	'pconnect' => FALSE,
