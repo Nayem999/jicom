@@ -568,6 +568,18 @@
                         <div class="col-sm-2"> </div>
                     </div>
                     <hr>
+                    <div class="row" >
+                        <div class="col-sm-4">
+                            <input type="checkbox" name="mf_report" id="mf_report" value="<?=isset($permissiion_module->mf_report)?$permissiion_module->mf_report:0;?>" <?=(isset($permissiion_module->mf_report) && $permissiion_module->mf_report==1)?'checked':'';?> onclick="fn_change_val('mf_report')" > <?= lang('mf_report'); ?>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" name="mf_report_view" id="mf_report_view"  value="<?=isset($permission_route->mf_report_view)?$permission_route->mf_report_view:0;?>" <?=(isset($permission_route->mf_report_view) && $permission_route->mf_report_view==1)?'checked':'';?> onclick="fn_change_val('mf_report_view')">
+                        </div>
+                        <div class="col-sm-2"> </div>
+                        <div class="col-sm-2"> </div>
+                        <div class="col-sm-2"> </div>
+                    </div>
+                    <hr>
                     <div class="row">
                         <div class="col-xs-12">
                             <button type="submit" class="btn btn-primary"><?= lang("submit"); ?></button>
