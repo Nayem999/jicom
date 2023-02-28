@@ -29,12 +29,6 @@ class Mf_report extends MY_Controller
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-d');  
         $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-d');  
 
-        $this->data['sale'] = $this->reports_model->saleReport($start_date,$end_date);
-        $this->data['saleItem'] = $this->reports_model->saleItemReport($start_date,$end_date); 
-        $this->data['saleCollection'] = $this->reports_model->saleCollectionReport($start_date,$end_date); 
-        $this->data['cashCollection'] = $this->reports_model->cashCollectionReport($start_date,$end_date); 
-        $this->data['expensesCollection'] = $this->reports_model->expensesCollectionReport($start_date,$end_date); 
-
         $this->data['start_date'] = $start_date;
         $this->data['end_date'] = $end_date;
         $results = array(); 
