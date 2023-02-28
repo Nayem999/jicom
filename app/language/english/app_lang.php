@@ -570,6 +570,8 @@ $lang['production_added']                   = "Production successfully added";
 $lang['production_updated']                 = "Production successfully updated";
 $lang['alert_x_production']                 = "You are going to delete production, please click ok to delete.";
 
-$lang['finish_good_stock']                         = "Finish Good Stock";
-$lang['finish_good_stock_list']                         = "Finish Good Stock List";
-$lang['finish_good_stock_list']                         = "Finish Good Stock List";
+$lang['finish_good_stock']                 = "Finish Good Stock";
+$lang['finish_good_stock_list']            = "Finish Good Stock List";
+$lang['finish_good_stock_list']            = "Finish Good Stock List";
+
+$lang['mf_report']                         = "Manufacture Report";

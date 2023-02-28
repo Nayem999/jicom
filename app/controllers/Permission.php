@@ -115,6 +115,7 @@ class Permission extends MY_Controller
                 'mf_recipe' => $this->input->post('mf_recipe'),
                 'mf_production' => $this->input->post('mf_production'),
                 'mf_finish_good_stock' => $this->input->post('mf_finish_good_stock'),
+                'mf_report' => $this->input->post('mf_report'),
             );
 
             $data2 = array(
@@ -224,6 +225,7 @@ class Permission extends MY_Controller
                 'mf_production_delete' => $this->input->post('mf_production_delete'),
                 'mf_finish_good_stock_view' => $this->input->post('mf_finish_good_stock_view'),
                 'mf_finish_good_stock_edit' => $this->input->post('mf_finish_good_stock_edit'),
+                'mf_report_view' => $this->input->post('mf_report_view'),
             );
             // print_r($data);
             // print_r($data2);die;
