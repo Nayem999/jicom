@@ -30,48 +30,24 @@
                     <div class="table-responsive" id="print_content">
                         <div class="col-xs-12">
                             <table class="table table-bordered">
-                                <thead>
-                                    <tr class="active">
-
-                                        <th style="width: 150px;" >SL</th>
-
-                                        <th>Name </th>
-
-                                        <!-- <th>Category </th> -->
-
-                                        <th>Brand</th>
-
-                                        <th>Store</th>	
-
-                                        <th >QTY</th>
-
+                                <tbody>
+                                    <tr>
+                                        <th class="text-center"> Name</th>      
+                                        <th class="text-center"> Brand</th>      
+                                        <th class="text-center"> Store</th>      
+                                        <th class="text-center"> Quantity</th>
                                     </tr>
-                                </thead>
-                                </tbody>
                                     <?php
-                                    
-                                        if(count($materials) > 0):
-                                        $i=0;
-                                        foreach ($materials as $key => $material):
+                                    foreach ($matarial_items as $key => $result) {
                                         ?>
-                                            <tr style="">
-
-                                                <td><?= ++$i ?></td>
-
-                                                <td><?= $material->name; ?></td>
-
-                                                <!-- <td><?= $material->cat_name; ?></td> -->
-
-                                                <td><?= $material->brand_name; ?></td>
-
-                                                <td><?= $material->store_name; ?></td>
-
-                                                <td><?= $material->qty . ' ' . @$material->unit; ?></td>
-
-                                            </tr>
-                                    <?php
-                                        endforeach;
-                                        endif;
+                                        <tr>
+                                            <td><?=$result->material_name; ?></td>
+                                            <td><?=$result->brand_name; ?></td>
+                                            <td><?=$result->store_name; ?></td>
+                                            <td><?=$result->quantity.' '.$result->unit_name; ?></td>
+                                        </tr>
+                                        <?php
+                                    }
                                     ?>
                                 </tbody>
                             </table>
@@ -95,9 +71,9 @@
 <script type="text/javascript">
 
     $("#excelWindow").click(function() {
-        let brand = $("#brand_id").val();
-        let brandName = $("#brand_id").find(":selected").text();
-        var url = '<?= site_url('mf_report/exp_material_report/'); ?>' + '/' + brand + '?brand_name='+ brandName;
+        let brandId = $("#brand_id").val();
+        var url = '<?= site_url('mf_material_stock/excel_stock_list/'); ?>'+ '/'+brandId;
+        location.replace(url);
         location.replace(url);
     });
 </script>

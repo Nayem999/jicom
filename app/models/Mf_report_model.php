@@ -10,11 +10,6 @@ class Mf_report_model extends CI_Model
 
 	}
 
-
-	public static function calculateQty(){
-		return 4545;
-	}
-
 	public static function getMaterialData($brand = null){
 		$ci =& get_instance();
 		$materialData =
@@ -31,6 +26,29 @@ class Mf_report_model extends CI_Model
 
 			return $materialData->get()->result();
 	}
+
+    public static function getPurchaseData($startDate,$endDate){
+        $ci =& get_instance();
+
+        $purchaseData =
+        
+        $ci->db->select('mf_purchases.* , mf_suppliers.name as supplier_name, mf_suppliers.phone as supplier_phone, mf_suppliers.address as supplier_address,  stores.name as store_name');
+
+        $ci->db->from('mf_purchases');
+
+        $ci->db->join('mf_suppliers', 'mf_suppliers.id=mf_purchases.supplier_id','left');
+
+        $ci->db->join('stores', 'stores.id=mf_purchases.store_id');
+
+        if($startDate ||  $endDate){
+
+            $ci->db->where('mf_purchases.created_at >=', $startDate);
+
+            $ci->db->where('mf_purchases.created_at <=', $endDate);
+        }
+
+       return $purchaseData->get()->result();
+    }
 	
 }
 

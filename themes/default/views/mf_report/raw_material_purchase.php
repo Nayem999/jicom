@@ -10,14 +10,14 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <?= lang('Brand', 'Brand'); ?>
-                                    <?php
-                                    $wr[0] = lang("select") . " " . lang("Material Brand");
-                                    foreach ($brands as $brand) {
-                                        $wr[$brand->id] = $brand->name;
-                                    }
-                                    ?>
-                                    <?= form_dropdown('brand_id', $wr, set_value('brand_id'), 'class="form-control select2 tip" id="brand_id" required="required" style="width:100%;"'); ?>
+                                    <label class="control-label" for="start_date"><?= lang("start_date"); ?></label>
+                                    <?= form_input('start_date', $start_date, 'class="form-control datepicker" id="start_date"'); ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="end_date"><?= lang("end_date"); ?></label>
+                                    <?= form_input('end_date', $end_date, 'class="form-control datepicker" id="end_date"'); ?>
                                 </div>
                             </div>
 
@@ -33,17 +33,17 @@
                                 <thead>
                                     <tr class="active">
 
-                                        <th style="width: 150px;" >SL</th>
+                                        <th> SL </th>
 
-                                        <th>Name </th>
+                                        <th> S.Name </th>
 
-                                        <!-- <th>Category </th> -->
+                                        <th> Store Name </th>
 
-                                        <th>Brand</th>
+                                        <th> Total </th>
 
-                                        <th>Store</th>	
+                                        <th> Paid Amount </th>	
 
-                                        <th >QTY</th>
+                                        <th> Due Amount </th>
 
                                     </tr>
                                 </thead>
@@ -58,15 +58,15 @@
 
                                                 <td><?= ++$i ?></td>
 
-                                                <td><?= $material->name; ?></td>
-
-                                                <!-- <td><?= $material->cat_name; ?></td> -->
-
-                                                <td><?= $material->brand_name; ?></td>
+                                                <td><?= $material->supplier_name; ?></td>
 
                                                 <td><?= $material->store_name; ?></td>
 
-                                                <td><?= $material->qty . ' ' . @$material->unit; ?></td>
+                                                <td><?= $material->total; ?></td>
+
+                                                <td><?= $material->paid ?> </td>
+
+                                                <td><?= $material->deu ?> </td>
 
                                             </tr>
                                     <?php
@@ -95,9 +95,9 @@
 <script type="text/javascript">
 
     $("#excelWindow").click(function() {
-        let brand = $("#brand_id").val();
-        let brandName = $("#brand_id").find(":selected").text();
-        var url = '<?= site_url('mf_report/exp_material_report/'); ?>' + '/' + brand + '?brand_name='+ brandName;
+        let stDate = $("#start_date").val();
+        let endDate = $("#end_date").val();
+        var url = '<?= site_url('mf_report/exp_material_purchase_report/'); ?>' + '/' + stDate + '/'+ endDate;
         location.replace(url);
     });
 </script>
