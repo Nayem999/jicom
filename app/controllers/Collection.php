@@ -46,7 +46,7 @@ class Collection extends MY_Controller
         $this->datatables->join('customers', 'customers.id=today_collection.customer_id');
         $this->datatables->join('stores', 'customers.store_id=stores.id'); 
         $this->datatables->join('payments', 'payments.collect_id=today_collection.today_collect_id');     
-        $this->datatables->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'LEFT');	
+        $this->datatables->join('bank_pending', 'bank_pending.collection_id=payments.collect_id and bank_pending.payment_type=1', 'left');	
         if(!$this->Admin){
           $this->db->where('today_collection.store_id',$this->session->userdata('store_id'));
         }
@@ -72,8 +72,10 @@ class Collection extends MY_Controller
         if ($today != NULL) {            
             $this->datatables->like('payment_date', $today);            
         }  
-        // $this->datatables->add_column();      
-        $this->datatables->unset_column('id');        
+        // $this->datatables->add_column();   
+        $this->datatables->group_by('today_collection.today_collect_id, customers.name, stores.name, today_collection.payment_date, today_collection.payment_amount, today_collection.payment_note, payments.paid_by, bank_pending.type, today_collection.payment_status');   
+        $this->datatables->unset_column('id');   
+        // echo $this->db->last_query();die;     
         echo $this->datatables->generate();              
         
     } 
@@ -109,7 +111,8 @@ class Collection extends MY_Controller
         $this->db->from('today_collection'); 
         if($customer) { $this->db->where('customers.id', $customer); }
         if($start_date) { $this->db->where('payment_date >=', $start_date); }
-        if($end_date) { $this->db->where('payment_date <=', $end_date); }       
+        if($end_date) { $this->db->where('payment_date <=', $end_date); }  
+        $this->db->group_by('today_collection.today_collect_id, customers.name, stores.name, today_collection.payment_date, today_collection.payment_amount, today_collection.payment_note, payments.paid_by, bank_pending.type, today_collection.payment_status');      
         $query_data=$this->db->get()->result_array();
 
         $fileName = "collection_list_data_" . date('Y-m-d_h_i_s') . ".xls"; 			
@@ -350,12 +353,17 @@ class Collection extends MY_Controller
         $salesCustomers = $this->sales_model->getCustomerDeu($customerid);
         $customers = $this->sales_model->getAllCustomers($customerid);
         if($type=='Cheque'){
+          $bankID=$this->input->post('bank');
+          $cheque_no=$this->input->post('cheque_no');
             if((!$bankID)||(!$cheque_no)){
               $this->session->set_flashdata('error', lang('Bank or Cheque no empty'));
-              redirect('collection/collectionpayment');
-            } 
+              // redirect('collection/collectionpayment');
+              $this->collectionpayment();
+
+            }
+
         }
-        
+
         foreach ($salesCustomers as $key => $value) {
            $totalDeu = $totalDeu + $value->deu;
          }
@@ -371,6 +379,7 @@ class Collection extends MY_Controller
             'customer_id' => $customerid,
             'payment_note' => $this->input->post('note'),
             'store_id'  => $customers->store_id,
+            'paid_by' => $type,
           ); 
         $collect_id = $this->sales_model->payPayment($payPaymentdata);
 
@@ -446,6 +455,7 @@ class Collection extends MY_Controller
           'today_collect_id' => $collect_id,
           'store_id'        => $customers->store_id,
           'note'            => $this->input->post('note'),
+          'paid_by'         => $type,
         );
         $this->sales_model->addAdvCollec($advData);
 
@@ -494,10 +504,11 @@ class Collection extends MY_Controller
           $this->site->insertQuery($dataTransaction) ;
         }
 
-
+        // echo '32*';die;
         
         $this->session->set_flashdata('message', lang('Payment Collection submited successfully'));
-        redirect('collection/collectionpayment');
+        // redirect('collection/collectionpayment');
+        $this->collectionpayment();
     }
 
   public function collectdelete($id = null){

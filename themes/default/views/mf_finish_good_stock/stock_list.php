@@ -16,7 +16,7 @@
                                         <th class="text-center"> Quantity</th>
                                     </tr>
                                     <?php
-                                    foreach ($matarial_list as $key => $result) {
+                                    foreach ($finish_good_list as $key => $result) {
                                         ?>
                                         <tr>
                                             <td><?=$result->product_name; ?></td>

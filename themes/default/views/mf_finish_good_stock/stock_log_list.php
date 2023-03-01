@@ -13,20 +13,18 @@
                                 <tbody>
                                     <tr>
                                         <th class="text-center"> Name</th>      
-                                        <th class="text-center"> Brand</th>      
-                                        <th class="text-center"> Store</th>      
-                                        <th class="text-center"> Adj. Qty</th>
+                                        <th class="text-center"> Reason</th>          
                                         <th class="text-center"> Adj. Qty Type</th>
+                                        <th class="text-center"> Adj. Qty</th>
                                     </tr>
                                     <?php
-                                    foreach ($matarial_list as $key => $result) {
+                                    foreach ($finish_goods_stock_adjust_list as $key => $result) {
                                         ?>
                                         <tr>
-                                            <td><?=$result->material_name; ?></td>
-                                            <td><?=$result->brand_name; ?></td>
-                                            <td><?=$result->store_name; ?></td>
-                                            <td><?=$result->adjust_qty.' '.$result->unit_name; ?></td>
+                                            <td><?=$result->product_name; ?></td>
+                                            <td><?=$result->note; ?></td>
                                             <td><?=($result->adjust_type==1)?'Increase':'Decrease'; ?></td>
+                                            <td><?=$result->quantity; ?></td>
                                         </tr>
                                         <?php
                                     }

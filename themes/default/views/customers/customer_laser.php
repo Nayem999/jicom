@@ -57,7 +57,7 @@
 
                             </thead> 
 
-                            <?php $url = base_url('merge/mergereport'); ?>
+                            <?php //$url = base_url('merge/mergereport'); ?>
 
                             <tbody>
 
@@ -70,11 +70,24 @@
                                      echo '<td class="center">'.$i .'</td>' ;
                                      echo '<td class="center">'.$this->tec->hrld($value['datetime']) .'</td>' ;
                                      if(($value['type']=='collection') || ($value['type'] =='Advance Collection') || ($value['type'] =='Advance Payment')){
-                                        echo "<td class=\"center\">".$value['type'] .'</td>' ;
+                                        if(($value['type']=='collection')){
+                                            $url = base_url('collection/view'); 
+                                            echo "<td class=\"center\">
+                                            <a onclick=\"window.open('" . $url.'/'.$value['id'] . "', 'pos_popup', 'scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#'>".$value['type'] .'</a>
+                                            </td>' ;
+                                        }
+                                        else
+                                        {
+                                            echo "<td class=\"center\">".$value['type'] .'</td>' ;
+                                        }
                                      } else {
-                                     echo "<td class=\"center\">
-                                        <a onclick=\"window.open('" . $url.'/'.$value['type'].'/'.$value['id'] . "', 'pos_popup', 'scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#'>".$value['type'] .'</a>
-                                        </td>' ;
+                                        $url = base_url('pos/view'); 
+                                        echo "<td class=\"center\">
+                                            <a onclick=\"window.open('" . $url.'/'.$value['id'] . "', 'pos_popup', 'scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#'>".$value['type'] .'</a>
+                                            </td>' ;
+                                        /* echo "<td class=\"center\">
+                                            <a onclick=\"window.open('" . $url.'/'.$value['type'].'/'.$value['id'] . "', 'pos_popup', 'scrollbars=yes,status=no,resizable=yes,screenx=0,screeny=0'); return false;\" href='#'>".$value['type'] .'</a>
+                                            </td>' ; */
                                     }
                                      if(($value['type'] =='collection') ||($value['type'] =='Advance Collection') || ($value['type'] =='Sales Return')) {  ;
                                          echo '<td class="center">'.$emptyvalue.'</td>' ;
@@ -84,7 +97,7 @@
                                      if(($value['type'] == 'Opening balance') && (1>$value['total'])){ 
                                          echo '<td class="center">'.$emptyvalue.'</td>' ;
                                      }else{
-                                        echo '<td class="center">'.$this->tec->formatMoney($value['total']) .'</td>' ;
+                                        echo '<td class="center">'.$value['total'] .'</td>' ;
                                         } 
 
                                      

@@ -635,16 +635,26 @@ class Reports_model extends CI_Model
             $this->db->where('customer_id',$customer_id);     
             $queryCustomer = $this->db->get();
             $resultsCustomar = $queryCustomer->row();   
-            
+            // echo $this->db->last_query();die;
             // Collection
             /* $this->db->select('SUM(payment_amount) as payment_amount ');
             $this->db->from('today_collection'); 
             $this->db->where('customer_id',$customer_id); */    
            
-            $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
+            // $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
+            /* $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
             $this->db->from('payments');
             $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$customer_id and bank_pending.payment_type=1",'left');
-            $this->db->where('payments.customer_id', $customer_id);
+            $this->db->where('payments.customer_id', $customer_id); */
+
+
+            $this->db->select("sum(if((paid_by='TT' ||paid_by='Cheque') && type='Approved',today_collection.payment_amount,0)) as chk_amount, sum(if( paid_by='Cash' || paid_by='Deposit', today_collection.payment_amount ,0)) as other_amount ");
+            $this->db->from('today_collection');
+            $this->db->join('bank_pending',"today_collection.today_collect_id=bank_pending.collection_id and bank_pending.customer_id =$customer_id",'left');
+            $this->db->where('today_collection.customer_id', $customer_id);
+
+
+
             $querycollection = $this->db->get();
             $collectionResults = $querycollection->row(); 
             // echo $this->db->last_query();die;

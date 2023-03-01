@@ -73,6 +73,7 @@ function loadItems() {
            // alert(item.row.seq);
 
             var product_id = item.row.id, StockQty = item.row.StockQty , item_type = item.row.type, item_war = item.row.war ,  item_seq = item.row.seq , item_tax_method = parseFloat(item.row.tax_method), combo_items = item.combo_items, item_qty = item.row.qty, sQty = parseFloat(item.row.sQty), item_aqty = parseFloat(item.row.quantity), item_type = item.row.type, item_ds = item.row.discount, item_qnty_type = item.row.qnty_type, item_per_type_qnty = item.row.per_type_qnty, item_code = item.row.code, item_name = item.row.name.replace(/"/g, "&#034;").replace(/'/g, "&#039;");
+            if(item_qty>StockQty){ item_qty=0 }
             var unit_price = parseFloat(item.row.real_unit_price);
             var net_price = unit_price;
 
@@ -385,7 +386,7 @@ $(document).ready(function(){
 
         var new_qty = parseFloat($(this).val()),
         item_id = row.attr('data-item-id');
-        spositems[item_id].row.qty = new_qty;
+        spositems[item_id].row.qty = new_qty;        
         localStorage.setItem('spositems', JSON.stringify(spositems));
         loadItems();
     });
@@ -936,7 +937,7 @@ $(document).ready(function(){
             $('#gc_details').html('');
             $('#amount').attr('readonly', false);
         }
-        if (p_val == 'cash' || p_val == 'other') {
+        if (p_val == 'Cash' || p_val == 'other') {
             $('.pcash').slideDown();
             $('.pcheque').slideUp('fast');
             $('.pcc').slideUp('fast');

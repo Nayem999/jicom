@@ -20,7 +20,7 @@ class Mf_finish_good_stock extends MY_Controller
         $this->load->library('form_validation');        
         $this->load->model('mf_finish_good_stock_model');        
 
-        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message');
+        $ses_unset=array('error'=>'error','success'=>'success','message'=>'message','warning'=>'warning');
 		$this->session->unset_userdata($ses_unset);
     }
   
@@ -30,7 +30,7 @@ class Mf_finish_good_stock extends MY_Controller
 			$this->session->set_flashdata('error', lang('access_denied'));
 			redirect();
 		}
-        $this->data['matarial_list'] = $this->mf_finish_good_stock_model->getFinishStockList();   
+        $this->data['finish_good_list'] = $this->mf_finish_good_stock_model->getFinishStockList();   
 
         $this->data['page_title'] = $this->lang->line("stock_list");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('stock_list')));
@@ -68,12 +68,12 @@ class Mf_finish_good_stock extends MY_Controller
     }
 
     public function stock_adjust()  {
-        if(!$this->site->route_permission('mf_finish_good_stock_add')) {
+        if(!$this->site->route_permission('mf_finish_good_stock_edit')) {
 			$this->session->set_flashdata('error', lang('access_denied'));
 			redirect();
 		}
 
-        $this->data['matarial_list'] = $this->mf_finish_good_stock_model->getStockList();   
+        $this->data['finish_good_list'] = $this->mf_finish_good_stock_model->getFinishStockList();   
         $this->data['page_title'] = $this->lang->line("stock_list");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('stock_list')));
         $meta = array('page_title' => lang('stock_list'), 'bc' => $bc);
@@ -83,7 +83,7 @@ class Mf_finish_good_stock extends MY_Controller
 
     public function adjustStock($id)  {
 
-        $this->data['matarial_info'] = $this->mf_finish_good_stock_model->getStockStoreById($id);   
+        $this->data['finish_good_info'] = $this->mf_finish_good_stock_model->getStockStoreById($id);   
         $this->data['title'] = 'Adjust Stock';
 		$this->data['id'] = $id;
         $this->load->view($this->theme.'mf_finish_good_stock/adjust_stock', $this->data,$id);
@@ -92,21 +92,18 @@ class Mf_finish_good_stock extends MY_Controller
 
     public function adjust_stock($id){
 
-		$material_id = $this->input->post('material_id'); 
+		$finish_good_id = $this->input->post('finish_good_id'); 
 		$adjust_type = $this->input->post('adjust_type'); 
 		$adjust_qty = $this->input->post('adjust_qty'); 
-        $matarial_store_info = $this->mf_finish_good_stock_model->getStockStoreById($id);  
-        $matarial_info = $this->mf_finish_good_stock_model->getStockById($material_id);  
+        $finish_good_store_info = $this->mf_finish_good_stock_model->getStockStoreById($id);  
         $new_store_qty=0;
         if($adjust_type==1 && $adjust_qty>0)
         {
-            $new_store_qty=$matarial_store_info->quantity + $adjust_qty;
-            $new_qty=$matarial_info->quantity + $adjust_qty;
+            $new_store_qty=$finish_good_store_info->quantity + $adjust_qty;
         }
         else if($adjust_type==2 && $adjust_qty>0)
         {
-            $new_store_qty=$matarial_store_info->quantity - $adjust_qty;
-            $new_qty=$matarial_info->quantity - $adjust_qty;
+            $new_store_qty=$finish_good_store_info->quantity - $adjust_qty;
         }
 
         if($new_store_qty>=0 &&  $adjust_qty>0){
@@ -114,42 +111,37 @@ class Mf_finish_good_stock extends MY_Controller
             $data = array(
                 'quantity'   => $new_store_qty		
             );
-            $data2 = array(
-                'quantity'   => $new_qty		
-            );
-        
-            $this->mf_finish_good_stock_model->adjustStoreStock($id,$data) ;	
-            $this->mf_finish_good_stock_model->adjustStock($material_id,$data2) ;	
 
-            $data3 = array(
-                'material_id'   => $material_id,		
-                'material_stock_id'   => $id,		
+            $data2 = array(	
+                'product_id'   => $finish_good_store_info->product_id,		
+                'store_id'   => $finish_good_store_info->store_id,		
                 'adjust_type'   => $adjust_type,		
-                'adjust_qty'   => $adjust_qty,		
-                'from_qty'   => $matarial_store_info->quantity,		
-                'new_qty'   => $new_store_qty,		
-                'adjust_reason'   => $this->input->post('adjust_reason'),		
+                'quantity'   => $adjust_qty,		
+                'type'   => 2,		
+                'note'   => $this->input->post('adjust_reason'),		
                 'created_by'   => $this->session->userdata('user_id'),		
                 'created_at'   => date('Y-m-d H:i:s'),		
             );
 
-            if($this->mf_finish_good_stock_model->adjustStockLog($data3))
+            if($this->mf_finish_good_stock_model->adjustStoreStock($id,$data) && $this->mf_finish_good_stock_model->adjustStockLog($data2))
             {
-                $this->session->set_flashdata('message', lang('Collection delete successfully')); 
+                $this->session->set_flashdata('message', lang('Adjust successfully')); 
             }
             else
             {
                 $this->session->set_flashdata('error', lang('Adjust not successfully'));
             }
-              
         } 
+        else{
+            $this->session->set_flashdata('error', lang('Adjust not successfully'));
+        }
 			 
-		redirect('mf_finish_good_stock/stock_adjust'); 
+		$this->stock_adjust(); 
 	
 	}
 
     public function adjust_log_list()  {
-        $this->data['matarial_list'] = $this->mf_finish_good_stock_model->getStockLogList();   
+        $this->data['finish_goods_stock_adjust_list'] = $this->mf_finish_good_stock_model->getStockLogList();   
 
         $this->data['page_title'] = $this->lang->line("adjust_log");
         $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('adjust_log')));

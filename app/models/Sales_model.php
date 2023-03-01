@@ -339,6 +339,7 @@ class Sales_model extends CI_Model
        $this->db->where('customer_id', $id);
        $this->db->where('(grand_total - paid) !=', '0.00');  
        $q =$this->db->get();
+       
         if( $q->num_rows() > 0 ) {
             return $q->result();
         }
@@ -357,10 +358,15 @@ class Sales_model extends CI_Model
     }
 
     public function getCustomerAmountWithBankApproved($id) {
-       $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
+      /*  $this->db->select("sum(if(paid_by='Cheque' && type='Approved',payments.amount,0)) as chk_amount, sum(if(paid_by='TT' || paid_by='cash' || paid_by='Deposit', payments.amount,0)) as other_amount ");
        $this->db->from('payments');
        $this->db->join('bank_pending',"payments.collect_id=bank_pending.collection_id and bank_pending.customer_id=$id",'left');
        $this->db->where('payments.customer_id', $id);
+       $q =$this->db->get(); */
+       $this->db->select("sum(if((paid_by='TT' ||paid_by='Cheque') && type='Approved',today_collection.payment_amount,0)) as chk_amount, sum(if( paid_by='Cash' || paid_by='Deposit', today_collection.payment_amount ,0)) as other_amount ");
+       $this->db->from('today_collection');
+       $this->db->join('bank_pending',"today_collection.today_collect_id=bank_pending.collection_id and bank_pending.customer_id =$id",'left');
+       $this->db->where('today_collection.customer_id', $id);
        $q =$this->db->get();
        
         if( $q->num_rows() > 0 ) {

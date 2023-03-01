@@ -1078,7 +1078,7 @@
                 <div class="form-group">
                   <?= lang("paying_by", "paid_by"); ?>
                   <select id="paid_by" class="form-control paid_by select2" style="width:100%;">
-                    <option value="cash">
+                    <option value="Cash">
                     <?= lang("cash"); ?>
                     </option>
                     <!-- <option value="CC">
@@ -1090,7 +1090,7 @@
                     <option value="TT">
                     <?= lang("tt"); ?>
                     </option>
-                    
+                    <option value="Credit">Credit</option>                    
                      
                   </select>
                 </div>
@@ -1991,6 +1991,7 @@
   }
 
   function quantityFild(product_id , row_no){
+    var qty = $("#quantity_"+row_no).val();
     var qty = $("#quantity_"+row_no).val();
     var site_url = "<?php echo site_url('pos/checkProductQty'); ?>/"+product_id; 
     $("#allqty_"+row_no).load(site_url, function(e){

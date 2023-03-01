@@ -43,7 +43,7 @@
                                <?= lang('Type', 'Type'); ?>*
                                <select class="form-control select2 tip" name="type" required="required" id="type">
                                  <option value="">Select</option>
-                                 <option value="cash">Cash</option>
+                                 <option value="Cash">Cash</option>
                                  <option value="Cheque">Cheque</option>
                                  <option value="TT">TT</option>
                                  <!-- <option value="card">Card</option> -->

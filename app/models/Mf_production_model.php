@@ -150,7 +150,7 @@ class Mf_production_model extends CI_Model
     }
 
     public function updateStatusApprove($id,$dataAppr,$data,$info,$status) {
-        $q = $this->db->get_where('mf_finished_good_stock', array('mf_finished_good_stock.product_id' => $info->product_id), 1);
+        $q = $this->db->get_where('mf_finished_good_stock', array('mf_finished_good_stock.product_id' => $info->product_id,'mf_finished_good_stock.store_id' => $info->store_id), 1);
 
         if( $q->num_rows() > 0 ) {
             $finished_good_stock = $q->row();
@@ -178,7 +178,13 @@ class Mf_production_model extends CI_Model
         }
         else
         {
-            $this->db->insert('mf_finished_good_stock', array('product_id' => $info->product_id,'quantity' => $info->target_qty,'cost' => $info->total_cost));
+            $finished_good_data=array(
+                'store_id' => $info->store_id,
+                'product_id' => $info->product_id,
+                'quantity' => $info->target_qty,
+                'cost' => $info->total_cost
+            );
+            $this->db->insert('mf_finished_good_stock',$finished_good_data );
         }
 
         if($this->db->update('mf_production_mst', $dataAppr, array('id' => $id)) && $this->db->insert('mf_finished_good_stock_log', $data)) {

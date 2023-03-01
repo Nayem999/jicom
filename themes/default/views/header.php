@@ -704,8 +704,8 @@
               <ul class="treeview-menu">
                 <?php if ($this->site->route_permission('mf_finish_good_stock_view')) {?>
                   <li id="mf_finish_good_stock_index"><a href="<?= site_url('mf_finish_good_stock'); ?>"><i class="fa fa-circle-o"></i><?= lang('stock_list'); ?></a></li>
-                  <!-- <li id="mf_finish_good_stock_stock_adjust"><a href="<?= site_url('mf_finish_good_stock/stock_adjust'); ?>"><i class="fa fa-circle-o"></i><?= lang('stock_adjust'); ?></a></li>
-                  <li id="mf_finish_good_stock_adjust_log_list"><a href="<?= site_url('mf_finish_good_stock/adjust_log_list'); ?>"><i class="fa fa-circle-o"></i><?= lang('adjust_log'); ?></a></li> -->
+                  <li id="mf_finish_good_stock_stock_adjust"><a href="<?= site_url('mf_finish_good_stock/stock_adjust'); ?>"><i class="fa fa-circle-o"></i><?= lang('stock_adjust'); ?></a></li>
+                  <li id="mf_finish_good_stock_adjust_log_list"><a href="<?= site_url('mf_finish_good_stock/adjust_log_list'); ?>"><i class="fa fa-circle-o"></i><?= lang('adjust_log'); ?></a></li>
                 <?php } ?>   
                 <li class="divider"></li>
               </ul>

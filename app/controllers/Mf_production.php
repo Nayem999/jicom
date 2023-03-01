@@ -114,6 +114,7 @@ class Mf_production extends MY_Controller
             $data = array(                
                 'date' => $this->input->post('date'),
                 'batch_no' => $batch_no,                                             
+                'store_id' => $this->input->post('store_id'),          
                 'product_id' => $this->input->post('product_id'),
                 'recipe_id' => $this->input->post('recipe_id'),
                 'target_qty' => $this->input->post('target_qty'),          
@@ -286,6 +287,7 @@ class Mf_production extends MY_Controller
         $dataAppr = array( 'status' => $this->input->post('status') );  
         $data=array(
             'production_id' =>  $id, 
+            'store_id' =>  $info->store_id, 
             'product_id' =>  $info->product_id, 
             'quantity' =>  $info->target_qty, 
             'status' => $this->input->post('status'),  
@@ -296,7 +298,6 @@ class Mf_production extends MY_Controller
  
         if($info->status==$this->input->post('status'))
         {
-            // echo "aaa";die;
             $this->session->set_flashdata('error', lang('Status can not same'));
             $this->index();
         }

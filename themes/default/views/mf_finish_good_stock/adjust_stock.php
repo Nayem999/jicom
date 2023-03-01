@@ -7,7 +7,7 @@
                 <button type="button" onclick="hide()" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> </button>
                 <h4 class="modal-title" id="myModalLabel"><?php echo $title; ?></h4>
             </div>
-            <?php echo form_open('mf_material_stock/adjust_stock/' . $id); ?>
+            <?php echo form_open('mf_finish_good_stock/adjust_stock/' . $id); ?>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-4 text-right">
@@ -15,8 +15,8 @@
                     </div>
                     <div class="col-sm-1">:</div>
                     <div class="col-sm-7">
-                        <?php echo $matarial_info->material_name; ?>
-                        <input type="hidden" name="material_id" id="material_id" value="<?= $matarial_info->material_id; ?>">
+                        <?php echo $finish_good_info->product_name; ?>
+                        <input type="hidden" name="finish_good_id" id="finish_good_id" value="<?= $finish_good_info->id; ?>">
                     </div>
                 </div>
                 <div class="row">
@@ -25,7 +25,7 @@
                     </div>
                     <div class="col-sm-1">:</div>
                     <div class="col-sm-7">
-                        <?php echo $matarial_info->quantity . ' ' . $matarial_info->unit_name; ?>
+                        <?php echo $finish_good_info->quantity; ?>
                     </div>
                 </div>
                 <div class="row">

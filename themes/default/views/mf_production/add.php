@@ -38,6 +38,21 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <?= lang('Store', 'Store'); ?>
+                                    <?php
+                                    // $sr[''] = lang("Select") . " " . lang("Store");
+                                    foreach ($factory_stores as $factory_store_arr) {
+                                        $sr[$factory_store_arr->id] = $factory_store_arr->name;
+                                    }
+                                    ?>
+                                    <?= form_dropdown('store_id', $sr, set_value('store_id'), 'class="form-control" required="required" id="store_id" style="width:100%;" '); ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <?= lang('Recipe', 'Recipe'); ?>
                                     <?php
                                     $pr[''] = lang("Select") . " " . lang("Recipe");
@@ -48,9 +63,6 @@
                                     <?= form_dropdown('recipe_id', $pr, set_value('recipe_id'), 'class="form-control select2 tip" required="required" id="recipe_id" style="width:100%;" onchange="fn_load_tbl()"'); ?>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Target Quantity</label>

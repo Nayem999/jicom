@@ -83,6 +83,8 @@ class Pos extends MY_Controller {
 			$customer_details = $this->pos_model->getCustomerByID($customer_id);
 			$customer = $customer_details->name;
 			$customer_credit_limit = $customer_details->credit_limit;
+			$opening_blance = $customer_details->opening_blance;
+
 			//$customer_phone = $customer_details->phone;
 			$note = $this->tec->clear_tags($this->input->post('spos_note'));
 
@@ -250,12 +252,12 @@ class Pos extends MY_Controller {
 			$totalDeu = $pre_grand_total=0;
 			if(is_array($grandTotalSalesCustomers))
 			{
-				$pre_grand_total = $grandTotalSalesCustomers[0]->grand_total;
+				$totalDeu += $grandTotalSalesCustomers[0]->grand_total;
 			}
-
+			$totalDeu += $opening_blance;
 			if(is_array($totalPaymentSalesCustomers))
 			{
-				$totalDeu = abs($pre_grand_total-$totalPaymentSalesCustomers[0]->chk_amount + $totalPaymentSalesCustomers[0]->other_amount);
+				$totalDeu -= abs($totalPaymentSalesCustomers[0]->chk_amount + $totalPaymentSalesCustomers[0]->other_amount);
 			}
 
 			$incDate = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")." + 1 second"));
@@ -273,7 +275,7 @@ class Pos extends MY_Controller {
 					$credit_over=0;
 				}
 				if($customer_credit_limit==null){ $customer_credit_limit=0; }
-				// echo $status."__".$credit_over."__".$customer_credit_limit."_".$totalDeu."_".$pre_grand_total;die;
+				// echo $status."__".$credit_over."__".$customer_credit_limit."_".$totalDeu;die;
 				if($credit_over>0){
 					if($credit_over>$customer_credit_limit){
 						$this->session->set_flashdata('error', lang('Credit Over'));
@@ -296,6 +298,7 @@ class Pos extends MY_Controller {
 					}
 				}
 			}
+
 			if(!$this->Admin){
         		$store_id = $this->session->userdata('store_id') ;
         	}else{
@@ -317,7 +320,8 @@ class Pos extends MY_Controller {
                         'payment_amount' => $this->tec->formatDecimal($tCollectAmount),
                         'customer_id' => $customer_id,
                         'payment_note' => $this->input->post('payment_note'),
-                        'store_id'     => $store_id
+                        'store_id'     => $store_id,
+						'paid_by' => $this->input->post('paid_by'),
                         );
 				if(($eid ==NULL) && ($tCollectAmount !=0)){
         			$collect_id = $this->sales_model->payPayment($payPaymentdata);
@@ -365,8 +369,10 @@ class Pos extends MY_Controller {
 								'payment_type' =>  1,
 								'bank_id' 		=>  $this->input->post('bank_id'),
 								'store_id'     => $store_id,
-								'cheque_date'  => $this->input->post('cheque_date'),
 							  );
+							  	if($this->input->post('cheque_date')){
+									$bankPending['cheque_date'] = $this->input->post('cheque_date');
+								}
 							  if($this->input->post('cc_no')){
 								  $bankPending['cheque_no'] = $this->input->post('cc_no');
 							  }else if($this->input->post('cheque_no')){
@@ -454,8 +460,11 @@ class Pos extends MY_Controller {
 					'pos_paid' => $this->tec->formatDecimal($this->input->post('amount')),
 					'collect_id'  => $collect_id,
 					'store_id' => $store_id,
-					'cheque_date' => $this->input->post('cheque_date'),
 					);
+					if($this->input->post('cheque_date'))
+					{
+						$payment['cheque_date']=$this->input->post('cheque_date');
+					}
 					if(!$eid) {
 						$payment['pos_balance'] = $this->tec->formatDecimal($this->input->post('balance_amount'));
 					}
@@ -648,15 +657,16 @@ class Pos extends MY_Controller {
 
 
 	function get_product($code = NULL) {
-
+// echo $this->input->get('code');die;
 		if($this->input->get('code')) { $code = $this->input->get('code'); }
 		$combo_items = FALSE;
 		if($product = $this->pos_model->getProductByCode($code)) {
 			unset($product->cost, $product->details);
-			$product->qty = 1;
+			if($product->sQuantity>0){ $product->qty = 1;}
+			else{ $product->qty = 0; }
 			$product->discount = '0';
 			//
-			$product->qty = 1;
+			// $product->qty = 1;
 			$product->sQty = $product->sQty ;
 			if($product->sQty > 0){
 				$seqAv = '(Seq: available)';
@@ -945,7 +955,7 @@ class Pos extends MY_Controller {
 		$this->data['modal'] = false;
 		$this->data['payments'] = $this->pos_model->getAllSalePayments($sale_id);
 		$this->data['created_by'] = $this->site->getUser($inv->created_by);
-		$this->data['page_title'] = lang("invoice");
+		$this->data['page_title'] = lang("Chalan");
 		$this->load->view($this->theme.'pos/chalan', $this->data);
 
 	}
