@@ -606,7 +606,8 @@ class Reports extends MY_Controller
             $this->db->dbprefix('expens_category') . ".name as category_name, ".
             $this->db->dbprefix('expens_category') . ".cat_id as category_id, ".
             $this->db->dbprefix('expenses') . ".paid_by, " . 
-            $this->db->dbprefix('employee') . ".name as user " );
+            $this->db->dbprefix('employee') . ".name as user " 
+        );
         $this->db->from('expenses');
         $this->db->join('expens_category', 'expens_category.cat_id=expenses.c_id'); 
         $this->db->join('employee', 'employee.id=expenses.employee_id','left');

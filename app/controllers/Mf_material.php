@@ -52,7 +52,8 @@ class Mf_material extends MY_Controller
 
     	$this->load->library('datatables'); 
 
-    	$this->datatables->select($this->db->dbprefix('mf_material') . ".id as sid,".
+    	$this->datatables->select(
+			$this->db->dbprefix('mf_material') . ".id as sid,".
     		$this->db->dbprefix('mf_material') . ".name, ".    		
     		$this->db->dbprefix('mf_categories') . ".name as category_name, ".
     		$this->db->dbprefix('mf_material') . ".descriptions,", FALSE);       

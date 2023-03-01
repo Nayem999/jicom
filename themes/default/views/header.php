@@ -721,7 +721,7 @@
                 </span> <i class="fa fa-angle-left pull-right"></i> </a>
               <ul class="treeview-menu">
                 <?php if ($this->site->route_permission('mf_report_view')) {?>
-                  <!-- <li id="mf_report_index"><a href="<?= site_url('mf_report'); ?>"><i class="fa fa-circle-o"></i>Raw Material Report</a></li> -->
+                  <li id="mf_report_index"><a href="<?= site_url('mf_report/raw_material'); ?>"><i class="fa fa-circle-o"></i>Raw Material Report</a></li>
                 <?php } ?>   
                 <li class="divider"></li>
               </ul>
