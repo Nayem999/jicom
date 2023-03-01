@@ -42,9 +42,9 @@ class Mf_material_stock extends MY_Controller
     }
 
 
-    function excel_stock_list()  {
+    function excel_stock_list($brand = null)  {
 
-        $matarial_list = $this->mf_material_stock_model->getStockList();  
+        $matarial_list = $this->mf_material_stock_model->getStockList($brand);  
 
         $fileName = "raw_material_stock_list_" . date('Y-m-d_h_i_s') . ".xls"; 
 

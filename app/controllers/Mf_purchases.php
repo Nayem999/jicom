@@ -37,7 +37,7 @@ class Mf_purchases extends MY_Controller
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['stores'] = $this->site->getAllStores();
         $this->data['page_title'] = lang('purchases');
-        
+
         $bc = array(
             array(
                 'link' => '#',
@@ -58,11 +58,13 @@ class Mf_purchases extends MY_Controller
         $store_id = $this->input->get('store_id') ? $this->input->get('store_id') : 0;   
         $this->load->library('datatables');
         
-        $this->datatables->select($this->db->dbprefix('mf_purchases') . ".id as id, " . 
+        $this->datatables->select(
+            $this->db->dbprefix('mf_purchases') . ".id as id, " . 
                       
             $this->db->dbprefix('mf_purchases') . ".date as date , supplier_id," .  
 
-            $this->db->dbprefix('mf_suppliers') . ".name as cname , total, paid , deu ", FALSE);
+            $this->db->dbprefix('mf_suppliers') . ".name as cname , total, paid , deu ", FALSE
+        );
         
         $this->datatables->join('mf_suppliers', 'mf_suppliers.id=mf_purchases.supplier_id');
         $this->datatables->join('stores', 'stores.id=mf_purchases.store_id');         

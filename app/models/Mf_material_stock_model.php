@@ -7,7 +7,7 @@ class Mf_material_stock_model extends CI_Model
         parent::__construct();
     }
 
-	public function getStockList(){
+	public function getStockList($brandId = null){
 
         $this->db->select('mf_material_store_qty.id, mf_material.name as material_name, mf_brands.name as brand_name, stores.name as store_name, mf_material_store_qty.quantity, mf_unit.name as unit_name '); 
         $this->db->from('mf_material_store_qty');  
@@ -15,6 +15,9 @@ class Mf_material_stock_model extends CI_Model
 		$this->db->join('stores','mf_material_store_qty.store_id=stores.id');
 		$this->db->join('mf_unit','mf_material.uom_id=mf_unit.id','left');
 		$this->db->join('mf_brands','mf_material_store_qty.brand_id=mf_brands.id','left');
+        if($brandId){
+            $this->db->where('mf_material_store_qty.brand_id',$brandId);
+        }
 		$this->db->order_by('mf_material.id','desc');
   
         $query = $this->db->get();
