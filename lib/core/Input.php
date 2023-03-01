@@ -563,9 +563,11 @@ class CI_Input {
 			default:
 				$which = NULL;
 				break;
+			return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
 		}
+		// return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
 
-		return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
+
 	}
 
 	// --------------------------------------------------------------------
